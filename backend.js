@@ -24,7 +24,7 @@ class productManager {
 
         await fs.writeFile (this.patch,JSON.stringify(this.products));
     };
-
+// funcion para leer y extraer Json.parse
     readProducts = async() => {
         let respuesta = await fs.readFile (this.patch, "utf-8")
         return JSON.parse(respuesta)
