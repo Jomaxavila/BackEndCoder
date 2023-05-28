@@ -1,73 +1,84 @@
-    class ProductManager {
-        constructor() {
+import {promises as fs} from "fs";
+
+class productManager {
+    constructor(){
+        this.patch = "./productos.txt";
         this.products = [];
-        this.id = 0;
-        }
-    
-        static id = 0;
-    
-        addProduct = (title, description, price, thumbnail, code, stock) => {
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].code === code) {
-            console.log(`El código ${code} está repetido`);
-            break;
-            }
-        }
-    
-        const newProduct = {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-        };
-    
-        if (!Object.values(newProduct).includes(undefined)) {
-            ProductManager.id++;
-            this.products.push({
-            ...newProduct,
-            id: ProductManager.id,
-            });
-        } else {
-            console.log("Todos los campos son requeridos");
-        }
-        };
-    
-        getProducts = () => {
-        return this.products;
-        };
-    
-        getProductByID = (id) => {
-        if (!this.products.find((product) => product.id === id)) {
-            console.log("Not Found");
-        } else {
-            console.log("Existe");
-        }
-        };
     }
-    
-    const products = new ProductManager();
-    // pirmera llamada arreglo vacio
-    console.log(products.getProducts());
-    // Agregamos productos
-    products.addProduct("India", "Paisaje de New Delhi", 1000, "imagen1", "IND123", 5);
-    products.addProduct("Vietnam", "Paisaje de Vietnam", 2500, "imagen3", "VIE789", 9);
+    static id = 0
 
-    // mostramos el Array con productos
-    console.log(products.getProducts());
+    addProduct = async (title, description, price, imagen, code, stock)=>{
+      productManager.id++
 
-     // Validación con código repetido
-     products.addProduct("New York", "Paisaje de Nueva York", 3000, "imagen4", "VIE789", 2);
+        let newProduct = {
+        title,
+        description,
+        price,
+        imagen,
+        code,
+        stock,
+        id:productManager.id
+        };
 
-    // Llamamos a un producto por el Id 2
-    products.getProductByID(2);
-    console.log("Se encuentra el producto solicitado con ID numero 2")
-    
-    // Llamamos a un producto por el Id no encontrado
-    products.getProductByID(8);
-    console.log("ID numero 8 no encontrado");
-    
-    // Intentando agregar sin atributo
-    products.addProduct("Sudáfrica", "Paisaje de Sudáfrica", 2000, "SUD456", 3);
-    
+        this.products.push(newProduct)
+
+        await fs.writeFile (this.patch,JSON.stringify(this.products));
+    };
+
+    readProducts = async() => {
+        let respuesta = await fs.readFile (this.patch, "utf-8")
+        return JSON.parse(respuesta)
+    }
+
+    getProduct = async ()=>{
+    let respuesta2 = await this.readProducts()
+    return console.log(respuesta2);
+    }
+
+    getProductById = async (id) =>{
+    let respuesta3 = await this.readProducts()
+    if (!respuesta3.find(product => product.id ===id)){
+        console.log("producto no encontrado")
+    }else{
+        console.log(respuesta3.find(product => product.id ===id))
+        }
+    };
+
+    deleteProductById = async (id)=>{
+        let respuesta3 = await this.readProducts();
+        let productFilter = respuesta3.filter(products => products.id !=id)
+        await fs.writeFile (this.patch,JSON.stringify(productFilter));
+        console.log("Producto Eliminado")
+    };
+
+    updateProduts = async ({id, ...producto})=>{
+        await this.deleteProductById(id); 
+        let productOld = await this.readProducts()
+        let productModif = [{...producto, id}, ...productOld];
+        await fs.writeFile (this.patch,JSON.stringify(productModif));
+            };
+}
+
+const productos = new productManager
+
+// productos.addProduct("titulo1", "description","1000", "imagen", "ABC123", "5"); 
+// productos.addProduct("titulo2", "description","2000", "imagen", "ABC456", "10"); 
+// productos.addProduct("titulo3", "description","3000", "imagen", "ABC678", "15");
+// productos.getProduct();
+
+// productos.getProductById(5);
+
+// productos.deleteProductById(2);
+productos.updateProduts({
+    title: 'titulo3',
+    description: 'description',
+    price: '4500',
+    imagen: 'imagen',
+    code: 'ABC678',
+    stock: '15',
+    id: 3,
+});
+
+
+
+
