@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
 
-export default class productManager {
+export default class ProductManager {
   constructor() {
-    this.patch = "./productos.txt";
+    this.path = "./productos.json";
     this.products = [];
   }
 
@@ -10,7 +10,7 @@ export default class productManager {
 
   addProduct = async (title, description, price, imagen, code, stock) => {
     try {
-      productManager.id++;
+      ProductManager.id++;
 
       // Validar los tipos de datos de los argumentos
       if (
@@ -31,12 +31,12 @@ export default class productManager {
         imagen,
         code,
         stock,
-        id: productManager.id,
+        id: ProductManager.id,
       };
 
       this.products.push(newProduct);
 
-      await fs.writeFile(this.patch, JSON.stringify(this.products));
+      await fs.writeFile(this.path, JSON.stringify(this.products));
     } catch (error) {
       console.error("Error al agregar el producto:", error.message);
     }
@@ -44,7 +44,7 @@ export default class productManager {
 
   readProducts = async () => {
     try {
-      let respuesta = await fs.readFile(this.patch, "utf-8");
+      let respuesta = await fs.readFile(this.path, "utf-8");
       return JSON.parse(respuesta);
     } catch (error) {
       console.error("Error al leer los productos:", error.message);
@@ -78,7 +78,7 @@ export default class productManager {
     try {
       let respuesta3 = await this.readProducts();
       let productFilter = respuesta3.filter((product) => product.id !== id);
-      await fs.writeFile(this.patch, JSON.stringify(productFilter));
+      await fs.writeFile(this.path, JSON.stringify(productFilter));
       console.log("Producto eliminado");
     } catch (error) {
       console.error("Error al eliminar el producto:", error.message);
@@ -90,14 +90,14 @@ export default class productManager {
       await this.deleteProductById(id);
       let productOld = await this.readProducts();
       let productModif = [{ ...producto, id }, ...productOld];
-      await fs.writeFile(this.patch, JSON.stringify(productModif));
+      await fs.writeFile(this.path, JSON.stringify(productModif));
     } catch (error) {
       console.error("Error al actualizar los productos:", error.message);
     }
   };
 }
 
-const productos = new productManager();
+const productos = new ProductManager();
 
 // Ejemplo de uso
 // productos.addProduct("titulo1", "description", 1000, "imagen", "ABC123", 5);
