@@ -1,0 +1,75 @@
+body {
+	font-family: 'Montserrat', sans-serif;
+}
+
+/* Home */
+/* .home-container {
+	display: flex;
+	flex-flow: column nowrap;
+	text-align: center;
+	background-color: lightblue;
+	border-radius: 10px;
+	width: 200px;
+	padding: 10px;
+	margin: auto;
+}
+
+.home-title {
+	font-size: 30px;
+	text-decoration: underline;
+}
+
+.home-list {
+	list-style: none;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+}
+
+.home-item {
+	font-size: 20px;
+	border-bottom: solid 2px black;
+	height: 50px;
+	width: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Socket */
+.real-time-container {
+	display: flex;
+	flex-flow: column nowrap;
+	text-align: center;
+	background-color: lightpink;
+	border-radius: 10px;
+	width: 200px;
+	padding: 10px;
+	margin: auto;
+}
+
+.real-time-title {
+	font-size: 30px;
+	text-decoration: underline;
+}
+
+.real-time-list {
+	list-style: none;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+}
+
+.real-time-item {
+	font-size: 20px;
+	border-bottom: solid 2px black;
+	height: 50px;
+	width: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+} */

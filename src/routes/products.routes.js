@@ -1,5 +1,5 @@
 import {Router} from "express";
-import ProductManager from "/Users/maxi/Desktop/BackEndCoder/src/controllers/productManager.js";
+import ProductManager from "../controllers/productManager.js";
 
 const productRouter = Router()
 const productManager = new ProductManager();
@@ -41,14 +41,19 @@ productRouter.put("/:id", async (req, res) => {
 	}
 });
 
-productRouter.delete("/:id", async (req, res) => {
+productRouter.delete('/:id', async (req, res) => {
+	const productId = parseInt(req.params.id);
 	try {
-	const id = parseInt(req.params.id);
-	await productManager.deleteProductById(id);
-	res.status(200).send('Producto eliminado');
+	  const result = await productManager.deleteProductById(productId);
+	  if (result.message) {
+		res.status(200).send('Producto eliminado');
+		console.log('Producto eliminado');
+	  } else {
+		res.status(404).send('Producto no encontrado');
+	  }
 	} catch (error) {
-	res.status(500).send({ error: error.message });
+	  res.status(500).send('Error al eliminar el producto');
 	}
-});
+  });
 
 export default productRouter;

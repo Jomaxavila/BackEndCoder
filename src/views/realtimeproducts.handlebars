@@ -1,0 +1,40 @@
+<h1>Lista de productos en tiempo real</h1>
+{{#each products}}
+  <h2>{{nombre}}</h2>
+  <p>{{description}}</p>
+  <p>{{code}}</p>
+  <p>{{price}}</p>
+  <p>{{status}}</p>
+  <p>{{stock}}</p>
+{{/each}}
+
+<form id="createProductForm">
+  <input type="text" name="nombre" placeholder="Nombre">
+  <input type="text" name="descripcion" placeholder="Descripción">
+  <input type="text" name="Code" placeholder="Code">
+  <input type="text" name="price" placeholder="Price">
+  <input type="text" name="status" placeholder="Status">
+  <input type="text" name="stock" placeholder="Stock">
+  <button type="submit">Crear producto</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  socket.on('connect', () => {
+    console.log('Conectado al servidor de sockets');
+  });
+
+  const createProductForm = document.getElementById('createProductForm');
+
+  createProductForm.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const formData = new FormData(createProductForm);
+    const product = Object.fromEntries(formData.entries());
+
+    socket.emit('createProduct', product);
+  });
+</script>
+
