@@ -6,6 +6,10 @@
   <p>{{price}}</p>
   <p>{{status}}</p>
   <p>{{stock}}</p>
+    <p>{{id}}</p>
+  <form id="deleteProductForm">
+    <button class="deleteProductBtn" data-productId="{{id}}">Eliminar</button>
+  </form>
 {{/each}}
 
 <form id="createProductForm">
@@ -53,4 +57,3 @@ socket.emit('createProduct', product);
    
   });
 </script>
-

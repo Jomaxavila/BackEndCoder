@@ -52,7 +52,7 @@ socketServer.on('connection', socket => {
       if (result.message) {
         // Emitir evento al cliente indicando que se ha eliminado un producto
         socketServer.emit('productDeleted', productId);
-        console.log('Producto eliminado:', productId);
+        console.log('Producto eliminado');
       } else {
         console.log('Producto no encontrado:', productId);
       }
