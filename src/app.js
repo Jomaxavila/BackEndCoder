@@ -1,7 +1,7 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
-import productRouter  from './routes/products.routes.js';
+import productRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import path from "path";
 import viewRouter from "./routes/views.routes.js";
@@ -32,18 +32,33 @@ app.use("/realtimeproducts", viewRouter);
 socketServer.on('connection', socket => {
   console.log("Nuevo Cliente");
 
-  
   socket.on('createProduct', async newProduct => {
     try {
       const result = await productManager.addProduct(newProduct);
       if (result === "Producto Agregado") {
-        const createdProduct = await productManager.getProductById(newProduct.id); 
-        console.log("nuevo producto agregado a la lista")
+        const createdProduct = await productManager.getProductById(newProduct.id);
+        // Emitir evento al cliente indicando que se ha creado un nuevo producto
+        socket.emit('productCreated', createdProduct);
+        console.log("Nuevo producto creado");
       }
     } catch (error) {
       console.error("Error al agregar el producto:", error);
     }
+  });
 
+  socket.on('deleteProduct', async productId => {
+    try {
+      const result = await productManager.deleteProductById(productId);
+      if (result.message) {
+        // Emitir evento al cliente indicando que se ha eliminado un producto
+        socketServer.emit('productDeleted', productId);
+        console.log('Producto eliminado:', productId);
+      } else {
+        console.log('Producto no encontrado:', productId);
+      }
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+    }
   });
 });
 

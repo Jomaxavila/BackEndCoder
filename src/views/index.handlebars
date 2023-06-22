@@ -1,6 +1,6 @@
-{{!-- <h1>Lista de productos</h1>
+<h1>Lista de productos en tiempo real</h1>
 {{#each products}}
-  <h2>{{nombre}}</h2>
+  <h2>{{title}}</h2>
   <p>{{description}}</p>
   <p>{{code}}</p>
   <p>{{price}}</p>
@@ -8,5 +8,49 @@
   <p>{{stock}}</p>
 {{/each}}
 
+<form id="createProductForm">
+  <input type="text" id="titleInput" placeholder="title">
+  <input type="text" id="descriptionInput" placeholder="description">
+  <input type="text" id="codeInput" placeholder="code">
+  <input type="text" id="priceInput" placeholder="Price">
+  <input type="text" id="statusInput" placeholder="Status">
+  <input type="text" id="stockInput" placeholder="Stock">
+  <button type="submit">Crear producto</button>
+</form>
+
+
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/index.js"></script> --}}
+<script>
+  const socket = io();
+
+  socket.on('connect', () => {
+    console.log('Conectado al servidor de sockets');
+  });
+
+  const createProductForm = document.getElementById('createProductForm');
+
+  createProductForm.addEventListener('submit', event => {
+    event.preventDefault();
+
+const titleInput = document.getElementById('titleInput');
+const descriptionInput = document.getElementById('descriptionInput');
+const codeInput = document.getElementById('codeInput');
+const priceInput = document.getElementById('priceInput');
+const statusInput = document.getElementById('statusInput');
+const stockInput = document.getElementById('stockInput');
+
+const product = {
+  title: titleInput.value,
+  description: descriptionInput.value,
+  code: codeInput.value,
+  price: priceInput.value,
+  status: statusInput.value,
+  stock: stockInput.value
+};
+
+socket.emit('createProduct', product);
+
+   
+  });
+</script>
+
