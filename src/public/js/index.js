@@ -2,7 +2,7 @@
 const socket = io();
 
 socket.on('connect', () => {
-  console.log('Conectado al servidor de sockets maldicion sjnbsdn');
+  console.log('Bienvenido ! Conectado al servidor de sockets');
 });
 
 const createProductForm = document.getElementById('createProductForm');
@@ -29,5 +29,17 @@ const product = {
 socket.emit('createProduct', product);
 
 });
+const deleteProductForm = document.getElementById("deleteProductForm");
 
-const DeleteProduct = document.getElementById("deleteProductBtn")
+deleteProductForm.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const productId = document.getElementById("deleteProductBtn").value;
+  socket.emit("deleteProduct", productId);
+});
+
+socket.on("productDeleted", productId => {
+  console.log("Producto eliminado:", productId);
+});
+
+
