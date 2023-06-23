@@ -46,6 +46,7 @@ socketServer.on('connection', socket => {
     }
   });
 
+  
   socket.on('deleteProduct', async productId => {
     try {
       const result = await productManager.deleteProductById(productId);

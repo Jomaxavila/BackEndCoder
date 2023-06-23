@@ -29,3 +29,5 @@ const product = {
 socket.emit('createProduct', product);
 
 });
+
+const DeleteProduct = document.getElementById("deleteProductBtn")
