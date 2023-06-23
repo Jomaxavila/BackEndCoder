@@ -1,26 +1,31 @@
-// Escuchar eventos de clic en los botones de eliminación
-const deleteProductButtons = document.getElementsByClassName('deleteProductBtn');
-Array.from(deleteProductButtons).forEach(button => {
-  button.addEventListener('click', event => {
-    const productId = event.target.dataset.productId;
-    deleteProduct(productId);
-  });
+
+const socket = io();
+
+socket.on('connect', () => {
+  console.log('Conectado al servidor de sockets maldicion sjnbsdn');
 });
 
-// Función para enviar la solicitud de eliminación de producto al servidor
-function deleteProduct(productId) {
-  fetch(`/api/products/${productId}`, {
-    method: 'DELETE'
-  })
-  .then(response => {
-    if (response.ok) {
-      console.log('Producto eliminado:', productId);
-      // Realiza las acciones necesarias para actualizar la lista de productos
-    } else {
-      console.log('Error al eliminar el producto');
-    }
-  })
-  .catch(error => {
-    console.error('Error al eliminar el producto:', error);
-  });
-}
+const createProductForm = document.getElementById('createProductForm');
+
+createProductForm.addEventListener('submit', event => {
+  event.preventDefault();
+
+let title = document.getElementById('title')
+let description = document.getElementById('description')
+let code = document.getElementById('code')
+let price = document.getElementById('price')
+let status = document.getElementById('status')
+let stock = document.getElementById('stock')
+
+const product = {
+  title: title.value,
+  description: description.value,
+  code: code.value,
+  price: price.value,
+  status: status.value,
+  stock: stock.value
+};
+
+socket.emit('createProduct', product);
+
+});

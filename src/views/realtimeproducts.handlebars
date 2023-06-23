@@ -7,23 +7,29 @@
   <p>{{status}}</p>
   <p>{{stock}}</p>
   <p>{{id}}</p>
-  <form id="deleteProductForm">
-    <button class="deleteProductBtn" data-productId="{{id}}">Eliminar</button>
-  </form>
 {{/each}}
 
 <form id="createProductForm">
-  <input type="text" name="nombre" placeholder="Nombre">
-  <input type="text" name="descripcion" placeholder="Descripción">
-  <input type="text" name="Code" placeholder="Code">
-  <input type="text" name="price" placeholder="Price">
-  <input type="text" name="status" placeholder="Status">
-  <input type="text" name="stock" placeholder="Stock">
+  <input id="title" type="text" name="nombre" placeholder="Nombre">
+  <input id="description" type="text" name="descripcion" placeholder="Descripción">
+  <input id="code" type="text" name="Code" placeholder="Code">
+  <input id="price" type="text" name="price" placeholder="Price">
+  <input id="status" type="text" name="status" placeholder="Status">
+  <input id="stock" type="text" name="stock" placeholder="Stock">
   <button type="submit">Crear producto</button>
+</form>
+<br>
+<h3>Eliminar Producto</h3>
+
+ <form id="deleteProductForm">
+<input id="Delete" type="text" name="delete" placeholder="Id Producto">
+    <button id="deleteProductBtn" type="submit">Eliminar</button>
 </form>
 
 <script src="/socket.io/socket.io.js"></script>
-<script>
+<script src="/js/index.js"></script>
+
+{{!-- <script>
   const socket = io();
 
   socket.on('connect', () => {
@@ -51,4 +57,4 @@
     });
   });
 
- 
+  --}}

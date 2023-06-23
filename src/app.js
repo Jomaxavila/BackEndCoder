@@ -9,7 +9,7 @@ import { Server } from "socket.io";
 import ProductManager from "./controllers/productManager.js";
 
 const app = express();
-const httpserver = app.listen(8080, () => console.log("Servidor arriba en el puerto 8080"));
+const httpserver = app.listen(8080, console.log("Servidor arriba en el puerto 8080"));
 const socketServer = new Server(httpserver);
 const productManager = new ProductManager();
 
