@@ -45,8 +45,6 @@ socketServer.on('connection', socket => {
       console.error("Error al agregar el producto:", error);
     }
   });
-
-  
   socket.on('deleteProduct', async productId => {
     try {
       const result = await productManager.deleteProductById(productId);
@@ -61,6 +59,8 @@ socketServer.on('connection', socket => {
       console.error('Error al eliminar el producto:', error);
     }
   });
+  
+  
 });
 
 export default app;

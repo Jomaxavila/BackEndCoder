@@ -6,6 +6,15 @@ const viewRouter = express.Router();
 const productManager = new ProductManager();
 
 
+viewRouter.get("/",async(req, res)=>{
+	let allProducts = await productManager.getProducts();
+	// console.log(allProducts)
+	res.render("home",{
+		title: "Lista de productos en tiempo real",
+		products: allProducts
+	})
+})
+
 viewRouter.get("/realtimeproducts",async(req, res)=>{
 	let allProducts = await productManager.getProducts();
 	// console.log(allProducts)
