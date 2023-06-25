@@ -1,24 +1,123 @@
 <h1>Lista de productos en tiempo real</h1>
-{{#each products}}
-  <h2>{{this.title}}</h2>
-  <p>{{this.description}}</p>
-  <p>{{this.code}}</p>
-  <p>{{this.price}}</p>
-  <p>{{this.status}}</p>
-  <p>{{this.stock}}</p>
-  <p>{{this.id}}</p>
-{{/each}}
+<section class="mt-6">
+  <div class="container">
+    <div class="row">
+      {{#each products}}
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <img src="{{thumbnail}}" class="card-img-top" alt="Product Image">
+            <div class="card-body">
+              <h5 class="card-title">{{title}}</h5>
+              <p class="card-text">{{description}}</p>
+              <p class="card-text">{{price}}</p>
+                 <p class="card-text">{{id}}</p>
 
+              <button class="btn btn-danger" type="button" onclick="deleteProduct({{id}})">
+                <ion-icon name="trash"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
 
-<form id="createProductForm">
-  <input id="title" type="text" name="nombre" placeholder="Nombre">
-  <input id="description" type="text" name="descripcion" placeholder="Descripción">
-  <input id="code" type="text" name="Code" placeholder="Code">
-  <input id="price" type="text" name="price" placeholder="Price">
-  <input id="status" type="text" name="status" placeholder="Status">
-  <input id="stock" type="text" name="stock" placeholder="Stock">
-  <button type="submit">Crear producto</button>
-</form>
+<section>
+  <div class="container mt-6" style="max-width: 500px">
+    <form action="/api/products" method="post" enctype="multipart/form-data">
+      <h3 class="is-size-3 mb-5">Ingrese un nuevo producto</h3>
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input
+          class="form-control is-valid"
+          type="text"
+          placeholder="Ingrese el nombre del producto"
+          value=""
+          name="title"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea
+          value=""
+          name="description"
+          class="form-control is-valid"
+          placeholder="Ingrese una breve descripción del producto"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Código</label>
+        <input
+          class="form-control is-valid"
+          type="text"
+          placeholder="Ingrese el código del producto"
+          value=""
+          name="code"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Precio</label>
+        <input
+          class="form-control is-valid"
+          type="text"
+          placeholder="Ingrese el precio del producto"
+          value=""
+          name="price"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Stock</label>
+        <input
+          class="form-control is-valid"
+          type="number"
+          min="0"
+          max="10000"
+          value="0"
+          name="stock"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Categoría</label>
+        <div class="select is-primary">
+          <select name="category" class="form-select">
+            <option value="Tecnología">Tecnología</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Smartphones">Smartphones</option>
+            <option value="Muebles">Muebles</option>
+            <option value="Cosmética y belleza">Cosmética y belleza</option>
+            <option value="Indumentaria">Indumentaria</option>
+            <option value="Herramientas">Herramientas</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="form-file">
+          <input class="form-file-input" type="file" name="thumbnail" />
+          <label class="form-file-label">
+            <span class="form-file-text">Sube una imagen</span>
+            <span class="form-file-button">
+              <ion-icon
+                name="cloud-upload-outline"
+                style="font-size: 25px"
+              ></ion-icon>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</section>
+
 <br>
 
 <h3>Eliminar Producto</h3>
