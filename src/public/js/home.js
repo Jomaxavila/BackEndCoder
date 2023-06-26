@@ -1,13 +1,13 @@
 console.log("home está cargado");
 
-const deleteProductForm = document.getElementById('deleteProductForm');
+// const deleteProductForm = document.getElementById('deleteProductForm');
 
-deleteProductForm.addEventListener('submit', event => {
-  event.preventDefault();
+// deleteProductForm.addEventListener('submit', event => {
+//   event.preventDefault();
 
-  const productId = document.getElementById('Delete').value;
-  deleteProduct(productId);
-});
+//   const productId = document.getElementById('Delete').value;
+//   deleteProduct(productId);
+// });
 
 function deleteProduct(id) {
   fetch(`/api/products/${id}`, {
