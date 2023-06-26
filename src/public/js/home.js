@@ -1,14 +1,5 @@
 console.log("home está cargado");
 
-// const deleteProductForm = document.getElementById('deleteProductForm');
-
-// deleteProductForm.addEventListener('submit', event => {
-//   event.preventDefault();
-
-//   const productId = document.getElementById('Delete').value;
-//   deleteProduct(productId);
-// });
-
 function deleteProduct(id) {
   fetch(`/api/products/${id}`, {
     method: "DELETE",
@@ -23,3 +14,9 @@ function deleteProduct(id) {
     })
     .catch((err) => console.log(err));
 }
+
+document.getElementById("deleteProductForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const productId = document.getElementById("Delete").value;
+  deleteProduct(productId);
+});

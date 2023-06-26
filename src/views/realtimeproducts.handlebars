@@ -9,6 +9,7 @@
             <div class="card-body">
               <h5 class="card-title">{{title}}</h5>
               <p class="card-text">{{description}}</p>
+               <p class="card-text">{{code}}</p>
               <p class="card-text">{{price}}</p>
               <p class="card-text">{{id}}</p>
             </div>
@@ -110,33 +111,3 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realtimeProducts.js"></script>
-
-{{!-- <script>
-  const socket = io();
-
-  socket.on('connect', () => {
-    console.log('Conectado al servidor de sockets');
-  });
-
-  const createProductForm = document.getElementById('createProductForm');
-
-  createProductForm.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const formData = new FormData(createProductForm);
-    const product = Object.fromEntries(formData.entries());
-
-    socket.emit('createProduct', product);
-  });
-
-  // Escuchar eventos de clic en los botones de eliminación
-  const deleteProductButtons = document.getElementsByClassName('deleteProductBtn');
-  Array.from(deleteProductButtons).forEach(button => {
-    button.addEventListener('click', event => {
-      event.preventDefault();
-      const productId = event.target.dataset.productId;
-      deleteProduct(productId);
-    });
-  });
-
-  --}}

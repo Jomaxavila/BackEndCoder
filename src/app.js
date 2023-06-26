@@ -31,6 +31,7 @@ app.use("/api/products", productRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/realtimeproducts", viewRouter);
 
+
 socketServer.on('connection', socket => {
   console.log("Nuevo Cliente");
 
