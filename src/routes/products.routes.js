@@ -1,8 +1,22 @@
-import {Router} from "express";
+import { Router } from "express";
 import ProductManager from "../controllers/productManager.js";
+const path = "src/models/productos.json";
+import { validateRequest, validateCodeNotRepeated } from "../middleware/validators.js";
+import multer from "multer";
 
-const productRouter = Router()
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "src/public/uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const productRouter = Router();
 const productManager = new ProductManager();
+
+productRouter.use(multer({ storage }).single("thumbnail"));
 
 
 productRouter.get("/", async (req, res) => { 
@@ -16,19 +30,19 @@ productRouter.get("/:id", async (req, res) => {
 });
 	
 
-productRouter.post("/", async (req, res) => {
+productRouter.post("/", validateRequest, validateCodeNotRepeated, async (req, res) => {
 	try {
-	const newProduct = req.body;
-	const result = await productManager.addProduct(newProduct);
-	if (result === "Producto Agregado") {
-		res.status(201).send("Producto agregado");
-	} else {
-		res.status(500).send({ error: "Error al agregar el producto" });
+	  const newProduct = req.body;
+	  const productCreated = await productManager.addProduct(newProduct);
+	  console.log(productCreated);
+	  res.redirect("/");
+	} catch (err) {
+	  res.status(err.status || 500).json({
+		status: "error",
+		payload: err.message,
+	  });
 	}
-	} catch (error) {
-	res.status(500).send({ error: error.message });
-	}
-});
+  });
 
 productRouter.put("/:id", async (req, res) => {
 	try {
