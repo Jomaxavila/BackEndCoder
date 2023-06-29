@@ -2,9 +2,9 @@ import { promises as fs } from "fs";
 
 export default class ProductManager {
 	constructor() {
-		this.path = "./models/productos.json"
+		this.path = "src/models/productos.json"
 	}
-xsw
+
 readProducts = async () => {
 	const products = await fs.readFile(this.path, "utf-8");
 	return JSON.parse(products);

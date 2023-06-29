@@ -1,5 +1,5 @@
 import ProductManager from "../controllers/productManager.js";
-const path = "./models/productos.json";
+const path = "src/models/productos.json";
 const myProductManager = new ProductManager(path);
 
 export default (io) => {
