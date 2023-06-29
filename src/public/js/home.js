@@ -44,10 +44,8 @@ chatBox.addEventListener("keyup" ,evt=>{
         toast:true,
         position: 'top-right'
          })
-         
-    
 
-
+ });
 
 
 function deleteProduct(id) {
@@ -69,4 +67,5 @@ document.getElementById("deleteProductForm").addEventListener("submit", function
   event.preventDefault();
   const productId = document.getElementById("Delete").value;
   deleteProduct(productId);
+
 });
