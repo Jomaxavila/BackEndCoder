@@ -1,6 +1,5 @@
 import { Router } from "express";
 import ProductManager from "../controllers/productManager.js";
-const path = "./models/productos.json";
 import { validateRequest, validateCodeNotRepeated } from "../middleware/validators.js";
 import multer from "multer";
 

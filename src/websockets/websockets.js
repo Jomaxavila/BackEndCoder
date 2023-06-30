@@ -4,7 +4,7 @@ const myProductManager = new ProductManager(path);
 
 export default (io) => {
 
-  io.on('connection', socket => {
+  io.on('connection', (socket) => {
     console.log("New client websocket: ", socket.id);
 
     let messages = [];
