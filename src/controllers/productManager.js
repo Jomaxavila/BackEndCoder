@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 
 export default class ProductManager {
 	constructor() {
-		this.path = "./models/productos.json"
+		this.path = "./src/models/productos.json"
 	}
 
 readProducts = async () => {
