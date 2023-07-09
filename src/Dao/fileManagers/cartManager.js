@@ -6,7 +6,7 @@ const productsAll = new ProductManager
 
 class CartManager {
 	constructor(){
-		this.path = "./src/models/carts.json"
+		this.path = "../src/db/carts.json"
 	} 
 
 	readCarts = async () => {

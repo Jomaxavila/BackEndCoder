@@ -1,4 +1,4 @@
-import ProductManager from "../controllers/productManager.js";
+import ProductManager from "../Dao/fileManagers/productManager.js";
 const path = "src/models/productos.json";
 const myProductManager = new ProductManager(path);
 

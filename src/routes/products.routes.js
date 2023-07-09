@@ -1,72 +1,81 @@
-import { Router } from "express";
-import ProductManager from "../controllers/productManager.js";
-import { validateRequest, validateCodeNotRepeated } from "../middleware/validators.js";
-import multer from "multer";
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "src/public/uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+import { request, Router } from "express";
+import ProductManager from "../Dao/fileManagers/productManager.js";
+import ProductManagerMongo from "../Dao/dbManagers/productManagerMongo.js";
 
 const productRouter = Router();
 const productManager = new ProductManager();
-
-productRouter.use(multer({ storage }).single("thumbnail"));
-
+const productManagerMongo = new ProductManagerMongo();
 
 productRouter.get("/", async (req, res) => { 
-	res.send( await productManager.getProducts())
-});
-	
-
-productRouter.get("/:id", async (req, res) => {
-	const id = parseInt(req.params.id);
-	res.send(await productManager.getProductById(id))
-});
-	
-
-productRouter.post("/", validateRequest, validateCodeNotRepeated, async (req, res) => {
 	try {
-	  const newProduct = req.body;
-	  const productCreated = await productManager.addProduct(newProduct);
-	  console.log(productCreated);
-	  res.redirect("/");
-	} catch (err) {
-	  res.status(err.status || 500).json({
+	  const respuesta = await productManagerMongo.getProducts();
+	  res.status(respuesta.code).send({
+		status: respuesta.status,
+		message: respuesta.message
+	  });
+	} catch (error) {
+	  res.status(500).send({
 		status: "error",
-		payload: err.message,
+		message: "Error al obtener los productos"
 	  });
 	}
   });
+  
+
+	productRouter.post('/', async (req,res)=>{
+		const product = req.body;
+		const respuesta = await productManagerMongo.addProduct(product);
+		res.status(respuesta.code).send({
+			status:respuesta.status,
+			message:respuesta.message
+		});
+	});
+
+  productRouter.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      const product = await productManagerMongo.getProductById(id);
+      if (product) {
+        res.send(product);
+      } else {
+        res.status(404).send({ message: "Producto no encontrado" });
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+  
+  
+  
+
+
+
+
 
 productRouter.put("/:id", async (req, res) => {
-	try {
-	const id = parseInt(req.params.id);
-	const updatedProduct = { id, ...req.body };
-	await productManager.updateProducts(updatedProduct);
-	res.status(200).send('Producto actualizado');
-	} catch (error) {
-	res.status(500).send({ error: error.message });
-	}
+  try {
+    const id = parseInt(req.params.id);
+    const updatedProduct = { id, ...req.body };
+    await productManager.updateProducts(updatedProduct);
+    res.status(200).send('Producto actualizado');
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 });
 
 productRouter.delete('/:id', async (req, res) => {
-	const productId = parseInt(req.params.id);
-	try {
-	  const result = await productManager.deleteProductById(productId);
-	  if (result.message) {
-		res.status(200).send('Producto eliminado');
-		console.log('Producto eliminado');
-	  } else {
-		res.status(404).send('Producto no encontrado');
-	  }
-	} catch (error) {
-	  res.status(500).send('Error al eliminar el producto');
-	}
-  });
+  const productId = parseInt(req.params.id);
+  try {
+    const result = await productManager.deleteProductById(productId);
+    if (result.message) {
+      res.status(200).send('Producto eliminado');
+      console.log('Producto eliminado');
+    } else {
+      res.status(404).send('Producto no encontrado');
+    }
+  } catch (error) {
+    res.status(500).send('Error al eliminar el producto');
+  }
+});
 
 export default productRouter;

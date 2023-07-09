@@ -8,6 +8,7 @@ import websockets from "./websockets/websockets.js";
 import exphbs from "express-handlebars";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 
 const app = express();
 const PORT = 8080 || process.env.PORT;
@@ -16,10 +17,23 @@ const __dirname = dirname(__filename);
 console.log(__dirname);
 
 const httpServer = http.createServer(app);
-
 const io = new SocketServer(httpServer);
 websockets(io);
+const config = {
+  mongoDB: {
+    URI: "mongodb+srv://jomaxavila:Fede1529@ecommerce.betvrpg.mongodb.net/?retryWrites=true&w=majority"
+  }
+};
+export const connectMongoDB = async () => {
+  try {
+    await mongoose.connect(config.mongoDB.URI);
+    console.log("Connected to Mongo Atlas");
+  } catch (error) {
+    console.log("Error en la conexión con Mongo Atlas", error);
+  }
+};
 
+connectMongoDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

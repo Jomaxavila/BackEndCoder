@@ -1,5 +1,5 @@
 import express from "express"
-import ProductManager from "../controllers/productManager.js";
+import ProductManager from "../Dao/fileManagers/productManager.js";
 
 
 const viewRouter = express.Router();
@@ -23,5 +23,15 @@ viewRouter.get("/realtimeproducts",async(req, res)=>{
 		products: allProducts
 	})
 })
+
+viewRouter.get("/chat",async(req, res)=>{
+	let allProducts = await productManager.getProducts();
+	// console.log(allProducts)
+	res.render('realtimeproducts',{
+		title: "Lista de productos en tiempo real",
+		products: allProducts
+	})
+})
+
 
 export default viewRouter;
