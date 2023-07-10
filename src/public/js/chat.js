@@ -1,7 +1,7 @@
 console.log("chat está cargado");
 const socket = io();
 let user;
-let chatMessages = document.getElementById("chatBox"); // Cambiar el ID al correcto
+let chatMessages = document.getElementById("chatMessages");
 
 Swal.fire({
   title: "Bienvenido a nuestro chat",
@@ -15,7 +15,7 @@ Swal.fire({
   user = result.value;
 });
 
-chatMessages.addEventListener("keyup", (evt) => { // Cambiar el nombre de la variable
+chatMessages.addEventListener("keyup", (evt) => {
   if (evt.key == "Enter") {
     if (chatMessages.value.trim().length > 0) {
       socket.emit("message", { user: user, message: chatMessages.value });
@@ -25,12 +25,13 @@ chatMessages.addEventListener("keyup", (evt) => { // Cambiar el nombre de la var
 });
 
 socket.on("messagesLogs", (data) => {
-  let log = document.getElementById("messagesLogs");
+  let messagesLogs = document.getElementById("messagesLogs");
   let messages = "";
 
   data.forEach((message) => {
-    messages = messages + `${message.user} dice: ${message.message}</br>`;
+    messages += `${message.user} dice: ${message.message}<br>`;
   });
+
   messagesLogs.innerHTML = messages;
 });
 

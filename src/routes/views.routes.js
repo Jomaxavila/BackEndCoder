@@ -28,13 +28,13 @@ viewRouter.get("/realtimeproducts",async(req, res)=>{
 viewRouter.get("/chat", async (req, res) => {
 	try {
 	  const messages = await Message.find({});
-	  res.render("chat", { messages });
+	  res.render("chat", { messages }); // Pasar todos los mensajes al template
 	} catch (error) {
 	  console.log("Error retrieving messages:", error);
 	  res.status(500).send("Error retrieving messages");
 	}
   });
   
-
+  
 
 export default viewRouter;
