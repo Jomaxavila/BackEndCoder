@@ -48,10 +48,10 @@ app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 
 
+
 const server = httpServer.listen(PORT, () =>
   console.log(
     `Server started on port ${PORT} at ${new Date().toLocaleString()}`
   )
 );
 server.on("error", (err) => console.log(err));
-

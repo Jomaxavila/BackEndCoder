@@ -1,0 +1,33 @@
+<div>
+  <h1 class="m-5 text-center">Lista de productos con paginación</h1>
+  <section class="mt-6">
+    <div class="container">
+      <div class="row justify-content-center">
+        {{#each products}}
+        <div class="col-md-4">
+          <div class="card mb-4 h-100">
+            <img src="{{thumbnail}}" style="width: 150px; height: 200px; object-fit: contain;" class="mt-3 mx-auto my-auto" alt="Product Image">
+            <div class="card-body text-center">
+              <h5 class="card-title">{{title}}</h5>
+              <p class="card-text">{{description}}</p>
+               <p class="card-text">{{category}}</p>
+              <p class="card-text">$USD {{price}}</p> 
+              <form action="/products/addToCart/{{id}}" method="POST">
+                <button type="submit" class="btn btn-success m-2">Agregar al carrito</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </section>
+  <div class="pagination justify-content-center">
+    {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}"><button class="btn btn-secondary m-5">Anterior</button></a>
+    {{/if}}
+    {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}"><button class="btn btn-secondary m-5">Siguiente</button></a>
+    {{/if}}
+  </div>
+</div>

@@ -9,6 +9,7 @@ export default class productManagerMongo {
 			price: newProduct.price,
 			status: newProduct.status,
 			stock: newProduct.stock,
+			category: newProduct.category,
 			thumbnail: newProduct.thumbnail,
 		};
 

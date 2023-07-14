@@ -1,6 +1,7 @@
 import express from "express"
 import ProductManager from "../Dao/fileManagers/productManager.js";
 import Message from "../Dao/models/messagesModel.js";
+import productsModel from "../Dao/models/productModel.js";
 
 
 const viewRouter = express.Router();
@@ -35,6 +36,38 @@ viewRouter.get("/chat", async (req, res) => {
 	}
   });
   
+  viewRouter.get("/products", async (req, res) => {
+	try {
+	  const { page = 1 } = req.query;
+	  const {
+		docs,
+		totalPages,
+		prevPage,
+		nextPage,
+		hasNextPage,
+		hasPrevPage,
+		prevLink,
+		nextLink,
+	  } = await productsModel.paginate({}, { limit: 3, page, lean: true });
+	  const products = docs;
   
-
-export default viewRouter;
+	  res.render("products", {
+		products,
+		totalPages,
+		hasPrevPage,
+		hasNextPage,
+		prevPage,
+		nextPage,
+		prevLink,
+		nextLink,
+	  });
+	} catch (error) {
+	  res.status(500).send({
+		status: "error",
+		message: "Error al obtener los productos",
+	  });
+	}
+  });
+  
+  export default viewRouter;
+  
