@@ -35,10 +35,32 @@ viewRouter.get("/chat", async (req, res) => {
 	  res.status(500).send("Error retrieving messages");
 	}
   });
+
   
   viewRouter.get("/products", async (req, res) => {
 	try {
-	  const { page = 1 } = req.query;
+	  const { limit = 10, page = 1, sort, query } = req.query;
+  
+	  // Construye el objeto de filtros para la consulta
+	  const filters = {};
+  
+		//filtrado por categorias modernas / antiguas/ clasicas
+	if (req.query.category) {
+	filters.category = req.query.category;
+  }
+  
+  
+	  const options = {
+		page: parseInt(page),
+		limit: parseInt(limit),
+		lean: true,
+	  };
+  
+	  // Agrega el ordenamiento si está presente
+	  if (sort) {
+		options.sort = { price: sort === "asc" ? 1 : -1 };
+	  }
+  
 	  const {
 		docs,
 		totalPages,
@@ -48,18 +70,17 @@ viewRouter.get("/chat", async (req, res) => {
 		hasPrevPage,
 		prevLink,
 		nextLink,
-	  } = await productsModel.paginate({}, { limit: 3, page, lean: true });
-	  const products = docs;
+	  } = await productsModel.paginate(filters, options);
   
 	  res.render("products", {
-		products,
+		products: docs,
 		totalPages,
 		hasPrevPage,
 		hasNextPage,
 		prevPage,
 		nextPage,
-		prevLink,
-		nextLink,
+		prevLink: hasPrevPage ? `/products?page=${prevPage}` : null,
+		nextLink: hasNextPage ? `/products?page=${nextPage}` : null,
 	  });
 	} catch (error) {
 	  res.status(500).send({

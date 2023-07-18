@@ -11,6 +11,7 @@ export default class productManagerMongo {
 			stock: newProduct.stock,
 			category: newProduct.category,
 			thumbnail: newProduct.thumbnail,
+			quantity: newProduct.quantity
 		};
 
 		try {

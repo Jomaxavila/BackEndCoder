@@ -11,7 +11,8 @@ const productSchema = mongoose.Schema({
   code: { type: String, required: true },
   stock: { type: Number, required: true },
   category: { type: String, required: true },
-  thumbnail: { type: String, required: true }
+  thumbnail: { type: String, required: true },
+  quantity: { type: Number, required: true }
 });
 
 productSchema.plugin(mongoosePaginate)
