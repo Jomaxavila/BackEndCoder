@@ -1,16 +1,16 @@
-<h1>Lista de productos en tiempo real</h1>
-<section class="mt-6">
+<div class="m-5 text-center">
+<h1 class="mt-6 text-center ">Lista de productos en tiempo real</h1>
+<section class="mt-6 text-center">
   <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
       {{#each products}}
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <img src="{{thumbnail}}" class="card-img-top" alt="Product Image">
-            <div class="card-body">
+        <div class=" mt-5 col-md-4">
+          <div class="card mb-4 h-100">
+            <img src="{{thumbnail}}" style=" height: 200px; object-fit: contain;" class=" img-fluid rounded mx-auto d-block  mt-3 mx-auto my-auto" alt="Product Image">
+            <div class="card-body text-center ">
               <h5 class="card-title">{{title}}</h5>
               <p class="card-text">{{description}}</p>
-               <p class="card-text">{{code}}</p>
-              <p class="card-text">{{price}}</p>
+              <p class="card-text"> $USD {{price}}</p>
               <p class="card-text">{{id}}</p>
             </div>
           </div>
@@ -18,9 +18,8 @@
       {{/each}}
     </div>
   </div>
+</div>
 </section>
-
-<section>
   <div class="container mt-6" style="max-width: 500px">
     <form id="createProductForm">
       <h3 class="is-size-3 mb-5">Ingrese un nuevo producto</h3>
@@ -103,11 +102,15 @@
 </div>
 </section>
 
+<div class="m-5 text-center">
 <h3>Eliminar Producto</h3>
 <form id="deleteProductForm">
   <input id="Delete" type="text" name="delete" placeholder="Id Producto" class="delete-product-input">
   <button id="deleteProductBtn" type="submit">Eliminar</button>
 </form>
+
+
+</div>
 
 
 <script src="/socket.io/socket.io.js"></script>

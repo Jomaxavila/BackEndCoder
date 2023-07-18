@@ -41,6 +41,38 @@ cartRouter.post('/:cid/products/:pid', async (req, res) => {
 	  });
 	}
   });
+  cartRouter.put('/:cid', async (req, res) => {
+    try {
+      const cartId = req.params.cid;
+      const updatedProducts = req.body.products;
+  
+      // Validar el arreglo de productos actualizado aquí (ejemplo)
+      if (!Array.isArray(updatedProducts)) {
+        return res.status(400).json({ message: 'El arreglo de productos debe ser un arreglo válido.' });
+      }
+  
+      // Actualizar el carrito en la base de datos
+      const updatedCart = await CartModel.findOneAndUpdate(
+        { _id: cartId },
+        { products: updatedProducts },
+        { new: true }
+      );
+  
+      // Verificar si el carrito existe
+      if (!updatedCart) {
+        return res.status(404).json({ message: 'Carrito no encontrado.' });
+      }
+  
+      res.status(200).json({
+        status: 'success',
+        message: 'Carrito actualizado correctamente.',
+        cart: updatedCart
+      });
+    } catch (error) {
+      console.error('Error al actualizar el carrito:', error);
+      res.status(500).json({ message: 'Error al actualizar el carrito.' });
+    }
+  });
   
   
   cartRouter.put('/:cid/products/:pid', async (req, res) => {

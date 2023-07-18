@@ -46,20 +46,23 @@ viewRouter.get("/chat", async (req, res) => {
   
 		//filtrado por categorias modernas / antiguas/ clasicas
 	if (req.query.category) {
-	filters.category = req.query.category;
+	filters.category = req.query.category; // ejemplo: http://localhost:8080/products/?category=modernas
   }
   
   
 	  const options = {
 		page: parseInt(page),
-		limit: parseInt(limit),
+		limit: parseInt(limit), // ejemplo : http://localhost:8080/products/?limit=1
 		lean: true,
 	  };
-  
+	  
 	  // Agrega el ordenamiento si está presente
 	  if (sort) {
-		options.sort = { price: sort === "asc" ? 1 : -1 };
-	  }
+		options.sort = { price: sort === "asc" ? 1 : -1 }; // ejemplo : http://localhost:8080/products/?sort=asc
+		
+	}else{
+		options.sort = { price: sort === "desc" ? 1 : +1 } // ejemplo : http://localhost:8080/products/?sort=desc
+	}
   
 	  const {
 		docs,

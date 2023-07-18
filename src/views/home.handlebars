@@ -1,15 +1,16 @@
-<h1>Lista de productos en tiempo real</h1>
-<section class="mt-6">
+<div class="m-5 text-center">
+<h1 class="mt-6 text-center ">Lista de productos</h1>
+<section class="mt-6 text-center">
   <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
       {{#each products}}
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <img src="{{thumbnail}}" class="card-img-top" alt="Product Image">
-            <div class="card-body">
+        <div class=" mt-5 col-md-4">
+          <div class="card mb-4 h-100">
+            <img src="{{thumbnail}}" style=" height: 200px; object-fit: contain;" class=" img-fluid rounded mx-auto d-block  mt-3 mx-auto my-auto" alt="Product Image">
+            <div class="card-body text-center ">
               <h5 class="card-title">{{title}}</h5>
               <p class="card-text">{{description}}</p>
-              <p class="card-text">{{price}}</p>
+              <p class="card-text"> $USD {{price}}</p>
               <p class="card-text">{{id}}</p>
             </div>
           </div>
@@ -17,12 +18,13 @@
       {{/each}}
     </div>
   </div>
+</div>
 </section>
 {{!-- AGREGAR PRODUCTOS PERO CON MULTER --}}
 <section>
   <div class="container mt-6" style="max-width: 500px">
     <form action="/api/products" method="post">
-      <h3 class="is-size-3 mb-5">Ingrese un nuevo producto</h3>
+      <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
       <div class="mb-3">
         <label class="form-label">Nombre</label>
         <input
@@ -100,9 +102,10 @@
 </form>
 </div>
 </section>
-<div>
-    <h1>Bienvenido </h1>
-    <input id="chatBox">
+<div class="m-5 text-center">
+    <h1 >Bienvenido </h1>
+    <label class="form-label">Chat</label>
+    <input  placeholder="mensaje" id="chatBox">
     <p id="newUserConnected"></p>
     <p  id="messagesLogs"></p>
 </div>
