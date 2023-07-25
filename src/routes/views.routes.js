@@ -8,21 +8,15 @@ const viewRouter = express.Router();
 const productManager = new ProductManager();
 
 
+
+
 viewRouter.get("/",async(req, res)=>{
 	let allProducts = await productManager.getProducts();
 	// console.log(allProducts)
 	res.render("home",{
 		title: "Lista de productos",
-		products: allProducts
-	})
-})
-
-viewRouter.get("/realtimeproducts",async(req, res)=>{
-	let allProducts = await productManager.getProducts();
-	// console.log(allProducts)
-	res.render('realtimeproducts',{
-		title: "Lista de productos en tiempo real",
-		products: allProducts
+		products: allProducts,
+		user: req.user 
 	})
 })
 
@@ -40,28 +34,23 @@ viewRouter.get("/chat", async (req, res) => {
   viewRouter.get("/products", async (req, res) => {
 	try {
 	  const { limit = 10, page = 1, sort, query } = req.query;
-  
-	  // Construye el objeto de filtros para la consulta
 	  const filters = {};
   
-		//filtrado por categorias modernas / antiguas/ clasicas
 	if (req.query.category) {
-	filters.category = req.query.category; // ejemplo: http://localhost:8080/products/?category=modernas
+	filters.category = req.query.category;
   }
   
   
 	  const options = {
 		page: parseInt(page),
-		limit: parseInt(limit), // ejemplo : http://localhost:8080/products/?limit=1
+		limit: parseInt(limit),
 		lean: true,
 	  };
-	  
-	  // Agrega el ordenamiento si está presente
 	  if (sort) {
-		options.sort = { price: sort === "asc" ? 1 : -1 }; // ejemplo : http://localhost:8080/products/?sort=asc
+		options.sort = { price: sort === "asc" ? 1 : -1 };
 		
 	}else{
-		options.sort = { price: sort === "desc" ? 1 : +1 } // ejemplo : http://localhost:8080/products/?sort=desc
+		options.sort = { price: sort === "desc" ? 1 : +1 }
 	}
   
 	  const {
@@ -92,6 +81,15 @@ viewRouter.get("/chat", async (req, res) => {
 	  });
 	}
   });
+
+
+  viewRouter.get('/register', (req,res)=>{
+	res.render("register");
+  })
+
+  viewRouter.get('/login', (req,res)=>{
+	res.render("login");
+  })
   
   export default viewRouter;
-  
+   

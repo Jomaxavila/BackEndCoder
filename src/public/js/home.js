@@ -55,7 +55,7 @@ function deleteProduct(id) {
     .then((res) => {
       if (res.ok) {
         console.log("Producto eliminado");
-        window.location.reload(); // Recargar la página
+        window.location.reload(); 
       } else {
         throw new Error("Error al eliminar el producto");
       }
