@@ -1,14 +1,20 @@
 import mongoose from "mongoose";
 
-const userCollection = 'Users'
-const userSchema = new mongoose.Schema({
+const userCollection = 'Users';
 
-	first_name: String,
-	last_name:String,
-	email:String,
-	age:Number,
-	password:String
-})
+const userSchema = new mongoose.Schema({
+  first_name: String,
+  last_name: String,
+  email: String,
+  age: Number,
+  password: String,
+  role: {
+    type: String,
+    enum: ['admin', 'usuario'],
+    default: 'usuario',
+  },
+});
 
 const userModel = mongoose.model(userCollection, userSchema);
+
 export default userModel;

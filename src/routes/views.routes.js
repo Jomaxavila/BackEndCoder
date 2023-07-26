@@ -73,6 +73,7 @@ viewRouter.get("/chat", async (req, res) => {
 		nextPage,
 		prevLink: hasPrevPage ? `/products?page=${prevPage}` : null,
 		nextLink: hasNextPage ? `/products?page=${nextPage}` : null,
+		user: req.session.user,
 	  });
 	} catch (error) {
 	  res.status(500).send({
