@@ -1,27 +1,25 @@
 import { Router } from "express";
 import userModel from "../Dao/models/UsersModel.js";
+import { createhast } from "../utils.js";
 
 const sessionRouter = Router();
 
-// Registrar un nuevo usuario
-sessionRouter.post('/register', async (req, res) => {
-  const { first_name, last_name, email, age, password } = req.body;
-  const exist = await userModel.findOne({ email });
 
-  if (exist) return res.status(400).send({ status: "error", error: "El usuario ya existe" });
+sessionRouter.post('/register',async(req,res)=>{
+  const { first_name, last_name, email, age, password} = req.body;
+ if(!first_name || !last_name || !email || !age) return  res.status(400).send({status:"error",error:"Error User" });
+ const user = {
+     first_name,
+     last_name,
+     email,
+     age,
+     password: createhast(password)
+ }
+ let result = await userModel.create(user);
+ res.send({status:"success",message:"User registered"});
 
-  const user = {
-    first_name,
-    last_name,
-    email,
-    age,
-    password,
-    role: "usuario"
-  };
+})
 
-  let result = await userModel.create(user);
-  res.send({ status: "success", message: "Usuario registrado" });
-});
 
 
 
@@ -51,6 +49,16 @@ sessionRouter.post('/login', async (req, res) => {
   console.log("Usuario en sesión:", req.session.user);
 
   res.send({ status: "success", payload: req.session.user, message: "Inicio de sesión exitoso" });
+});
+
+sessionRouter.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log("Error al destruir la sesión:", err);
+      return res.status(500).send({ status: "error", error: "Error al cerrar sesión" });
+    }
+    res.redirect("/login"); // Redirige al usuario a la página de login después de cerrar sesión
+  });
 });
 
 

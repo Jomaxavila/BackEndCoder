@@ -5,6 +5,10 @@
     <li><strong>Email:</strong> {{user.email}}</li>
     <li><strong>Rol:</strong> {{user.role}}</li>
   </ul>
+ <form action="/api/sessions/logout" method="POST"> <!-- Verifica que la acción del formulario sea /api/sessions/logout -->
+    <button type="submit" class="btn btn-danger m-2">Cerrar sesión</button>
+  </form>
+</div>
   <h1 class="m-5 text-center">Lista de productos con paginación</h1>
   <section class="mt-6">
     <div class="container">

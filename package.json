@@ -14,6 +14,7 @@
   "author": "Maxi Avila",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.0",
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
@@ -29,6 +30,6 @@
     "session-file-store": "^1.5.0",
     "socket.io": "^4.6.2",
     "socket.io-client": "^4.7.0",
-    "sweetalert2": "^11.7.12"
+    "sweetalert2": "^11.7.20"
   }
 }
