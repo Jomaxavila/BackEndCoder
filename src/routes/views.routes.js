@@ -95,6 +95,10 @@ viewRouter.get("/chat", async (req, res) => {
 viewRouter.get('/resetPassword',(req,res)=>{
     res.render('resetPassword');
 })
+
+viewRouter.get('/failregister',(req,res)=>{
+	res.render('failregister')
+})
   
   export default viewRouter;
    
