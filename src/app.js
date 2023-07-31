@@ -12,7 +12,7 @@ import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import initializedPassport from "./config/passport.config.js";
+import {initializedPassport} from "./config/passport.config.js";
 import passport from "passport";
 
 const app = express();
@@ -57,6 +57,7 @@ app.use(
     }),
   })
 );
+
 initializedPassport();
 app.use(passport.initialize());
 app.use(passport.session());
