@@ -14,7 +14,7 @@ sessionRouter.get('/githubcallback',passport.authenticate('github',{failureRedir
     res.redirect('/')
 })
 
-sessionRouter.post('/register',passport.authenticate('regsiter',{failureRedirect:'/failregister'}), async(req,res)=>{
+sessionRouter.post('/register',passport.authenticate('register',{failureRedirect:'/failregister'}), async(req,res)=>{
 res.send({status:"success", message:"User Register"})
 })
 

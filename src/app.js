@@ -12,8 +12,9 @@ import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import {initializedPassport} from "./config/passport.config.js";
 import passport from "passport";
+import {initPassport } from "./config/passport.config.js";
+
 
 const app = express();
 const PORT = 8080 || process.env.PORT;
@@ -57,10 +58,9 @@ app.use(
     }),
   })
 );
-
-initializedPassport();
+initPassport()
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session())
 app.engine("handlebars", exphbs.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
