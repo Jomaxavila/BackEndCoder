@@ -64,7 +64,7 @@ sessionRouter.post("/logout", (req, res) => {
       console.log("Error al destruir la sesión:", err);
       return res.status(500).send({ status: "error", error: "Error al cerrar sesión" });
     }
-    res.redirect("/login"); // Redirige al usuario a la página de login después de cerrar sesión
+    res.redirect("/login");
   });
 });
 
