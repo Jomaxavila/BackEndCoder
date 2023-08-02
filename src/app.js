@@ -13,7 +13,7 @@ import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import { initPassport, initializedPassport } from "./config/passport.config.js";
+import { initPassport } from "./config/passport.config.js";
 
 
 
@@ -60,7 +60,6 @@ app.use(
   })
 );
 initPassport();
-initializedPassport();
 app.use(passport.initialize());
 app.use(passport.session())
 app.engine("handlebars", exphbs.engine());

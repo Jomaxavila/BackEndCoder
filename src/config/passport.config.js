@@ -1,11 +1,11 @@
 import passport from "passport";
 import local from "passport-local";
 import userModel from "../Dao/models/UsersModel.js";
-import { createhast, isValidPassword } from "../utils.js";
+import { isValidPassword } from "../utils.js";
 import GitHubStrategy from "passport-github2";
 
-
 export const initPassport = () => {
+  // Configuración de GitHub Strategy
   passport.use(
     "github",
     new GitHubStrategy(
@@ -14,55 +14,45 @@ export const initPassport = () => {
         clientSecret: "cdd167ee3efb48a66c69d2e0fcd6950bd673710b",
         callbackURL: "http://localhost:8080/api/sessions/githubcallback",
       },
- 
       async (accesToken, refreshToken, profile, done) => {
         try {
-            let user = await userModel.findOne({email:profile._json.email})
-            if(!user){
-                let newUser={
-                    first_name:profile._json.name,
-                    last_name:'',
-                    email:profile._json.email,
-                    age:'',
-                    password:''
-                }
-                let result= await userModel.create(newUser)
-                done(null,result)
-            }else{
-                done(null,user)
-            }
+          let user = await userModel.findOne({ email: profile._json.email });
+          if (!user) {
+            let newUser = {
+              first_name: profile._json.name,
+              last_name: "",
+              email: profile._json.email,
+              age: "",
+              password: "",
+            };
+            let result = await userModel.create(newUser);
+            done(null, result);
+          } else {
+            done(null, user);
+          }
         } catch (error) {
-            return done(error)
+          return done(error);
         }
       }
     )
   );
-};
-
-const LocalStrategy = local.Strategy;
-export const initializedPassport = () => {
+  // Configuración de la estrategia de autenticación local
+  const LocalStrategy = local.Strategy;
   passport.use(
-    "register",
+    "local",
     new LocalStrategy(
-      { passReqToCallback: true, usernameField: "email" },
-      async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
+      { usernameField: "email" },
+      async (email, password, done) => {
         try {
-          let user = await userModel.findOne({ email: username });
-          if (user) {
-            console.log("User already exists");
+          const user = await userModel.findOne({ email });
+          if (!user || !isValidPassword(user, password)) {
+            // Si el usuario no existe o la contraseña no es válida, devolver error
+            return done(null, false, { message: "Credenciales incorrectas" });
           }
-          const newUser = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password: createhast(password),
-          };
-          let result = await userModel.create(newUser);
-          return done(null, result);
+          // Si el usuario y la contraseña son válidos, devolver el usuario
+          return done(null, user);
         } catch (error) {
-          return done("Error de usuaio" + error);
+          return done(error);
         }
       }
     )
@@ -76,4 +66,6 @@ export const initializedPassport = () => {
     let user = await userModel.findById(id);
     done(null, user);
   });
+
+
 };
