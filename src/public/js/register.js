@@ -1,11 +1,11 @@
-const form = document.getElementById('registerForm')
+const registerForm = document.getElementById('registerForm');
 
-form.addEventListener('submit', async e => {
+registerForm.addEventListener('submit', async e => {
   e.preventDefault();
 
-  const data = new FormData(form);
-  const obj = {}
-  data.forEach((value, key) => obj[key] = value);
+  const data = new FormData(registerForm);
+  const obj = {};
+  data.forEach((value, key) => (obj[key] = value));
 
   try {
     const response = await fetch('/api/sessions/register', {
@@ -18,13 +18,34 @@ form.addEventListener('submit', async e => {
 
     if (response.ok) {
       form.reset();
-      console.log("Usuario registrado exitosamente");
+      Swal.fire({
+        title: '¡Registro Exitoso!',
+        text: 'Usuario registrado exitosamente.',
+        icon: 'success',
+        position: 'center',
+        timer: 3000
+      }).then(() => {
+        // Redirección después de cerrar el SweetAlert
+        window.location.replace('/login');
+      });
     } else {
-      const data = await response.json();
-      console.log("Error al registrar usuario:", data.error || "Ocurrió un error al registrar al usuario. Por favor, intenta de nuevo más tarde.");
+      const responseData = await response.json();
+      Swal.fire({
+        title: 'Error',
+        text: responseData.error || 'Ocurrió un error al registrar al usuario. Por favor, intenta de nuevo más tarde.',
+        icon: 'error',
+        position: 'center',
+        timer: 3000
+      });
     }
   } catch (error) {
     console.error('Error al realizar el registro:', error);
-    console.log("Ocurrió un error al registrar al usuario. Por favor, intenta de nuevo más tarde.");
+    Swal.fire({
+      title: 'Error',
+      text: 'Ocurrió un error al registrar al usuario. Por favor, intenta de nuevo más tarde.',
+      icon: 'error',
+      position: 'center',
+      timer: 3000
+    });
   }
 });

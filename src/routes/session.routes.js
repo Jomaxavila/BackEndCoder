@@ -68,16 +68,16 @@ sessionRouter.post("/register", async (req, res) => {
       .send({ status: "error", error: "Error al registrar usuario" });
   }
 });
+
 sessionRouter.post(
   "/login",
   passport.authenticate("local"),
   async (req, res) => {
-    // Si llegamos aquí, el inicio de sesión fue exitoso, y el usuario ya está almacenado en req.user
     req.session.user = {
       name: `${req.user.first_name} ${req.user.last_name}`,
       email: req.user.email,
       age: req.user.age,
-      role: "usuario", // Opcionalmente, puedes establecer un valor predeterminado para el rol
+      role: "usuario", 
     };
     res.send({
       status: "success",

@@ -1,13 +1,13 @@
 <div>
-  <h1 class="m-5 text-center">Bienvenido, {{user.name}}</h1>
+  <h1 class="m-5 text-center">Bienvenid@, {{user.name}}</h1>
   <ul class="list-unstyled text-center">
     <li><strong>Nombre:</strong> {{user.name}}</li>
     <li><strong>Email:</strong> {{user.email}}</li>
     <li><strong>Rol:</strong> {{user.role}}</li>
+     <form action="/api/sessions/logout" method="POST"> <!-- Verifica que la acción del formulario sea /api/sessions/logout -->
+       <button type="submit" class="btn btn-danger m-2">Cerrar sesión</button>
+    </form>
   </ul>
- <form action="/api/sessions/logout" method="POST"> <!-- Verifica que la acción del formulario sea /api/sessions/logout -->
-    <button type="submit" class="btn btn-danger m-2">Cerrar sesión</button>
-  </form>
 </div>
   <h1 class="m-5 text-center">Lista de productos con paginación</h1>
   <section class="mt-6">
