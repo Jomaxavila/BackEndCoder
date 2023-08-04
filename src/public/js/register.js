@@ -1,9 +1,9 @@
-const registerForm = document.getElementById('registerForm');
+const form = document.getElementById('registerForm');
 
-registerForm.addEventListener('submit', async e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
 
-  const data = new FormData(registerForm);
+  const data = new FormData(form);
   const obj = {};
   data.forEach((value, key) => (obj[key] = value));
 
