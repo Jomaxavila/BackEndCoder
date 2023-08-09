@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import { createhast } from "../utils.js";
+import userModel from "../Dao/models/usersModel.js";
+
 
 const sessionRouter = Router();
 
@@ -62,8 +64,8 @@ sessionRouter.post("/register", async (req, res) => {
     let result = await userModel.create(newUser);
     res.send({ status: "success", message: "Usuario registrado exitosamente" });
   } catch (error) {
-    res
-      .status(500)
+    console.log("Error en el registro:", error);
+    res.status(500)
       .send({ status: "error", error: "Error al registrar usuario" });
   }
 });
