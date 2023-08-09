@@ -1,6 +1,5 @@
 import { Router } from "express";
 import passport from "passport";
-import userModel from "../Dao/models/UsersModel.js";
 import { createhast } from "../utils.js";
 
 const sessionRouter = Router();
