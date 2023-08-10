@@ -11,7 +11,7 @@ router.post('/login', (req, res) => {
     const access_token = generateToken({ email, role: 'user' });
 
     res.cookie('maxcookie7', access_token, {
-      maxAge: 60 * 60 * 1000, // Tiempo de expiración en milisegundos (1 hora en este caso)
+      maxAge: 60 * 60 * 1000, 
       httpOnly: true,
     });
 

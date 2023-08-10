@@ -29,13 +29,10 @@ export const initPassport = () => {
   }));
 
   // Configuración de GitHub Strategy
-  passport.use(
-    "github",
-    new GitHubStrategy(
-      {
-        clientID: "Iv1.b4d747ed99c2d832",
-        clientSecret: "cdd167ee3efb48a66c69d2e0fcd6950bd673710b",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+  passport.use("github",new GitHubStrategy({
+    clientID: "Iv1.b4d747ed99c2d832",
+    clientSecret: "b9332a7a9eb77c5cec78137e0b3c98458d41eae0",
+    callbackURL: "http://localhost:8080/api/sessions/githubcallback",
       },
       async (accesToken, refreshToken, profile, done) => {
         try {

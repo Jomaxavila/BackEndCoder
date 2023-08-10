@@ -12,14 +12,14 @@ sessionRouter.get(
   async (req, res) => {}
 );
 
-sessionRouter.get(
-  "/githubcallback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+sessionRouter.get("/githubcallback",
+  passport.authenticate('github',{ failureRedirect: '/login'}),
   async (req, res) => {
     req.session.user = req.user;
     res.redirect("/");
   }
 );
+
 
 
 sessionRouter.get("/failregister", async (req, res) => {
