@@ -100,4 +100,15 @@ sessionRouter.post("/logout", (req, res) => {
   });
 });
 
+sessionRouter.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
+  const currentUser = {
+    name: `${req.user.first_name} ${req.user.last_name}`,
+    email: req.user.email,
+    age: req.user.age,
+    role: req.user.role,
+  };
+  res.json({ status: "success", user: currentUser });
+});
+
+
 export default sessionRouter;

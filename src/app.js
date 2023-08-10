@@ -5,6 +5,7 @@ import viewRouter from "./routes/views.routes.js";
 import productRouter from "./routes/products.routes.js";
 import cartRouter from "./routes/carts.routes.js";
 import sessionRouter from "./routes/session.routes.js";
+import userRouter from "./routes/users.routes.js";
 import websockets from "./websockets/websockets.js";
 import exphbs from "express-handlebars";
 import { dirname } from "path";
@@ -14,6 +15,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
+import cookieParser from "cookie-parser";
 
 
 
@@ -60,6 +62,8 @@ app.use(
   })
 );
 initPassport();
+app.use(cookieParser())
+
 app.use(passport.initialize());
 app.use(passport.session())
 app.engine("handlebars", exphbs.engine());
@@ -70,6 +74,7 @@ app.use("/", viewRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/sessions", sessionRouter);
+app.use("/api/users",userRouter)
 
 
 const server = httpServer.listen(PORT, () =>

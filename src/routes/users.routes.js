@@ -1,23 +1,24 @@
-import ManagerAcces from "../Dao/managers/ManagerAcces.js";
-import { Router } from "express";
-import { uploader } from "../src/utils.js";
+import { Router } from 'express';
+import { generateToken } from '../utils.js';
 
-const managerAcces = new ManagerAcces();
 const router = Router();
-const users = [];
 
-router.get('/', async(req,res)=>{
-    await ManagerAcces.crearRegistro('GET')
-	res.send({users}) 
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+
+  if (email === "jomaxavila@gmail.com" && password === "1234") {
+    const access_token = generateToken({ email, role: 'user' });
+
+    res.cookie('maxcookie7', access_token, {
+      maxAge: 60 * 60 * 1000, // Tiempo de expiración en milisegundos (1 hora en este caso)
+      httpOnly: true,
+    });
+
+    res.json({ payload: 'OK' });
+  } else {
+    res.status(401).json({ error: 'Credenciales incorrectas' });
+  }
 });
 
-router.post('/',uploader.single('file'),function(req,res){
-    console.log(req.file)
-    if(!req.file){
-        return res.status(400).send({status:"error", error:"No se guardo la imagen"})
-    }
-    let user =req.body;
-    user.profile=req.file.path
-    users.push(user)
-    res.send({status:"Ok",message:"Usuario Creado"})
-});
+export default router;

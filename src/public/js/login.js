@@ -1,24 +1,22 @@
-const form = document.getElementById('loginForm');
-
-form.addEventListener('submit', async e => {
-  e.preventDefault();
+form?.addEventListener('submit', async (event) => {
+  event.preventDefault();
 
   const data = new FormData(form);
-  const obj = {};
-  data.forEach((value, key) => (obj[key] = value));
+  const loginPayload = Object.fromEntries(data);
 
   try {
     const response = await fetch('/api/sessions/login', {
       method: 'POST',
-      body: JSON.stringify(obj),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(loginPayload)  
     });
 
     if (response.status === 200) {
       const responseData = await response.json();
-      
+
       Swal.fire({
         title: '¡Bienvenido!',
         text: `¡Bienvenido, ${responseData.payload.name}! ${responseData.message}`,
@@ -27,7 +25,7 @@ form.addEventListener('submit', async e => {
         timer: 3000
       });
       setTimeout(() => {
-        window.location.replace('/products');
+        window.location.href = '/products';
       }, 3000);
     } else {
       Swal.fire({
