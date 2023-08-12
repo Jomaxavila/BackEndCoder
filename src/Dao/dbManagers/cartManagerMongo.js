@@ -1,9 +1,6 @@
 import cartModel from "../models/cartModel.js";
 
 class CartManagerMongo {
-	constructor(){
-		this.path = "./src/db/carts.json"
-	} 
 
 	createCart = async () => {
 		let cart = await cartModel.create({})

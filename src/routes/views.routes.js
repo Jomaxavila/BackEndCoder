@@ -1,24 +1,32 @@
 import express from "express"
-import ProductManager from "../Dao/fileManagers/productManager.js";
+import productManagerMongo from "../Dao/dbManagers/productManagerMongo.js";
 import Message from "../Dao/models/messagesModel.js";
 import productsModel from "../Dao/models/productModel.js";
 
 
 const viewRouter = express.Router();
-const productManager = new ProductManager();
+const productsMongo = new productManagerMongo();
 
-
-
-
-viewRouter.get("/",async(req, res)=>{
-	let allProducts = await productManager.getProducts();
-	// console.log(allProducts)
-	res.render("home",{
+viewRouter.get("/", async (req, res) => {
+	try {
+	  const allProducts = await productsModel.find({}, null, {
+		lean: true,
+	  });
+  
+	  res.render("home", {
 		title: "Lista de productos",
 		products: allProducts,
-		user: req.user 
-	})
-})
+	  });
+	} catch (error) {
+	  res.status(500).render("error", {
+		error: "Error al obtener los productos",
+	  });
+	}
+  });
+  
+
+
+
 
 viewRouter.get("/chat", async (req, res) => {
 	try {
@@ -39,7 +47,6 @@ viewRouter.get("/chat", async (req, res) => {
 	if (req.query.category) {
 	filters.category = req.query.category;
   }
-  
   
 	  const options = {
 		page: parseInt(page),

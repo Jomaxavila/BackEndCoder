@@ -1,16 +1,22 @@
 <div class="m-5 text-center">
 <h1 class="mt-6 text-center ">Lista de productos</h1>
-<section class="mt-6 text-center">
-  <div class="container">
-    <div class="row justify-content-center">
-      {{#each products}}
-        <div class=" mt-5 col-md-4">
-          <div class="card mb-4 h-100">
-            <img src="{{thumbnail}}" style=" height: 200px; object-fit: contain;" class=" img-fluid rounded mx-auto d-block  mt-3 mx-auto my-auto" alt="Product Image">
-            <div class="card-body text-center ">
-              <h5 class="card-title">{{title}}</h5>
-              <p class="card-text">{{description}}</p>
-              <p class="card-text"> $USD {{price}}</p>
+<section class="mt-6">
+    <div class="container">
+      <div class="row justify-content-center">
+       {{#each products}}
+          <div class="mt-5 col-md-4">
+            <div class="card mb-4 h-100">
+              <img
+                src="{{thumbnail}}"
+                style="width: 150px; height: 200px; object-fit: contain;"
+                class="img-fluid rounded mx-auto d-block mt-3 mx-auto my-auto"
+                alt="Product Image"
+              />
+              <div class="card-body text-center">
+                <h5 class="card-title">{{title}}</h5>
+                <p class="card-text">{{description}}</p>
+                <p class="card-text">{{category}}</p>
+                <p class="card-text">$USD {{price}}</p>
               <p class="card-text">{{id}}</p>
             </div>
           </div>

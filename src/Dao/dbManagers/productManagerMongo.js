@@ -1,6 +1,6 @@
 import productModel from "../models/productModel.js";
 
-export default class productManagerMongo {
+ class productManagerMongo {
 	addProduct = async (newProduct) => {
 		const product = {
 			title: newProduct.title,
@@ -88,3 +88,4 @@ export default class productManagerMongo {
 		}
 	};
 }
+export default productManagerMongo;

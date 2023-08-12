@@ -1,46 +1,38 @@
-import { request, Router } from "express";
-import ProductManager from "../Dao/fileManagers/productManager.js";
+import { Router } from "express";
 import ProductManagerMongo from "../Dao/dbManagers/productManagerMongo.js";
 
 const productRouter = Router();
-const productManager = new ProductManager();
 const productManagerMongo = new ProductManagerMongo();
+
+
 
 productRouter.get("/", async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
 
-    // Aplicar los filtros y opciones según los parámetros recibidos
     const options = {};
     const filters = {};
 
-    // Aplicar el límite de resultados por página
     options.limit = parseInt(limit);
 
-    // Calcular el número de elementos a saltar según la página solicitada
     const skip = (parseInt(page) - 1) * options.limit;
     options.skip = skip;
 
-    // Aplicar el ordenamiento según el parámetro sort
     if (sort === "asc") {
       options.sort = { price: 1 };
     } else if (sort === "desc") {
       options.sort = { price: -1 };
     }
 
-    // Aplicar el filtro según el parámetro query
     if (query) {
       filters.category = query;
     }
 
-    // Obtener los productos según los filtros y opciones
     const products = await productManagerMongo.getProducts(filters, options);
 
-    // Obtener el número total de páginas
     const totalProducts = await productManagerMongo.countProducts(filters);
     const totalPages = Math.ceil(totalProducts / options.limit);
 
-    // Construir el objeto de respuesta
     const response = {
       status: "success",
       payload: products,
