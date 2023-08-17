@@ -6,7 +6,6 @@ import productsModel from "../Dao/models/productModel.js";
 
 const viewRouter = express.Router();
 const productsMongo = new productManagerMongo();
-
 viewRouter.get("/", async (req, res) => {
 	try {
 	  const allProducts = await productsModel.find({}, null, {
@@ -19,13 +18,12 @@ viewRouter.get("/", async (req, res) => {
 	  });
 	} catch (error) {
 	  res.status(500).render("error", {
-		error: "Error al obtener los productos",
+		message: "Error al obtener los productos",
 	  });
 	}
   });
   
-
-
+  
 
 
 viewRouter.get("/chat", async (req, res) => {
