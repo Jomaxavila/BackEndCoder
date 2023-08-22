@@ -1,136 +1,23 @@
-import { Router } from "express";
-import CartManagerMongo from "../Dao/dbManagers/cartManagerMongo.js";
+import { Router } from 'express';
+import CartController from '../controllers/cart.controller.js';
 
-const cartRouter = Router();
-const cartManagerMongo = new CartManagerMongo();
+const router = Router();
+const cartController = new CartController(); 
 
-cartRouter.post('/', async (req, res) => {
-  const respuesta = await cartManagerMongo.createCart();   
-  res.status(200).send({
-    status: respuesta.status,
-    message: respuesta.message
-  });
-});
+class CartRouter {
+  constructor() {
+    this.cartRouter = Router();
+    this.cartRouter.post('/', cartController.createCart);
+    this.cartRouter.post('/:cid/products/:pid', cartController.addProductInCart);
+    this.cartRouter.delete('/:cid/products/:pid', cartController.deleteProductInCart);
+    this.cartRouter.get('/:id', cartController.getCart);
+    this.cartRouter.get('/', cartController.getCarts);
+    this.cartRouter.delete('/:id', cartController.deleteCart);
+  }
 
-cartRouter.post('/:cid/products/:pid', async (req, res) => {
-	let cartId = req.params.cid;
-	let productId = req.params.pid;
-	const respuesta = await cartManagerMongo.addProductInCart(cartId, productId);
-	res.status(respuesta.code).send({
-	  status: respuesta.status,
-	  message: respuesta.message
-	});
-  })
+  getRouter() {
+    return this.cartRouter;
+  }
+}
 
-  cartRouter.delete('/:cid/products/:pid', async (req, res) => {
-	try {
-	  const cartId = req.params.cid;
-	  const productId = req.params.pid;
-	
-	  const respuesta = await cartManagerMongo.deleteProductInCart(cartId, productId);
-	
-	  res.status(respuesta.code).send({
-		status: respuesta.status,
-		message: respuesta.message,
-	  });
-	} catch (error) {
-	  console.error('Error al eliminar el producto del carrito:', error.message);
-	  res.status(500).json({
-		status: 'error',
-		message: 'Error al eliminar el producto del carrito',
-	  });
-	}
-  });
-  cartRouter.put('/:cid', async (req, res) => {
-    try {
-      const cartId = req.params.cid;
-      const updatedProducts = req.body.products;
-  
-      // Validar el arreglo de productos actualizado aquí (ejemplo)
-      if (!Array.isArray(updatedProducts)) {
-        return res.status(400).json({ message: 'El arreglo de productos debe ser un arreglo válido.' });
-      }
-  
-      // Actualizar el carrito en la base de datos
-      const updatedCart = await CartModel.findOneAndUpdate(
-        { _id: cartId },
-        { products: updatedProducts },
-        { new: true }
-      );
-  
-      // Verificar si el carrito existe
-      if (!updatedCart) {
-        return res.status(404).json({ message: 'Carrito no encontrado.' });
-      }
-  
-      res.status(200).json({
-        status: 'success',
-        message: 'Carrito actualizado correctamente.',
-        cart: updatedCart
-      });
-    } catch (error) {
-      console.error('Error al actualizar el carrito:', error);
-      res.status(500).json({ message: 'Error al actualizar el carrito.' });
-    }
-  });
-  
-  
-  cartRouter.put('/:cid/products/:pid', async (req, res) => {
-	try {
-	  const cartId = req.params.cid;
-	  const productId = req.params.pid;
-	  const quantity = req.body.quantity;
-  
-	  const updatedCart = await cartManagerMongo.updateProductQuantity(cartId, productId, quantity);
-  
-	  // Verificar si el carrito y el producto existen en el objeto updatedCart
-	  if (!updatedCart || !updatedCart.products) {
-		return res.status(404).json({ message: 'Carrito no encontrado' });
-	  }
-	  
-	  // Encontrar el producto en el carrito
-	  const product = updatedCart.products.find((prod) => prod._id === productId); 
-  
-	  // Verificar si el producto existe en el carrito
-	  if (!product) {
-		return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
-	  }
-  
-	  product.quantity = quantity;
-  
-	  res.status(200).json({
-		status: 'success',
-		message: 'Cantidad de producto actualizada correctamente',
-		cart: updatedCart,
-	  });
-	} catch (error) {
-	  res.status(500).json({ message: 'Error al actualizar la cantidad de producto en el carrito' });
-	}
-  });
-  
-
-
-cartRouter.get('/', async (req, res) => {
-	res.send(await cartManagerMongo.getCarts());
-});
-
-cartRouter.get('/:id', async (req, res) => {
-  const cart = await cartManagerMongo.getCart(req.params.id);
-  res.send({
-    status: "success",
-    message: JSON.parse(JSON.stringify(cart, null, "\t")),
-  });
-});
-
-
-cartRouter.delete('/:id', async (req, res) => {
-	const cartId = req.params.id;
-	const respuesta = await cartManagerMongo.deleteCart(cartId);
-	res.status(respuesta.code).send({
-	  status: respuesta.status,
-	  message: respuesta.message
-	});
-  });
-  
-
-export default cartRouter;
+export default new CartRouter();

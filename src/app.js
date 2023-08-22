@@ -5,7 +5,7 @@ import viewRouter from "./routes/views.routes.js";
 import productRouter from "./routes/products.routes.js";
 import cartRouter from "./routes/carts.routes.js";
 import sessionRouter from "./routes/session.routes.js";
-import userRouter from "./routes/users.routes.js";
+import UserRouter from "./routes/users.routes.js"
 import websockets from "./websockets/websockets.js";
 import exphbs from "express-handlebars";
 import { dirname } from "path";
@@ -71,10 +71,11 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 app.use("/", viewRouter);
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartRouter);
+app.use("/api/products", productRouter.getRouter());
+app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/sessions", sessionRouter);
-app.use("/api/users",userRouter)
+app.use("/api/users", UserRouter.getRouter());
+
 
 const server = httpServer.listen(PORT, () =>
   console.log(

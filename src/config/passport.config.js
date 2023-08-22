@@ -1,6 +1,6 @@
 import passport from "passport";
 import local from "passport-local";
-import { isValidPassword } from "../utils.js";
+import { isValidPassword} from "../utils.js"
 import GitHubStrategy from "passport-github2";
 import userModel from "../Dao/models/usersModel.js";
 import passportJWT, { ExtractJwt }from "passport-jwt";

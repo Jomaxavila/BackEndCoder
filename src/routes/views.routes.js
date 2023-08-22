@@ -5,7 +5,7 @@ import productsModel from "../Dao/models/productModel.js";
 
 
 const viewRouter = express.Router();
-const productsMongo = new productManagerMongo();
+
 viewRouter.get("/", async (req, res) => {
 	try {
 	  const allProducts = await productsModel.find({}, null, {

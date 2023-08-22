@@ -1,24 +1,20 @@
 import { Router } from 'express';
-import { generateToken } from '../utils.js';
+import UserController from '../controllers/user.controller.js';
 
 const router = Router();
 
-router.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-
-  if (email === "jomaxavila@gmail.com" && password === "1234") {
-    const access_token = generateToken({ email, role: 'user' });
-
-    res.cookie('maxcookie7', access_token, {
-      maxAge: 60 * 60 * 1000, 
-      httpOnly: true,
-    });
-
-    res.json({ payload: 'OK' });
-  } else {
-    res.status(401).json({ error: 'Credenciales incorrectas' });
+class UserRouter {
+  constructor() {
+    this.inicioUser = Router();
+    this.userController = UserController; 
+    this.inicioUser.get('/', this.userController.getUser);
+    this.inicioUser.post('/', this.userController.createUser);
+    this.inicioUser.post('/login', this.userController.login.bind(this.userController)); // Corrección aquí
   }
-});
 
-export default router;
+  getRouter() {
+    return this.inicioUser;
+  }
+}
+
+export default new UserRouter();
