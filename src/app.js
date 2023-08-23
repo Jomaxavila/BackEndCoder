@@ -73,7 +73,7 @@ app.set("view engine", "handlebars");
 app.use("/", viewRouter);
 app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
-app.use("/api/sessions", sessionRouter);
+app.use("/api/sessions", sessionRouter.getRouter());
 app.use("/api/users", UserRouter.getRouter());
 
 
