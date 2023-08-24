@@ -123,4 +123,4 @@ class SessionService {
   
 }
 
-export default SessionService;
+export default new SessionService();

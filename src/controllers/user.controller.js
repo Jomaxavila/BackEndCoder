@@ -2,7 +2,6 @@ import UserService from "../services/users.service.js";
 import { STATUS } from "../utilidades/constantes.js";
 
 
-
 class UserController{
   
   async login(req, res) {
@@ -55,8 +54,6 @@ class UserController{
       }
   }
   
-  
-
 }
 
 export default new UserController();

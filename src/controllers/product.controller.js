@@ -1,8 +1,22 @@
 import ProductService from "../services/product.service.js";
 
-const productService = new ProductService();
 
 class ProductController {
+
+  async getAllProducts(req, res) {
+    try {
+      const result = await ProductService.getProducts();
+      res.status(result.code).json({
+        status: result.status,
+        payload: result.message,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "error",
+        message: "Error al obtener los productos",
+      });
+    }
+  }
   
   async getProducts(req, res) {
     try {
@@ -111,5 +125,5 @@ class ProductController {
     }
   }
 }
-
+    
 export default ProductController;

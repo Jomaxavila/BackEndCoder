@@ -3,7 +3,7 @@ import { generateToken } from '../utils.js'
 import userModel from '../Dao/models/usersModel.js'
 
 
-class userService{
+class UserService{
   async login(email, password) {
     try {
       if (email === "jomaxavila@gmail.com" && bcrypt.compareSync(password, "1234")) {
@@ -50,4 +50,4 @@ class userService{
   }
 }
 
-export default new userService();
+export default new UserService();

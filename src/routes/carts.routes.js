@@ -2,17 +2,16 @@ import { Router } from 'express';
 import CartController from '../controllers/cart.controller.js';
 
 
-const cartController = new CartController(); 
 
 class CartRouter {
   constructor() {
     this.cartRouter = Router();
-    this.cartRouter.post('/', cartController.createCart);
-    this.cartRouter.post('/:cid/products/:pid', cartController.addProductInCart);
-    this.cartRouter.delete('/:cid/products/:pid', cartController.deleteProductInCart);
-    this.cartRouter.get('/:id', cartController.getCart);
-    this.cartRouter.get('/', cartController.getCarts);
-    this.cartRouter.delete('/:id', cartController.deleteCart);
+    this.cartRouter.post('/', CartController.createCart);
+    this.cartRouter.post('/:cid/products/:pid', CartController.addProductInCart);
+    this.cartRouter.delete('/:cid/products/:pid', CartController.deleteProductInCart);
+    this.cartRouter.get('/:id', CartController.getCart);
+    this.cartRouter.get('/', CartController.getCarts);
+    this.cartRouter.delete('/:id', CartController.deleteCart);
   }
 
   getRouter() {

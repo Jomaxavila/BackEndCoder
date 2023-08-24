@@ -1,109 +1,29 @@
-import express from "express"
-import productManagerMongo from "../Dao/dbManagers/productManagerMongo.js";
-import Message from "../Dao/models/messagesModel.js";
-import productsModel from "../Dao/models/productModel.js";
+import { Router } from "express";
+import viewsController from "../controllers/views.controller.js";
 
-
-const viewRouter = express.Router();
-
-viewRouter.get("/", async (req, res) => {
-	try {
-	  const allProducts = await productsModel.find({}, null, {
-		lean: true,
-	  });
-  
-	  res.render("home", {
-		title: "Lista de productos",
-		products: allProducts,
-	  });
-	} catch (error) {
-	  res.status(500).render("error", {
-		message: "Error al obtener los productos",
-	  });
-	}
-  });
-  
-  
-
-
-viewRouter.get("/chat", async (req, res) => {
-	try {
-	  const messages = await Message.find({});
-	  res.render("chat", { messages }); // Pasar todos los mensajes al template
-	} catch (error) {
-	  console.log("Error retrieving messages:", error);
-	  res.status(500).send("Error retrieving messages");
-	}
-  });
-
-  
-  viewRouter.get("/products", async (req, res) => {
-	try {
-	  const { limit = 10, page = 1, sort, query } = req.query;
-	  const filters = {};
-  
-	if (req.query.category) {
-	filters.category = req.query.category;
+class ViewsRouter {
+  constructor() {
+    this.viewsrouter = Router();
+    this.viewsrouter.get("/", viewsController.renderHome);
+    this.viewsrouter.get("/chat", viewsController.renderChat);
+    this.viewsrouter.get("/products", viewsController.renderProducts);
+    this.viewsrouter.get('/register', (req, res) => {
+      res.render("register");
+    });
+    this.viewsrouter.get('/login', (req, res) => {
+      res.render("login");
+    });
+    this.viewsrouter.get('/resetPassword', (req, res) => {
+      res.render('resetPassword');
+    });
+    this.viewsrouter.get('/failregister', (req, res) => {
+      res.render('failregister');
+    });
   }
-  
-	  const options = {
-		page: parseInt(page),
-		limit: parseInt(limit),
-		lean: true,
-	  };
-	  if (sort) {
-		options.sort = { price: sort === "asc" ? 1 : -1 };
-		
-	}else{
-		options.sort = { price: sort === "desc" ? 1 : +1 }
-	}
-  
-	  const {
-		docs,
-		totalPages,
-		prevPage,
-		nextPage,
-		hasNextPage,
-		hasPrevPage,
-		prevLink,
-		nextLink,
-	  } = await productsModel.paginate(filters, options);
-  
-	  res.render("products", {
-		products: docs,
-		totalPages,
-		hasPrevPage,
-		hasNextPage,
-		prevPage,
-		nextPage,
-		prevLink: hasPrevPage ? `/products?page=${prevPage}` : null,
-		nextLink: hasNextPage ? `/products?page=${nextPage}` : null,
-		user: req.session.user,
-	  });
-	} catch (error) {
-	  res.status(500).send({
-		status: "error",
-		message: "Error al obtener los productos",
-	  });
-	}
-  });
 
+  getRouter() {
+    return this.viewsrouter;
+  }
+}
 
-  viewRouter.get('/register', (req,res)=>{
-	res.render("register");
-  })
-
-  viewRouter.get('/login', (req,res)=>{
-	res.render("login");
-  })
-
-viewRouter.get('/resetPassword',(req,res)=>{
-    res.render('resetPassword');
-})
-
-viewRouter.get('/failregister',(req,res)=>{
-	res.render('failregister')
-})
-  
-  export default viewRouter;
-   
+export default new ViewsRouter();

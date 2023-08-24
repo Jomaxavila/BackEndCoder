@@ -70,7 +70,7 @@ app.engine("handlebars", exphbs.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-app.use("/", viewRouter);
+app.use("/", viewRouter.getRouter());
 app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/sessions", sessionRouter.getRouter());

@@ -1,7 +1,8 @@
 import productModel from "../Dao/models/productModel.js"
 
-class ProductService {
 
+class ProductService {
+  
     addProduct = async (newProduct) => {
       const product = {
         title: newProduct.title,
@@ -32,7 +33,7 @@ class ProductService {
     };
     getProducts = async () => {
       try {
-        const products = await productModel.find({});
+        const products = await productModel.find();
         return {
         code: 202,
         status: "success",
@@ -88,6 +89,20 @@ class ProductService {
         return { error: "Error al actualizar los productos" };
       }
     };
+    async getAllProducts(req, res) {
+      try {
+        const result = await productModel.getAllProducts().lean();
+        res.status(result.code).json({
+          status: result.status,
+          payload: result.message,
+        });
+      } catch (error) {
+        res.status(500).json({
+          status: "error",
+          message: "Error al obtener los productos",
+        });
+      }
+    }
   }
 
-export default ProductService;
+export default new ProductService();

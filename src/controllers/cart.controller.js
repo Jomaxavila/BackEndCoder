@@ -2,12 +2,10 @@
 import CartService from "../services/cart.service.js";
 
 
-const cartService = new CartService();
-
 class CartController {
   async createCart(req, res) {
     try {
-      const response = await cartService.createCart();
+      const response = await CartService.createCart();
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -22,7 +20,7 @@ class CartController {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
-      const response = await cartService.addProductInCart(cartId, productId);
+      const response = await CartService.addProductInCart(cartId, productId);
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -37,7 +35,7 @@ class CartController {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
-      const response = await cartService.deleteProductInCart(cartId, productId);
+      const response = await CartService.deleteProductInCart(cartId, productId);
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -51,7 +49,7 @@ class CartController {
   async getCart(req, res) {
     try {
       const cartId = req.params.id;
-      const response = await cartService.getCart(cartId);
+      const response = await CartService.getCart(cartId);
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -64,7 +62,7 @@ class CartController {
 
   async getCarts(req, res) {
     try {
-      const response = await cartService.getCarts();
+      const response = await CartService.getCarts();
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -78,7 +76,7 @@ class CartController {
   async deleteCart(req, res) {
     try {
       const cartId = req.params.id;
-      const response = await cartService.deleteCart(cartId);
+      const response = await CartService.deleteCart(cartId);
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -90,4 +88,4 @@ class CartController {
   }
 }
 
-export default CartController;
+export default new CartController();

@@ -1,28 +1,28 @@
 
 import SessionService from "../services/session.service.js";
 
-const sessionService = new SessionService();
+
 
 class SessionController {
   async restartPassword(req, res) {
     const { email, password } = req.body;
-    const response = await sessionService.restartPassword(email, password);
+    const response = await SessionService.restartPassword(email, password);
     res.status(response.status === "success" ? 200 : 400).json(response);
   }
 
   async registerUser(req, res) {
     const { first_name, last_name, email, age, password } = req.body;
-    const response = await sessionService.registerUser(first_name, last_name, email, age, password);
+    const response = await SessionService.registerUser(first_name, last_name, email, age, password);
     res.status(response.status === "success" ? 200 : 400).json(response);
   }
 
   async loginUser(req, res) {
-    const response = await sessionService.loginUser(req);
+    const response = await SessionService.loginUser(req);
     res.status(response.status === 'success' ? 200 : 401).json(response);
   }
 
   async logout(req, res) {
-    const response = await sessionService.logout(req);
+    const response = await SessionService.logout(req);
     if (response.status === "success") {
       res.clearCookie("connect.sid");
       res.redirect("/login"); 
@@ -33,12 +33,12 @@ class SessionController {
   }
   
   async getCurrentSession(req, res) {
-    const response = await sessionService.getCurrentSession(req);
+    const response = await SessionService.getCurrentSession(req);
     res.status(response.status === "success" ? 200 : 500).json(response);
   }
 
   async handleGitHubCallback(req, res) {
-    const response = await sessionService.handleGitHubCallback(req);
+    const response = await SessionService.handleGitHubCallback(req);
     if (response.status === "success") {
       res.redirect("/");
     } else {
@@ -47,12 +47,12 @@ class SessionController {
   }
 
   async failRegister(req, res) {
-    const response = await sessionService.failRegister();
+    const response = await SessionService.failRegister();
     res.status(200).json(response);
   }
 
   async githubCallbackFail(req, res) {
-    const response = await sessionService.githubCallbackFail();
+    const response = await SessionService.githubCallbackFail();
     res.redirect("/login");
   }
 
@@ -60,4 +60,4 @@ class SessionController {
   }
 }
 
-export default SessionController;
+export default new SessionController();
