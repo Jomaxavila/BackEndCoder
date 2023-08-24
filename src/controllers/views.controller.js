@@ -15,7 +15,10 @@ class ViewsController {
       });
     }
   }
-
+  async renderAdminPage(req, res) {
+    res.render('admin');
+  }
+  
   async renderChat(req, res) {
     try {
       const messages = await ViewsService.getChatMessages();

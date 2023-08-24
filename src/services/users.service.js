@@ -6,36 +6,40 @@ import userModel from '../Dao/models/usersModel.js'
 class UserService{
   async login(email, password) {
     try {
-      if (email === "jomaxavila@gmail.com" && bcrypt.compareSync(password, "1234")) {
-        const access_token = generateToken({ email, role: 'admin' });
+        const user = await userModel.findOne({ email }); 
+        if (user && bcrypt.compareSync(password, user.password)) {
+            const role = user.role === 'admin' ? 'admin' : 'usuario';
+            const access_token = generateToken({ email, role });
 
-        return {
-          access_token,
-          cookieOptions: {
-            name: 'maxcookie7',
-            maxAge: 60 * 60 * 1000,
-            httpOnly: true,
-          },
-          payload: 'OK',
-        };
-      } else {
-        throw new Error('Credenciales incorrectas');
-      }
+            return {
+                access_token,
+                cookieOptions: {
+                    name: 'maxcookie7',
+                    maxAge: 60 * 60 * 1000,
+                    httpOnly: true,
+                },
+                payload: 'OK',
+            };
+        } else {
+            throw new Error('Credenciales incorrectas');
+        }
     } catch (error) {
-      throw new Error(error.message);
+        throw new Error(error.message);
     }
-  }
+}
 
-  async createUser(data){
-    try{
-      data.password = bcrypt.hashSync(data.password,bcrypt.genSaltSync(10))
-      const response = await userModel.create(data)
-      return response
 
-    }catch(error){
-       throw new Error(error.message)
+  async createUser(data, role) {
+    try {
+        data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10));
+        data.role = role;
+        const response = await userModel.create(data);
+        return response;
+    } catch (error) {
+        throw new Error(error.message);
     }
-  }
+}
+
 
   async getUser(email){
     try{

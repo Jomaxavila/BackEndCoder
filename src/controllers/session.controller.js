@@ -19,6 +19,7 @@ class SessionController {
   async loginUser(req, res) {
     const response = await SessionService.loginUser(req);
     res.status(response.status === 'success' ? 200 : 401).json(response);
+    
   }
 
   async logout(req, res) {

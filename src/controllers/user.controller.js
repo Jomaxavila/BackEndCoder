@@ -22,18 +22,19 @@ class UserController{
   }
 
      
-    async createUser(req,res){
-        try{
-            const data = req.body
-            const response = await UserService.createUser(data)
-            res.status(201).json({user:response,status:STATUS.SUCCESS})
-        }catch(error){ 
-            res.status(400).json({
-                error:error.message,
-                status:STATUS.FAIL
-            })
-        }
+  async createUser(req, res) {
+    try {
+        const data = req.body;
+        const role = req.body.role || 'usuario'; 
+        const response = await UserService.createUser(data, role);
+        res.status(201).json({ user: response, status: STATUS.SUCCESS });
+    } catch (error) {
+        res.status(400).json({
+            error: error.message,
+            status: STATUS.FAIL
+        });
     }
+}
 
     async getUser(req, res) {
       try {
@@ -43,7 +44,7 @@ class UserController{
           if (users.length === 0) {
               res.status(404).json({ message: 'Usuario no encontrado' });
           } else {
-              const user = users[0]; // Supongo que getUser(email) retorna un array de usuarios
+              const user = users[0];
               res.status(200).json({ user, status: STATUS.SUCCESS });
           }
       } catch (error) {

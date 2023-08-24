@@ -1,0 +1,90 @@
+<div  class="m-5 text-center">
+    <title>Panel de Administración</title>
+    <h1>Bienvenido al Panel de Administración</h1>
+   <li><strong>Nombre:</strong> {{user.name}}</li>
+    <li><strong>Email:</strong> {{user.email}}</li>
+    <li><strong>Rol:</strong> {{user.role}}</li>
+  {{!-- AGREGAR PRODUCTOS PERO CON MULTER --}}
+<section>
+  <div class="container mt-6" style="max-width: 500px">
+    <form action="/api/products" method="post">
+      <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input
+          class="form-control is-valid"
+          type="text"
+          placeholder="Ingrese el nombre del producto"
+          value=""
+          name="title"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea
+          value=""
+          name="description"
+          class="form-control is-valid"
+          placeholder="Ingrese una breve descripción del producto"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Código</label>
+        <input
+          class="form-control is-valid"
+          type="text"
+          placeholder="Ingrese el código del producto"
+          value=""
+          name="code"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Precio</label>
+        <input
+          class="form-control is-valid"
+          type="text"
+          placeholder="Ingrese el precio del producto"
+          value=""
+          name="price"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Stock</label>
+        <input
+          class="form-control is-valid"
+          type="number"
+          min="0"
+          max="10000"
+          value="0"
+          name="stock"
+        />
+      </div>
+    <div class="field">
+  <label class="label">Imágen</label>
+  <div class="control has-icons-left has-icons-right">
+    <input
+      class="form-control is-success"
+      type="file"
+      placeholder="suba su imagen"
+      value=""
+      name="thumbnail"
+    >
+    <span class="input-group-addon">
+      <i class="glyphicon glyphicon-picture"></i>
+    </span>
+  </div>
+</div>
+<div class="field is-grouped">
+  <div class="control">
+    <button class="btn btn-primary btn-light">Guardar</button>
+  </div>
+</div>
+</form>
+</div>
+</section>
+</div>
+<script src="/js/login.js"></script>

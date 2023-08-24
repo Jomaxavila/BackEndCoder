@@ -25,7 +25,11 @@ form?.addEventListener('submit', async (event) => {
         timer: 3000
       });
       setTimeout(() => {
-        window.location.href = '/products';
+        if (responseData.payload.role === 'admin') {
+          window.location.href = '/products';
+        } else {
+          window.location.href = '/products'; 
+        }
       }, 3000);
     } else {
       Swal.fire({
@@ -38,6 +42,11 @@ form?.addEventListener('submit', async (event) => {
     }
   } catch (error) {
     console.error('Error:', error);
+  
+    // Imprime información detallada sobre el error en la consola
+    console.error('Error status:', error.status);
+    console.error('Error message:', error.message);
+    
     Swal.fire({
       title: 'Error',
       text: 'Ha ocurrido un error. Inténtalo de nuevo más tarde.',
@@ -45,5 +54,4 @@ form?.addEventListener('submit', async (event) => {
       position: 'center',
       timer: 3000
     });
-  }
-});
+  }})

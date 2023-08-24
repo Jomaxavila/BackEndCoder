@@ -28,8 +28,10 @@ class SessionRouter {
       "/login",
       passport.authenticate("local"),
       SessionController.loginUser.bind(SessionController)
+    
     );
 
+     
     this.sessionRouter.post("/logout", SessionController.logout.bind(SessionController));
 
     this.sessionRouter.get(
