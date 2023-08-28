@@ -4,21 +4,19 @@ import { isValidPassword} from "../utils.js"
 import GitHubStrategy from "passport-github2";
 import userModel from "../Dao/models/usersModel.js";
 import passportJWT, { ExtractJwt }from "passport-jwt";
+import CONFIG from "./config.js";
 
 
 
-const SECRET_KEY= "top_secret_07"
 const JwtStrategy = passportJWT.Strategy
-
-
 
 export const initPassport = () => {
   passport.use("jwt", new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: SECRET_KEY
+    secretOrKey: CONFIG.SECRET_KEY,
   }, async (jwt_payload, done) => {
     try {
-      const user = await userModel.findById(jwt_payload.id); // Cambia 'id' por el campo correcto en tu modelo
+      const user = await userModel.findById(jwt_payload.id);
       if (!user) {
         return done(null, false, { message: "Usuario no encontrado" });
       }
@@ -31,7 +29,7 @@ export const initPassport = () => {
   // Configuración de GitHub Strategy
   passport.use("github",new GitHubStrategy({
     clientID: "Iv1.b4d747ed99c2d832",
-    clientSecret: "b9332a7a9eb77c5cec78137e0b3c98458d41eae0",
+    clientSecret: CONFIG.CLIENT_SECRET,
     callbackURL: "http://localhost:8080/api/sessions/githubcallback",
       },
       async (accesToken, refreshToken, profile, done) => {
@@ -65,11 +63,9 @@ export const initPassport = () => {
       async (email, password, done) => {
         try {
           const user = await userModel.findOne({ email });
-          if (!user || !isValidPassword(user, password)) {
-            // Si el usuario no existe o la contraseña no es válida, devolver error
+          if (!user || !isValidPassword(user, password)) { 
             return done(null, false, { message: "Credenciales incorrectas" });
           }
-          // Si el usuario y la contraseña son válidos, devolver el usuario
           return done(null, user);
         } catch (error) {
           return done(error);

@@ -12,7 +12,7 @@ class UserRouter {
     this.sessionController = SessionController; // No necesitas crear una instancia aquí
     this.inicioUser.get('/', UserController.getUser);
     this.inicioUser.post('/', UserController.createUser);
-    this.inicioUser.post('/login', passport.authenticate('local'), SessionController.loginUser);
+    this.inicioUser.post('/login', SessionController.loginUser);
   }
 
   getRouter() {

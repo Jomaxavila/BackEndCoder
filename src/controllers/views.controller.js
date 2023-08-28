@@ -16,8 +16,9 @@ class ViewsController {
     }
   }
   async renderAdminPage(req, res) {
-    res.render('admin');
+    res.render('admin', { user: req.session.user });
   }
+  
   
   async renderChat(req, res) {
     try {

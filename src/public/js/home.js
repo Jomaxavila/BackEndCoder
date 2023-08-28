@@ -4,19 +4,19 @@ let user;
 let  chatBox = document.getElementById("chatBox")
 
 
-Swal.fire({
-  title: "Bienvenido a nuestro chat",
-  input: "text",
-  text: "Ingresa tu nombre por favor",
-  inputvalidator:(value)=>{
-    return !value && "Se requiere un nombre para continuar"
+// Swal.fire({
+//   title: "Bienvenido a nuestro chat",
+//   input: "text",
+//   text: "Ingresa tu nombre por favor",
+//   inputvalidator:(value)=>{
+//     return !value && "Se requiere un nombre para continuar"
 
-  },
-  allowOutsideClick:true,
+//   },
+//   allowOutsideClick:true,
  
-}).then(result=>{
-  user=result.value
-})
+// }).then(result=>{
+//   user=result.value
+// })
 
 chatBox.addEventListener("keyup" ,evt=>{
     if (evt.key == "Enter"){

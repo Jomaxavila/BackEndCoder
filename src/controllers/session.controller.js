@@ -26,7 +26,7 @@ class SessionController {
     const response = await SessionService.logout(req);
     if (response.status === "success") {
       res.clearCookie("connect.sid");
-      res.redirect("/login"); 
+      res.redirect("/"); 
     } else {
   
       res.status(500).json(response);

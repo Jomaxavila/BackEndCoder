@@ -28,8 +28,7 @@ class CartService {
           message: "No se encontró un carrito con ese ID",
         };
       }
-
-      // Obtener el índice del producto en el carrito
+      
       const productIndex = cart.products.findIndex(
         (product) => product.product.toString() === productId
       );

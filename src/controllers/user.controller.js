@@ -1,27 +1,26 @@
 import UserService from "../services/users.service.js";
 import { STATUS } from "../utilidades/constantes.js";
+import jwt from 'jsonwebtoken';
 
 
 class UserController{
   
   async login(req, res) {
     const { email, password } = req.body;
-
+  
     try {
-      const loginResult = await this.userController.login(email, password);
-
-      res.cookie(loginResult.cookieOptions.name, loginResult.access_token, {
+      const loginResult = await UserService.login(email, password);
+      const token = loginResult.access_token; 
+      res.cookie('access_token', token, {
         maxAge: loginResult.cookieOptions.maxAge,
         httpOnly: loginResult.cookieOptions.httpOnly,
       });
-
       res.json({ payload: loginResult.payload });
     } catch (error) {
       res.status(401).json({ error: error.message });
     }
   }
-
-     
+  
   async createUser(req, res) {
     try {
         const data = req.body;
@@ -40,7 +39,6 @@ class UserController{
       try {
           const { email } = req.body;
           const users = await UserService.getUser(email);
-  
           if (users.length === 0) {
               res.status(404).json({ message: 'Usuario no encontrado' });
           } else {

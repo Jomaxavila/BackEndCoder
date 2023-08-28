@@ -39,8 +39,8 @@ class ProductController {
         filters.category = query;
       }
 
-      const response = await productService.getProducts(filters, options);
-      const totalProducts = await productService.countProducts(filters);
+      const response = await ProductService.getProducts(filters, options);
+      const totalProducts = await ProductService.countProducts(filters);
       const totalPages = Math.ceil(totalProducts / options.limit);
 
       response.totalPages = totalPages;
@@ -71,7 +71,7 @@ class ProductController {
   async createProduct(req, res) {
     try {
       const product = req.body;
-      const response = await productService.addProduct(product);
+      const response = await ProductService.addProduct(product);
       res.status(response.code).json({
         status: response.status,
         message: response.message,
@@ -88,7 +88,7 @@ class ProductController {
   async getProductById(req, res) {
     try {
       const productId = req.params.id;
-      const response = await productService.getProductById(productId);
+      const response = await ProductService.getProductById(productId);
       if (response) {
         res.send(response);
       } else {
@@ -103,7 +103,7 @@ class ProductController {
     try {
       const productId = req.params.id;
       const updatedProduct = req.body;
-      await productService.updateProducts({ id: productId, ...updatedProduct });
+      await ProductService.updateProducts({ id: productId, ...updatedProduct });
       res.status(200).send("Producto actualizado");
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -113,7 +113,7 @@ class ProductController {
   async deleteProduct(req, res) {
     try {
       const productId = req.params.id;
-      const result = await productService.deleteProductById(productId);
+      const result = await ProductService.deleteProductById(productId);
       if (result.message) {
         res.status(200).send("Producto eliminado");
         console.log("Producto eliminado");

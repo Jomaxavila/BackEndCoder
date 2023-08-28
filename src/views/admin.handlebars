@@ -1,90 +1,106 @@
-<div  class="m-5 text-center">
-    <title>Panel de Administración</title>
+<div>
+  <nav class="navbar navbar-expand-md bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item user-nav">
+            <a class="nav-link m-1">{{user.name}}</a>
+          </li>
+          <li class="nav-item">
+            <form action="/api/sessions/logout" method="POST">
+              <button type="submit" class="btn btn-sm btn-danger m-2">Logout</button>
+            </form>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-shopping-cart m-2"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+  <div class="m-5 text-center">
     <h1>Bienvenido al Panel de Administración</h1>
-   <li><strong>Nombre:</strong> {{user.name}}</li>
-    <li><strong>Email:</strong> {{user.email}}</li>
-    <li><strong>Rol:</strong> {{user.role}}</li>
-  {{!-- AGREGAR PRODUCTOS PERO CON MULTER --}}
-<section>
-  <div class="container mt-6" style="max-width: 500px">
-    <form action="/api/products" method="post">
-      <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
-      <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input
-          class="form-control is-valid"
-          type="text"
-          placeholder="Ingrese el nombre del producto"
-          value=""
-          name="title"
-        />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea
-          value=""
-          name="description"
-          class="form-control is-valid"
-          placeholder="Ingrese una breve descripción del producto"
-          rows="3"
-        ></textarea>
-      </div>
+    <section>
+      <div class="container mt-6" style="max-width: 500px">
+        <form action="/api/products" method="post" enctype="multipart/form-data">
+          <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input
+              class="form-control"
+              type="text"
+              placeholder="Ingrese el nombre del producto"
+              name="title"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea
+              name="description"
+              class="form-control"
+              placeholder="Ingrese una breve descripción del producto"
+              rows="3"
+            ></textarea>
+          </div>
+        <div class="mb-3">
+          <label class="form-label">Código</label>
+          <input
+            class="form-control is-valid"
+            type="text"
+            placeholder="Ingrese el código del producto"
+            value=""
+            name="code"
+          />
+        </div>
 
-      <div class="mb-3">
-        <label class="form-label">Código</label>
-        <input
-          class="form-control is-valid"
-          type="text"
-          placeholder="Ingrese el código del producto"
-          value=""
-          name="code"
-        />
-      </div>
+        <div class="mb-3">
+          <label class="form-label">Precio</label>
+          <input
+            class="form-control is-valid"
+            type="text"
+            placeholder="Ingrese el precio del producto"
+            value=""
+            name="price"
+          />
+        </div>
 
-      <div class="mb-3">
-        <label class="form-label">Precio</label>
-        <input
-          class="form-control is-valid"
-          type="text"
-          placeholder="Ingrese el precio del producto"
-          value=""
-          name="price"
-        />
+        <div class="mb-3">
+          <label class="form-label">Stock</label>
+          <input
+            class="form-control is-valid"
+            type="number"
+            min="0"
+            max="10000"
+            value="0"
+            name="stock"
+          />
+          <div class="mb-3">
+            <label class="form-label">Imágen</label>
+            <input
+              class="form-control"
+              type="file"
+              name="thumbnail"
+            />
+          </div>
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="btn btn-primary">Guardar</button>
+            </div>
+          </div>
+        </form>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">Stock</label>
-        <input
-          class="form-control is-valid"
-          type="number"
-          min="0"
-          max="10000"
-          value="0"
-          name="stock"
-        />
-      </div>
-    <div class="field">
-  <label class="label">Imágen</label>
-  <div class="control has-icons-left has-icons-right">
-    <input
-      class="form-control is-success"
-      type="file"
-      placeholder="suba su imagen"
-      value=""
-      name="thumbnail"
-    >
-    <span class="input-group-addon">
-      <i class="glyphicon glyphicon-picture"></i>
-    </span>
+    </section>
   </div>
+
+
 </div>
-<div class="field is-grouped">
-  <div class="control">
-    <button class="btn btn-primary btn-light">Guardar</button>
-  </div>
-</div>
-</form>
-</div>
-</section>
-</div>
-<script src="/js/login.js"></script>

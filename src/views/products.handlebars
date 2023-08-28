@@ -1,13 +1,38 @@
 <div>
-  <h1 class="m-5 text-center">Bienvenid@, {{user.name}}</h1>
-  <ul class="list-unstyled text-center">
-    <li><strong>Nombre:</strong> {{user.name}}</li>
-    <li><strong>Email:</strong> {{user.email}}</li>
-    <li><strong>Rol:</strong> {{user.role}}</li>
-     <form action="/api/sessions/logout" method="POST"> <!-- Verifica que la acción del formulario sea /api/sessions/logout -->
-       <button type="submit" class="btn btn-danger m-2">Cerrar sesión</button>
-    </form>
-  </ul>
+  <nav class="navbar navbar-expand-md bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item user-nav">
+            <a class="nav-link m-1">{{user.name}}</a>
+          </li>
+          <li class="nav-item">
+            <form action="/api/sessions/logout" method="POST">
+              <button type="submit" class="btn btn-sm btn-danger m-2">Logout</button>
+            </form>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-shopping-cart m-2"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </div>
   <h1 class="m-5 text-center">Lista de productos con paginación</h1>
   <section class="mt-6">

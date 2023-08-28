@@ -74,8 +74,7 @@ class SessionService {
     });
   }
   
-
-  async getCurrentSession(req) {
+  async getSession(req) {
     try {
       const currentUser = {
         name: `${req.user.first_name} ${req.user.last_name}`,

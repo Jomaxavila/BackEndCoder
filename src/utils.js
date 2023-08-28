@@ -15,7 +15,7 @@ export const generateToken = (user)=>{
  export const cookieExtractor = (req)=>{
   let token = null 
   if(req && req.cookies){
-    token = req.cookies[maxcookie7]
+    token = req.cookies['maxcookie7']
   }
   return token
 }

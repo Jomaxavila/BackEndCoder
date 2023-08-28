@@ -26,7 +26,7 @@ form?.addEventListener('submit', async (event) => {
       });
       setTimeout(() => {
         if (responseData.payload.role === 'admin') {
-          window.location.href = '/products';
+          window.location.href = '/admin';
         } else {
           window.location.href = '/products'; 
         }
@@ -42,8 +42,6 @@ form?.addEventListener('submit', async (event) => {
     }
   } catch (error) {
     console.error('Error:', error);
-  
-    // Imprime información detallada sobre el error en la consola
     console.error('Error status:', error.status);
     console.error('Error message:', error.message);
     

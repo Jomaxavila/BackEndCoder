@@ -16,9 +16,10 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
+import CONFIG from "./config/config.js"; 
 
 const app = express();
-const PORT = 8080 || process.env.PORT;
+const PORT = CONFIG.PORT || 8080; 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 console.log(__dirname);
@@ -27,21 +28,16 @@ const httpServer = http.createServer(app);
 const io = new SocketServer(httpServer);
 websockets(io);
 
-const conection = mongoose.connect("mongodb+srv://jomaxavila:Fede1529@ecommerce.betvrpg.mongodb.net/?retryWrites=true&w=majority", { 
+mongoose.connect(CONFIG.MONGO_URI, { // Use MONGO_URI from CONFIG
     useNewUrlParser: true, 
     useUnifiedTopology: true,
-});
-
-export const connectMongoDB = async () => {
-  try {
-    await conection; // Use the connection instance you created above
+})
+.then(() => {
     console.log("Connected to Mongo Atlas");
-  } catch (error) {
+})
+.catch(error => {
     console.log("Error en la conexión con Mongo Atlas", error);
-  }
-};
-
-connectMongoDB();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -52,7 +48,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: "mongodb+srv://jomaxavila:Fede1529@ecommerce.betvrpg.mongodb.net/?retryWrites=true&w=majority",
+      mongoUrl: CONFIG.MONGO_URI,
       options: { 
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -75,7 +71,6 @@ app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/sessions", sessionRouter.getRouter());
 app.use("/api/users", UserRouter.getRouter());
-
 
 const server = httpServer.listen(PORT, () =>
   console.log(
