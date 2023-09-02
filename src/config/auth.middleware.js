@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import CONFIG from './config.js';
 
- const auth = (role) => {
+const auth = (role) => {
   return async (req, res, next) => {
-    const token = req.cookies.access_token;
+    const token = req.cookies.maxcookie7;
 
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });
@@ -20,4 +20,5 @@ import CONFIG from './config.js';
     }
   };
 };
+
 export default auth;

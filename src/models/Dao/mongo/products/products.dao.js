@@ -1,7 +1,9 @@
-import productModel from "../models/productModel.js";
+import productModel from "../../../schemas/productModel.js";
 
- class productManagerMongo {
+ export class  ProductsDAO  {
+	
 	addProduct = async (newProduct) => {
+		
 		const product = {
 			title: newProduct.title,
 			description: newProduct.description,
@@ -88,4 +90,3 @@ import productModel from "../models/productModel.js";
 		}
 	};
 }
-export default productManagerMongo;

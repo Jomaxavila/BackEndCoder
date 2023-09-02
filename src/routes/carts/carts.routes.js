@@ -1,7 +1,5 @@
 import { Router } from 'express';
-import CartController from '../controllers/cart.controller.js';
-
-
+import CartController from '../../controllers/cart.controller.js';
 
 class CartRouter {
   constructor() {
@@ -15,8 +13,8 @@ class CartRouter {
   }
 
   getRouter() {
-    return this.cartRouter;
+    return this.cartRouter; 
   }
 }
 
-export default new CartRouter();
+export default CartRouter; 

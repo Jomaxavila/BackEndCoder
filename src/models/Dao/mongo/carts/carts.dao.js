@@ -1,6 +1,6 @@
-import cartModel from "../models/cartModel.js";
+import cartModel from "../../../schemas/cartModel.js";
 
-class CartManagerMongo {
+export class CartsDAO {
 
 	createCart = async () => {
 		let cart = await cartModel.create({})
@@ -136,6 +136,7 @@ class CartManagerMongo {
 			throw error;
 		}
 	};
+	
 }
+	
 
-export default CartManagerMongo;

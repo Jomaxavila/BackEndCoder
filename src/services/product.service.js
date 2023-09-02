@@ -1,4 +1,4 @@
-import productModel from "../Dao/models/productModel.js"
+import productsModel from "../models/schemas/productModel.js";
 
 
 class ProductService {
@@ -17,7 +17,7 @@ class ProductService {
       };
   
       try {
-        const result = await productModel.create(product);
+        const result = await productsModel.create(product);
         return {
           code: 202,
           status: "success",
@@ -33,7 +33,7 @@ class ProductService {
     };
     getProducts = async () => {
       try {
-        const products = await productModel.find();
+        const products = await productsModel.find();
         return {
         code: 202,
         status: "success",
@@ -52,7 +52,7 @@ class ProductService {
     
       getProductById = async (id) => {
       try {
-        const product = await productModel.findById(id);
+        const product = await productsModel.findById(id);
         if (!product) {
         return { message: "Producto no encontrado" };
         } else {
@@ -68,7 +68,7 @@ class ProductService {
   
     deleteProductById = async (id) => {
       try {
-        const result = await productModel.deleteOne({ _id: id });
+        const result = await productsModel.deleteOne({ _id: id });
         if (result.deletedCount === 1) {
           return { message: "Producto eliminado" };
         } else {
@@ -82,7 +82,7 @@ class ProductService {
   
     updateProducts = async ({ id, ...producto }) => {
       try {
-        await productModel.updateOne({ _id: id }, { $set: producto });
+        await productsModel.updateOne({ _id: id }, { $set: producto });
         return { message: "Productos actualizados" };
       } catch (error) {
         console.error("Error al actualizar los productos:", error.message);
@@ -91,7 +91,7 @@ class ProductService {
     };
     async getAllProducts(req, res) {
       try {
-        const result = await productModel.getAllProducts().lean();
+        const result = await productsModel.getAllProducts().lean();
         res.status(result.code).json({
           status: result.status,
           payload: result.message,

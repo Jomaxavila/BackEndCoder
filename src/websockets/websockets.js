@@ -1,8 +1,5 @@
-import ProductManager from "../Dao/fileManagers/productManager.js";
-import Message from "../Dao/models/messagesModel.js";
-
-const path = "src/models/productos.json";
-const myProductManager = new ProductManager(path);
+import { getDAOS } from "../models/Dao/mongo/indexDAO.js";
+import messageModel from "../models/schemas/messagesModel.js";
 
 export default (io) => {
   io.on('connection', (socket) => {
@@ -18,7 +15,7 @@ export default (io) => {
       console.log(data);
 
       // Guardar el mensaje en la colección "messages"
-      const newMessage = new Message({
+      const newMessage = new messageModel({
         user: data.user,
         message: data.message,
       });
@@ -38,8 +35,9 @@ export default (io) => {
     socket.on("createProduct", async (data) => {
       console.log(data);
       try {
-        await myProductManager.addProduct(data);
-        const productListUpdated = await myProductManager.getProducts();
+        const { productsDao } = getDAOS(); 
+        await productsDao.addProduct(data); 
+        const productListUpdated = await productsDao.getProducts();
         io.sockets.emit("refresh-products", productListUpdated);
       } catch (err) {
         console.log(err);

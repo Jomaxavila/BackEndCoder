@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils.js'
-import userModel from '../Dao/models/usersModel.js'
+import userModel from '../models/schemas/usersModel.js';
 
 
 class UserService{

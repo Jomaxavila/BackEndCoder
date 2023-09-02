@@ -1,7 +1,6 @@
 import ViewsService from "../services/views.service.js";
 
 class ViewsController {
-
   async renderHome(req, res) {
     try {
       const allProducts = await ViewsService.getAllProducts();
@@ -15,17 +14,19 @@ class ViewsController {
       });
     }
   }
+
   async renderAdminPage(req, res) {
     res.render('admin', { user: req.session.user });
   }
-  
-  
+
   async renderChat(req, res) {
     try {
       const messages = await ViewsService.getChatMessages();
       res.render("chat", { messages });
     } catch (error) {
-      res.status(500).send("Error retrieving chat messages");
+      res.status(500).render("error", {
+        message: "Error retrieving chat messages",
+      });
     }
   }
 
@@ -43,10 +44,11 @@ class ViewsController {
         limit: parseInt(limit),
         lean: true,
       };
+
       if (sort) {
         options.sort = { price: sort === "asc" ? 1 : -1 };
       } else {
-        options.sort = { price: sort === "desc" ? 1 : +1 };
+        options.sort = { price: sort === "desc" ? 1 : -1 };
       }
 
       const result = await ViewsService.getProductsWithPagination(filters, options);
@@ -70,4 +72,4 @@ class ViewsController {
   }
 }
 
-export default new ViewsController();
+export default  new ViewsController();

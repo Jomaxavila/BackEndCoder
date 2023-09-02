@@ -1,5 +1,5 @@
-import productsModel from "../Dao/models/productModel.js";
-import messageModel from "../Dao/models/messagesModel.js"
+import productsModel from "../models/schemas/productModel.js";
+import messageModel from "../models/schemas/messagesModel.js";
 
 class ViewsService {
   async getAllProducts() {

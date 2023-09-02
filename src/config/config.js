@@ -18,4 +18,6 @@ const CONFIG = {
 
 };
 
+console.log("SECRET_KEY:", CONFIG.SECRET_KEY);
+
 export default CONFIG;

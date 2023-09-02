@@ -1,5 +1,6 @@
-import userModel from "../Dao/models/usersModel.js";
+import userModel from "../models/schemas/usersModel.js";
 import { createhast } from "../utils.js";
+import CONFIG from "../config/config.js";
 
 class SessionService {
   async restartPassword(email, password) {
@@ -120,6 +121,10 @@ class SessionService {
   async githubLogin() {
   }
   
+   async generateToken(_id) {
+    const token = jwt.sign({ user: _id }, CONFIG.SECRET_KEY, { expiresIn: '12h' });
+    return token;
+  }
 }
 
 export default new SessionService();

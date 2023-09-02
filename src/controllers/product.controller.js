@@ -1,9 +1,7 @@
 import ProductService from "../services/product.service.js";
 
-
-class ProductController {
-
-  async getAllProducts(req, res) {
+ class ProductController {
+  static async getAllProducts(req, res, next) {
     try {
       const result = await ProductService.getProducts();
       res.status(result.code).json({
@@ -11,14 +9,11 @@ class ProductController {
         payload: result.message,
       });
     } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: "Error al obtener los productos",
-      });
+      next(error);
     }
   }
-  
-  async getProducts(req, res) {
+
+  static async getProducts(req, res, next) {
     try {
       const { limit = 10, page = 1, sort, query } = req.query;
 
@@ -61,14 +56,11 @@ class ProductController {
 
       res.status(200).json(response);
     } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: "Error al obtener los productos",
-      });
+      next(error);
     }
   }
 
-  async createProduct(req, res) {
+  static async createProduct(req, res, next) {
     try {
       const product = req.body;
       const response = await ProductService.addProduct(product);
@@ -77,15 +69,11 @@ class ProductController {
         message: response.message,
       });
     } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al crear el producto",
-      });
+      next(error);
     }
   }
 
-  async getProductById(req, res) {
+  static async getProductById(req, res, next) {
     try {
       const productId = req.params.id;
       const response = await ProductService.getProductById(productId);
@@ -95,22 +83,22 @@ class ProductController {
         res.status(404).send({ message: "Producto no encontrado" });
       }
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      next(error);
     }
   }
 
-  async updateProduct(req, res) {
+  static async updateProduct(req, res, next) {
     try {
       const productId = req.params.id;
       const updatedProduct = req.body;
       await ProductService.updateProducts({ id: productId, ...updatedProduct });
       res.status(200).send("Producto actualizado");
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      next(error);
     }
   }
 
-  async deleteProduct(req, res) {
+  static async deleteProduct(req, res, next) {
     try {
       const productId = req.params.id;
       const result = await ProductService.deleteProductById(productId);
@@ -121,9 +109,9 @@ class ProductController {
         res.status(404).send("Producto no encontrado");
       }
     } catch (error) {
-      res.status(500).send("Error al eliminar el producto");
+      next(error);
     }
   }
 }
-    
+
 export default ProductController;

@@ -1,6 +1,4 @@
-
 import CartService from "../services/cart.service.js";
-
 
 class CartController {
   async createCart(req, res) {
