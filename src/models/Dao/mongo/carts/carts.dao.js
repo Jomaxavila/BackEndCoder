@@ -1,6 +1,6 @@
 import cartModel from "../../../schemas/cartModel.js";
 
-export class CartsDAO {
+ export default class CartsDAO {
 
 	createCart = async () => {
 		let cart = await cartModel.create({})

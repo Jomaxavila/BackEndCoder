@@ -17,4 +17,4 @@ class ProductsRouter {
   }
 }
 
-export default ProductsRouter;
+export default new ProductsRouter();

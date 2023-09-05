@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
-const ordersCollection = "orders"
+const ticketsCollection = "tickets";
 
-const ordersSchema = new mongoose.Schema({
+const ticketsSchema = new mongoose.Schema({
     order_number:{
         type:String,
         required:true
@@ -13,7 +13,7 @@ const ordersSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:["pending","rejectd","completed"],
+        enum:["pending","rejected","completed"], // Corregí el typo en "rejected"
         default: "pending"
     },
     products:[{
@@ -26,5 +26,7 @@ const ordersSchema = new mongoose.Schema({
         default:0
     }
 })
-const ordersModel = new mongoose.model(ordersCollection,ordersSchema)
-export default ordersModel
+
+const ticketsModel = mongoose.model(ticketsCollection, ticketsSchema);
+
+export default ticketsModel;

@@ -43,6 +43,19 @@ class CartController {
       });
     }
   }
+  async purchaseCart(req, res) {
+    try {
+      const cartId = req.params.cid;
+      const response = await CartService.purchaseCart(cartId);
+      res.status(response.code).json(response);
+    } catch (error) {
+      res.status(500).json({
+        code: 500,
+        status: "error",
+        message: "Error al finalizar la compra del carrito",
+      });
+    }
+  }
 
   async getCart(req, res) {
     try {

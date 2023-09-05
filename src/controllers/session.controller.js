@@ -1,5 +1,6 @@
 
 import SessionService from "../services/session.service.js";
+import { SaveUsersDTO } from "../models/dtos/users.dto.js";
 
 
 
@@ -8,6 +9,7 @@ class SessionController {
     const { email, password } = req.body;
     const response = await SessionService.restartPassword(email, password);
     res.status(response.status === "success" ? 200 : 400).json(response);
+
   }
 
   async registerUser(req, res) {
@@ -34,8 +36,14 @@ class SessionController {
   }
   
   async getCurrentSession(req, res) {
-    const response = await SessionService.getCurrentSession(req);
-    res.status(response.status === "success" ? 200 : 500).json(response);
+    const currentUser = req.user; // Usuario actual obtenido de la sesión
+    const userDTO = new SaveUsersDTO({
+      name: `${currentUser.first_name} ${currentUser.last_name}`,
+      email: currentUser.email,
+      age: currentUser.age,
+    });
+
+    res.status(200).json(userDTO); // Responde con el DTO del usuario
   }
 
   async handleGitHubCallback(req, res) {

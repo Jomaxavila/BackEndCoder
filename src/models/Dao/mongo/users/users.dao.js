@@ -1,6 +1,6 @@
 import userModel from "../../../schemas/usersModel.js";
 
-export class UsersDAO {
+export default class UsersDAO {
   async createUser(data) {
     try {
       const response = await userModel.create(data);

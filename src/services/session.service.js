@@ -89,6 +89,21 @@ class SessionService {
       return { status: "error", error: "Error al obtener la sesión actual" };
     }
   }
+  async getCurrentSession(req) {
+    try {
+      const currentUser = {
+        name: `${req.user.first_name} ${req.user.last_name}`,
+        email: req.user.email,
+        age: req.user.age,
+        role: req.user.role,
+      };
+
+      return { status: "success", user: currentUser };
+    } catch (error) {
+      console.log("Error al obtener la sesión actual:", error);
+      return { status: "error", error: "Error al obtener la sesión actual" };
+    }
+  }
 
   async handleGitHubCallback(req) {
     try {

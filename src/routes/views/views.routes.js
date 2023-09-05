@@ -32,4 +32,4 @@ class ViewsRouter {
   }
 }
 
-export default ViewsRouter;
+export default new ViewsRouter();

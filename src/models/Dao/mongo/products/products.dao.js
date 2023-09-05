@@ -1,6 +1,6 @@
 import productModel from "../../../schemas/productModel.js";
 
- export class  ProductsDAO  {
+  export default class ProductsDAO  {
 	
 	addProduct = async (newProduct) => {
 		
@@ -90,3 +90,4 @@ import productModel from "../../../schemas/productModel.js";
 		}
 	};
 }
+

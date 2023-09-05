@@ -10,6 +10,7 @@ class CartRouter {
     this.cartRouter.get('/:id', CartController.getCart);
     this.cartRouter.get('/', CartController.getCarts);
     this.cartRouter.delete('/:id', CartController.deleteCart);
+    this.cartRouter.post('/:cid/purchase', CartController.purchaseCart); 
   }
 
   getRouter() {
@@ -17,4 +18,4 @@ class CartRouter {
   }
 }
 
-export default CartRouter; 
+export default new CartRouter();

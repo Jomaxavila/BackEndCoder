@@ -3,7 +3,6 @@ import passport from "passport";
 import SessionController from "../../controllers/session.controller.js"
 
 
-
 class SessionRouter {
   constructor() {
     this.sessionRouter = Router();
@@ -46,5 +45,5 @@ class SessionRouter {
   }
 }
 
-export default SessionRouter;
+export default new SessionRouter();
 

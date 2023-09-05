@@ -72,4 +72,4 @@ class ViewsController {
   }
 }
 
-export default  new ViewsController();
+export default new ViewsController();
