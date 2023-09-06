@@ -22,9 +22,10 @@ class ViewsRouter {
     this.viewsrouter.get('/failregister', (req, res) => {
       res.render('failregister');
     });
+    this.viewsrouter.get('/cart', (req, res) => {
+      res.render('cart');
+    });
     this.viewsrouter.get('/admin', ViewsController.renderAdminPage);
-
-
   }
 
   getRouter() {

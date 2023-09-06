@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const ticketsCollection = "tickets";
 
 const ticketsSchema = new mongoose.Schema({
-    order_number:{
+    tickets_number:{
         type:String,
         required:true
     },

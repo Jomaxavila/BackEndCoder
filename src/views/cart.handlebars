@@ -34,7 +34,7 @@
     </div>
   </nav>
 </div>
-  <h1 class="m-5 text-center">Lista de productos con paginación</h1>
+  <h1 class="m-5 text-center">comprando productos</h1>
   <section class="mt-6">
     <div class="container">
       <div class="row justify-content-center">
@@ -63,19 +63,3 @@
       </div>
     </div>
   </section>
-  <div class="pagination justify-content-center">
-    {{#if hasPrevPage}}
-      <a href="/products?page={{prevPage}}"><button
-          class="btn btn-secondary m-5"
-        >Anterior</button></a>
-
-    {{/if}}
-    {{#if hasNextPage}}
-      <a href="/products?page={{nextPage}}"><button
-          class="btn btn-secondary m-5"
-        >Siguiente</button></a>
-
-    {{/if}}
-  
-  </div>
-</div>

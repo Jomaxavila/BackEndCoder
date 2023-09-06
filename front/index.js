@@ -1,4 +1,4 @@
-fetch('http://localhost:8080/api/orders')
+fetch('http://localhost:8080/api/tickets')
   .then(response => response.json())
   .then(orders => {
     const fragment = document.createDocumentFragment();

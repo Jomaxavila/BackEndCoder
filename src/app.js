@@ -14,6 +14,7 @@ import cookieParser from "cookie-parser";
 import CONFIG from "./config/config.js";
 import appRouter from "./routes/app.router.js";
 import cors from 'cors';
+import ViewsRouter from "./routes/views/views.routes.js";
 
 const app = express();
 const PORT = CONFIG.PORT || 8080;
@@ -63,6 +64,8 @@ app.set("view engine", "handlebars");
 app.use(cookieParser())
 
 app.use ('/api', appRouter)
+app.use('/',ViewsRouter.getRouter())
+
 app.use(cors({
   origin: 'http://127.0.0.1:5580', 
   methods: ['GET', 'POST', 'PUT'] 
