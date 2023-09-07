@@ -7,7 +7,6 @@ import passportJWT, { ExtractJwt }from "passport-jwt";
 import CONFIG from "./config.js";
 
 
-
 const JwtStrategy = passportJWT.Strategy
 
 export const initPassport = () => {
@@ -30,7 +29,7 @@ export const initPassport = () => {
   passport.use("github",new GitHubStrategy({
     clientID: "Iv1.b4d747ed99c2d832",
     clientSecret: CONFIG.CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+    callbackURL: "http://localhost:8080/api/session/githubcallback",
       },
       async (accesToken, refreshToken, profile, done) => {
         try {

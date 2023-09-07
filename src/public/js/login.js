@@ -5,7 +5,7 @@ form?.addEventListener('submit', async (event) => {
   const loginPayload = Object.fromEntries(data);
 
   try {
-    const response = await fetch('/api/sessions/login', {
+    const response = await fetch('/api/session/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

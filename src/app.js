@@ -62,14 +62,14 @@ app.engine("handlebars", exphbs.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use(cookieParser())
-
-app.use ('/api', appRouter)
-app.use('/',ViewsRouter.getRouter())
-
 app.use(cors({
   origin: 'http://127.0.0.1:5580', 
   methods: ['GET', 'POST', 'PUT'] 
 }));
+app.use ('/api', appRouter)
+app.use('/',ViewsRouter.getRouter())
+
+
 
 const server = httpServer.listen(PORT, () =>
   console.log(

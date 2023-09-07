@@ -3,37 +3,37 @@ import passport from "passport";
 import SessionController from "../../controllers/session.controller.js"
 
 
-class SessionRouter {
+class SessionsRouter {
   constructor() {
-    this.sessionRouter = Router();
+    this.sessionsRouter = Router();
    
-    this.sessionRouter.get(
+    this.sessionsRouter.get(
       "/github",
       passport.authenticate("github", { scope: ["user:email"] }),
       SessionController.handleGitHubCallback.bind(SessionController)
     );
 
-    this.sessionRouter.get(
+    this.sessionsRouter.get(
       "/githubcallback",
       passport.authenticate("github", { failureRedirect: "/login" }),
       SessionController.handleGitHubCallback.bind(SessionController)
     );
 
-    this.sessionRouter.get("/failregister", SessionController.failRegister.bind(SessionController));
+    this.sessionsRouter.get("/failregister", SessionController.failRegister.bind(SessionController));
 
-    this.sessionRouter.post("/restartPassword", SessionController.restartPassword.bind(SessionController));
+    this.sessionsRouter.post("/restartPassword", SessionController.restartPassword.bind(SessionController));
 
-    this.sessionRouter.post("/register", SessionController.registerUser.bind(SessionController));
+    this.sessionsRouter.post("/register", SessionController.registerUser.bind(SessionController));
 
-    this.sessionRouter.post(
+    this.sessionsRouter.post(
       "/login",
       passport.authenticate("local"),
       SessionController.loginUser.bind(SessionController) // Cambio aquí
     );
 
-    this.sessionRouter.post("/logout", SessionController.logout.bind(SessionController));
+    this.sessionsRouter.post("/logout", SessionController.logout.bind(SessionController));
 
-    this.sessionRouter.get(
+    this.sessionsRouter.get(
       "/current",
       passport.authenticate("local", { session: false }),
       SessionController.getCurrentSession.bind(SessionController)
@@ -41,9 +41,9 @@ class SessionRouter {
   }
 
   getRouter() {
-    return this.sessionRouter; 
+    return this.sessionsRouter; 
   }
 }
 
-export default new SessionRouter();
+export default new SessionsRouter();
 
