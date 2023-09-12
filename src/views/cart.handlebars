@@ -43,7 +43,7 @@
             <div class="card mb-4 h-100">
               <img
                 src="{{thumbnail}}"
-                style="width: 150px; height: 200px; object-fit: contain;"
+                style="width: 100px; height: 150px; object-fit: contain;"
                 class="img-fluid rounded mx-auto d-block mt-3 mx-auto my-auto"
                 alt="Product Image"
               />
@@ -52,9 +52,8 @@
                 <p class="card-text">{{description}}</p>
                 <p class="card-text">{{category}}</p>
                 <p class="card-text">$USD {{price}}</p>
-                <form action="/cart/addProductInCart/{{id}}" method="POST">
-                  <button type="submit" class="btn btn-success m-2">Agregar al
-                    carrito</button>
+                <form action="/cart/purchase/{{user.cartId}}" method="POST">
+                  <button type="submit" class="btn btn-primary m-2">Realizar Compra</button>
                 </form>
               </div>
             </div>

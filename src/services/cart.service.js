@@ -17,9 +17,81 @@ class CartService {
       };
     }
   }
-
-  async addProductInCart(cartId, productId) {
+  async getCartById(cartId) {
     try {
+      const cart = await cartModel.findById(cartId);
+      if (!cart) {
+        return null; // Retorna null si no se encuentra el carrito
+      }
+      return cart;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async removeItemFromCart(cartId, productId) {
+    try {
+      const cart = await cartModel.findById(cartId);
+      if (!cart) {
+        return {
+          code: 404,
+          status: "error",
+          message: "No se encontró un carrito con ese ID",
+        };
+      }
+
+      const productIndex = cart.products.findIndex(
+        (product) => product.product.toString() === productId
+      );
+
+      if (productIndex === -1) {
+        return {
+          code: 404,
+          status: "error",
+          message: "El producto no existe en el carrito",
+        };
+      }
+
+      cart.products.splice(productIndex, 1);
+
+      await cart.save();
+
+      return {
+        code: 202,
+        status: "success",
+        message: "Producto eliminado correctamente del carrito",
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async completeCart(cartId) {
+    try {
+      const cart = await cartModel.findById(cartId);
+      if (!cart) {
+        return {
+          code: 404,
+          status: "error",
+          message: "No se encontró un carrito con ese ID",
+        };
+      }
+      cart.completed = true;
+
+      await cart.save();
+
+      return {
+        code: 202,
+        status: "success",
+        message: "Carrito completado correctamente",
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async addProductToCart(cartId, productId) {
+    try {
+      // Verificar si el carrito existe
       const cart = await cartModel.findOne({ _id: cartId });
       if (!cart) {
         return {
@@ -28,17 +100,21 @@ class CartService {
           message: "No se encontró un carrito con ese ID",
         };
       }
-      
+
+      // Verificar si el producto ya está en el carrito
       const productIndex = cart.products.findIndex(
         (product) => product.product.toString() === productId
       );
 
       if (productIndex === -1) {
+        // Si el producto no está en el carrito, agregarlo
         cart.products.push({ product: productId, quantity: 1 });
       } else {
+        // Si el producto ya está en el carrito, incrementar la cantidad
         cart.products[productIndex].quantity++;
       }
 
+      // Guardar el carrito actualizado
       await cart.save();
 
       return {
@@ -50,6 +126,7 @@ class CartService {
       throw error;
     }
   }
+
 
   async deleteProductInCart(cartId, productId) {
     try {

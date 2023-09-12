@@ -89,6 +89,8 @@ class ProductService {
         return { error: "Error al actualizar los productos" };
       }
     };
+
+    
     async getAllProducts(req, res) {
       try {
         const result = await productsModel.getAllProducts().lean();

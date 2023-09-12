@@ -15,6 +15,8 @@ import CONFIG from "./config/config.js";
 import appRouter from "./routes/app.router.js";
 import cors from 'cors';
 import ViewsRouter from "./routes/views/views.routes.js";
+import Mockingrouter from "./routes/Mocking/mocking.routes.js";
+import errorHandler from "./services/errors/indexControlError.js"
 
 const app = express();
 const PORT = CONFIG.PORT || 8080;
@@ -68,6 +70,8 @@ app.use(cors({
 }));
 app.use ('/api', appRouter)
 app.use('/',ViewsRouter.getRouter())
+app.use('/mockingproducts', Mockingrouter.getRouter());
+app.use(errorHandler)
 
 
 

@@ -3,6 +3,7 @@ import ViewsController from "../../controllers/views.controller.js";
 
 
 
+
 class ViewsRouter {
   constructor() {
     this.viewsrouter = Router();
@@ -12,7 +13,7 @@ class ViewsRouter {
     this.viewsrouter.get('/register', (req, res) => {
       res.render("register");
     });
- 
+
     this.viewsrouter.get('/login', (req, res) => {
       res.render("login");
     });

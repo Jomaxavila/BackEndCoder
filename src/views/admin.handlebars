@@ -28,30 +28,32 @@
     </div>
   </nav>
 </div>
-  <div class="m-5 text-center">
-    <h1>Bienvenido al Panel de Administración</h1>
-    <section>
-      <div class="container mt-6" style="max-width: 500px">
-        <form action="/api/products" method="post" enctype="multipart/form-data">
-          <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
-          <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input
-              class="form-control"
-              type="text"
-              placeholder="Ingrese el nombre del producto"
-              name="title"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Descripción</label>
-            <textarea
-              name="description"
-              class="form-control"
-              placeholder="Ingrese una breve descripción del producto"
-              rows="3"
-            ></textarea>
-          </div>
+<div class="m-5 text-center">
+  <h1>Bienvenido al Panel de Administración</h1>
+  <section>
+    <div class="container mt-6" style="max-width: 500px">
+      <form action="/api/products" method="post" enctype="multipart/form-data">
+        <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Ingrese el nombre del producto"
+            name="title"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descripción</label>
+          <textarea
+            name="description"
+            class="form-control"
+            placeholder="Ingrese una breve descripción del producto"
+            rows="3"
+            required 
+          ></textarea>
+        </div>
         <div class="mb-3">
           <label class="form-label">Código</label>
           <input
@@ -60,9 +62,9 @@
             placeholder="Ingrese el código del producto"
             value=""
             name="code"
+            required 
           />
         </div>
-
         <div class="mb-3">
           <label class="form-label">Precio</label>
           <input
@@ -71,9 +73,9 @@
             placeholder="Ingrese el precio del producto"
             value=""
             name="price"
+            required 
           />
         </div>
-
         <div class="mb-3">
           <label class="form-label">Stock</label>
           <input
@@ -83,32 +85,32 @@
             max="10000"
             value="0"
             name="stock"
+            required 
           />
-          <div class="mb-3">
-            <label class="form-label">Imágen</label>
-            <input
-              class="form-control"
-              type="file"
-              name="thumbnail"
-            />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Imágen</label>
+          <input
+            class="form-control"
+            type="file"
+            name="thumbnail"
+            required 
+          />
+        </div>
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="btn btn-primary">Guardar</button>
           </div>
-          <div class="field is-grouped">
-            <div class="control">
-              <button class="btn btn-primary">Guardar</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </section>
-  </div>
-
-  <div class="m-5 text-center">
-<h3>Eliminar Producto</h3>
-<form id="deleteProductForm">
-  <input id="Delete" type="text" name="delete" placeholder="Id Producto" class="delete-product-input">
-  <button id="deleteProductBtn" type="submit">Eliminar</button>
-</form>
-
+        </div>
+      </form>
+    </div>
+  </section>
 </div>
-
+<div class="m-5 text-center">
+  <h3>Eliminar Producto</h3>
+  <form id="deleteProductForm">
+    <input id="Delete" type="text" name="delete" placeholder="Id Producto" class="delete-product-input">
+    <button id="deleteProductBtn" type="submit">Eliminar</button>
+  </form>
+</div>
 <script src="/js/admin.js"></script>
