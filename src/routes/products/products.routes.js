@@ -1,118 +1,105 @@
 import { Router } from 'express';
-import ProductController from '../../controllers/product.controller.js';
-import CustomError from '../../services/errors/CustomError.js';
+import customError from '../../services/errors/customError.js';
 import EError from '../../services/errors/enums.js';
+import ProductController from '../../controllers/product.controller.js';
 
 class ProductsRouter {
   constructor() {
-    this.router = Router();
+    this.productRouter = Router();
 
-    this.router.get('/', async (req, res, next) => {
+    this.productRouter.get('/', async (req, res) => {
       try {
-        const products = await ProductController.getAllProducts();
-        res.status(200).json({
-          status: 'success',
-          data: products,
-        });
+        const products = await ProductController.getAllProducts(req, res);
+        res.json({ status: 'success', payload: products });
       } catch (error) {
-    
-        const customError = new CustomError({
-          name: 'ProductError',
-          cause: error,
-          message: 'Error al obtener todos los productos',
-          code: EError.PRODUCT_NOT_FOUND,
-        });
-        next(customError);
+        res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
       }
     });
 
-    this.router.get('/:id', async (req, res, next) => {
+    this.productRouter.get('/:id', async (req, res) => {
+      const productId = req.params.id;
       try {
-        const productId = req.params.id;
-        const product = await ProductController.getProductById(productId);
-
-        if (!product) {
-     
-          const customError = new CustomError({
-            name: 'ProductError',
-            message: 'Producto no encontrado',
-            code: EError.PRODUCT_NOT_FOUND,
-          });
-          throw customError;
-        }
-
-        res.status(200).json({
-          status: 'success',
-          data: product,
-        });
-      } catch (error) {
-     
-        next(error);
-      }
-    });
-
-    this.router.post('/', async (req, res, next) => {
-      try {
-        const product = req.body;
-        const response = await ProductController.createProduct(product);
-        res.status(response.code).json({
-          status: response.status,
-          message: response.message,
-        });
-      } catch (error) {
-       
-        const customError = new CustomError({
-          name: 'ProductError',
-          cause: error,
-          message: 'Error al crear un producto',
-          code: EError.PRODUCT_CREATION_ERROR,
-        });
-        next(customError);
-      }
-    });
-
-    this.router.put('/:id', async (req, res, next) => {
-      try {
-        const productId = req.params.id;
-        const updatedProduct = req.body;
-        await ProductController.updateProduct(productId, updatedProduct);
-        res.status(200).send('Producto actualizado');
-      } catch (error) {
-      
-        const customError = new CustomError({
-          name: 'ProductError',
-          cause: error,
-          message: 'Error al actualizar un producto',
-          code: EError.PRODUCT_UPDATE_ERROR,
-        });
-        next(customError);
-      }
-    });
-
-    this.router.delete('/:id', async (req, res, next) => {
-      try {
-        const productId = req.params.id;
-        const result = await ProductController.deleteProduct(productId);
-        if (result.message) {
-          res.status(200).send('Producto eliminado');
-          console.log('Producto eliminado');
+        const product = await ProductController.getProductById(req, res, productId);
+        if (product) {
+          res.json({ status: 'success', payload: product });
         } else {
-          res.status(404).send('Producto no encontrado');
+          res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
         }
       } catch (error) {
-        const customError = new CustomError({
-          name: 'ProductError',
-          cause: error,
-          message: 'Error al eliminar un producto',
-          code: EError.PRODUCT_DELETION_ERROR,
-        });
-        next(customError);
+        res.status(500).json({ status: 'error', message: 'Error al obtener el producto', error: error.message });
+      }
+    });
+
+    this.productRouter.post('/', async (req, res) => {
+      const { title, description, price, status, code, stock, category, thumbnail, quantity } = req.body;
+    
+      try {
+        if (!title || !description || !price || !status || !code || !stock || !category || !thumbnail || !quantity) {
+          throw customError.createError({
+            name: 'Error al crear el producto',
+            message: 'Fallo el intento de crear el producto',
+            code: EError.INVALID_TYPES_ERROR,
+          });
+        }
+    
+        const newProduct = {
+          title,
+          description,
+          price,
+          status,
+          code,
+          stock,
+          category,
+          thumbnail,
+          quantity
+        };
+    
+        const response = await ProductController.createProduct(req, res, newProduct);
+    
+        if (response.code === 202) {
+          res.json({ status: 'success', payload: response.message });
+        } else {
+          res.status(response.code).json({ status: 'error', message: response.message });
+        }
+      } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Error al crear el producto', error: error.message });
+      }
+    });
+
+    this.productRouter.put('/:id', async (req, res) => {
+      const productId = req.params.id;
+      const updatedProduct = req.body;
+    
+      try {
+        const response = await ProductController.updateProduct(req, res, productId, updatedProduct);
+        if (response.code === 200) {
+          res.json({ status: 'success', message: 'Producto actualizado' });
+        } else {
+          res.status(response.code).json({ status: 'error', message: response.message });
+        }
+      } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Error al actualizar el producto', error: error.message });
+      }
+    });
+
+    this.productRouter.delete('/:id', async (req, res) => {
+      const productId = req.params.id;
+    
+      try {
+        const response = await ProductController.deleteProduct(req, res, productId);
+        if (response.message) {
+          res.json({ status: 'success', message: 'Producto eliminado' });
+        } else {
+          res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
+        }
+      } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Error al eliminar el producto', error: error.message });
       }
     });
   }
 
   getRouter() {
-    return this.router;
+    return this.productRouter;
   }
 }
 

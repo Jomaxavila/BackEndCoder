@@ -1,4 +1,4 @@
-export const generateProductErrorInfo = (product) => {
+export const generateProductError = (product) => {
 	return `
 	  One or more properties were incomplete or not valid.
 	  List of required properties:
