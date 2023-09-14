@@ -4,15 +4,12 @@ import ProductService from "../services/product.service.js";
   static async getAllProducts(req, res, next) {
     try {
       const result = await ProductService.getProducts();
-      res.status(result.code).json({
-        status: result.status,
-        payload: result.message,
-      });
+      return result; 
     } catch (error) {
       next(error);
     }
   }
-
+  
   static async getProducts(req, res, next) {
     try {
       const { limit = 10, page = 1, sort, query } = req.query;
@@ -114,4 +111,4 @@ import ProductService from "../services/product.service.js";
   }
 }
 
-export default ProductController;
+export default ProductController; 

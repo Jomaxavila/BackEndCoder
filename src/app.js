@@ -17,6 +17,7 @@ import cors from 'cors';
 import ViewsRouter from "./routes/views/views.routes.js";
 import Mockingrouter from "./routes/Mocking/mocking.routes.js";
 import errorMiddle from "./middleware/indexControlError.js"
+import { addLogger } from "./Utils/logger.js";
 
 const app = express();
 const PORT = CONFIG.PORT || 8080;
@@ -72,6 +73,7 @@ app.use ('/api', appRouter)
 app.use('/',ViewsRouter.getRouter())
 app.use('/mockingproducts', Mockingrouter.getRouter());
 app.use(errorMiddle)
+app.use(addLogger)
 
 
 

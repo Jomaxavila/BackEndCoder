@@ -3,34 +3,45 @@ import productsModel from "../models/schemas/productModel.js";
 
 class ProductService {
   
-    addProduct = async (newProduct) => {
-      const product = {
-        title: newProduct.title,
-        description: newProduct.description,
-        code: newProduct.code,
-        price: newProduct.price,
-        status: newProduct.status,
-        stock: newProduct.stock,
-        category: newProduct.category,
-        thumbnail: newProduct.thumbnail,
-        quantity: newProduct.quantity
-      };
-  
-      try {
-        const result = await productsModel.create(product);
-        return {
-          code: 202,
-          status: "success",
-          message: `El producto ${product.title} ha sido agregado con éxito. Su id interno es ${product.id}`,
-        };
-      } catch (error) {
-        return {
-          code: 400,
-          status: "error",
-          message: `${error}`,
-        };
-      }
+  addProduct = async (newProduct) => {
+    const product = {
+      title: newProduct.title,
+      description: newProduct.description,
+      code: newProduct.code,
+      price: newProduct.price,
+      status: newProduct.status,
+      stock: newProduct.stock,
+      category: newProduct.category,
+      thumbnail: newProduct.thumbnail,
+      quantity: newProduct.quantity
     };
+  
+    const existingProduct = await productsModel.findOne({ code: product.code });
+  
+    if (existingProduct) {
+      return {
+        code: 400, 
+        status: "error",
+        message: `El código ${product.code} ya está en uso por otro producto.`,
+      };
+    }
+  
+    try {
+      const result = await productsModel.create(product);
+      return {
+        code: 202,
+        status: "success",
+        message: `El producto ${product.title} ha sido agregado con éxito. Su id interno es ${product.id}`,
+      };
+    } catch (error) {
+      return {
+        code: 400,
+        status: "error",
+        message: `${error}`,
+      };
+    }
+  };
+  
     getProducts = async () => {
       try {
         const products = await productsModel.find();

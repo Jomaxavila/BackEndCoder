@@ -15,20 +15,23 @@ class ProductsRouter {
         res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
       }
     });
+    
 
     this.productRouter.get('/:id', async (req, res) => {
       const productId = req.params.id;
       try {
+        console.log('Obteniendo producto con ID:', productId);
         const product = await ProductController.getProductById(req, res, productId);
         if (product) {
           res.json({ status: 'success', payload: product });
-        } else {
-          res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
-        }
+        } 
       } catch (error) {
+        console.error('Error al obtener el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al obtener el producto', error: error.message });
       }
     });
+    
+    
 
     this.productRouter.post('/', async (req, res) => {
       const { title, description, price, status, code, stock, category, thumbnail, quantity } = req.body;
@@ -56,12 +59,8 @@ class ProductsRouter {
     
         const response = await ProductController.createProduct(req, res, newProduct);
     
-        if (response.code === 202) {
-          res.json({ status: 'success', payload: response.message });
-        } else {
-          res.status(response.code).json({ status: 'error', message: response.message });
-        }
       } catch (error) {
+        console.error('Error al crear el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al crear el producto', error: error.message });
       }
     });
@@ -72,12 +71,8 @@ class ProductsRouter {
     
       try {
         const response = await ProductController.updateProduct(req, res, productId, updatedProduct);
-        if (response.code === 200) {
-          res.json({ status: 'success', message: 'Producto actualizado' });
-        } else {
-          res.status(response.code).json({ status: 'error', message: response.message });
-        }
       } catch (error) {
+        console.error('Error al actualizar el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al actualizar el producto', error: error.message });
       }
     });
@@ -87,12 +82,8 @@ class ProductsRouter {
     
       try {
         const response = await ProductController.deleteProduct(req, res, productId);
-        if (response.message) {
-          res.json({ status: 'success', message: 'Producto eliminado' });
-        } else {
-          res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
-        }
       } catch (error) {
+        console.error('Error al eliminar el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al eliminar el producto', error: error.message });
       }
     });
