@@ -17,7 +17,7 @@ import cors from 'cors';
 import ViewsRouter from "./routes/views/views.routes.js";
 import Mockingrouter from "./routes/Mocking/mocking.routes.js";
 import errorMiddle from "./middleware/indexControlError.js"
-import { addLogger } from "./Utils/logger.js";
+import { addLogger, logger } from "./Utils/logger.js";
 
 const app = express();
 const PORT = CONFIG.PORT || 8080;
@@ -33,10 +33,10 @@ mongoose.connect(CONFIG.MONGO_URI, {
   useUnifiedTopology: true,
 })
   .then(() => {
-    console.log("Connected to Mongo Atlas");
+    logger.info("Connected to Mongo Atlas");
   })
   .catch(error => {
-    console.log("Error en la conexión con Mongo Atlas", error);
+    logger.error("Error en la conexión con Mongo Atlas", error);
   });
 
 app.use(express.json());
@@ -73,13 +73,9 @@ app.use ('/api', appRouter)
 app.use('/',ViewsRouter.getRouter())
 app.use('/mockingproducts', Mockingrouter.getRouter());
 app.use(errorMiddle)
-app.use(addLogger)
-
-
+app.use(addLogger);
 
 const server = httpServer.listen(PORT, () =>
-  console.log(
-    `Server started on port ${PORT} at ${new Date().toLocaleString()}`
-  )
+  logger.info(`Server started on port ${PORT} at ${new Date().toLocaleString()}`)
 );
-server.on("error", (err) => console.log(err));
+server.on("error", (err) => logger.error(err));

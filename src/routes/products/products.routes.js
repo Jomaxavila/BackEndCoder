@@ -2,38 +2,39 @@ import { Router } from 'express';
 import customError from '../../services/errors/customError.js';
 import EError from '../../services/errors/enums.js';
 import ProductController from '../../controllers/product.controller.js';
+import { addLogger } from '../../Utils/logger.js';
 
 class ProductsRouter {
   constructor() {
     this.productRouter = Router();
 
-    this.productRouter.get('/', async (req, res) => {
+    this.productRouter.get('/', addLogger, async (req, res) => {
       try {
+        req.logger.info('Obteniendo todos los productos');
+        
         const products = await ProductController.getAllProducts(req, res);
         res.json({ status: 'success', payload: products });
       } catch (error) {
+        req.logger.error('Error al obtener productos:', error);
         res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
       }
     });
     
-
-    this.productRouter.get('/:id', async (req, res) => {
+    this.productRouter.get('/:id', addLogger, async (req, res) => {
       const productId = req.params.id;
       try {
-        console.log('Obteniendo producto con ID:', productId);
+        req.logger.info(`Obteniendo producto con ID: ${productId}`);
         const product = await ProductController.getProductById(req, res, productId);
         if (product) {
           res.json({ status: 'success', payload: product });
         } 
       } catch (error) {
-        console.error('Error al obtener el producto:', error);
+        req.logger.error(`Error al obtener el producto con ID ${productId}:`, error);
         res.status(500).json({ status: 'error', message: 'Error al obtener el producto', error: error.message });
       }
     });
     
-    
-
-    this.productRouter.post('/', async (req, res) => {
+    this.productRouter.post('/', addLogger, async (req, res) => {
       const { title, description, price, status, code, stock, category, thumbnail, quantity } = req.body;
     
       try {
@@ -60,30 +61,30 @@ class ProductsRouter {
         const response = await ProductController.createProduct(req, res, newProduct);
     
       } catch (error) {
-        console.error('Error al crear el producto:', error);
+        req.logger.error('Error al crear el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al crear el producto', error: error.message });
       }
     });
 
-    this.productRouter.put('/:id', async (req, res) => {
+    this.productRouter.put('/:id', addLogger, async (req, res) => {
       const productId = req.params.id;
       const updatedProduct = req.body;
     
       try {
         const response = await ProductController.updateProduct(req, res, productId, updatedProduct);
       } catch (error) {
-        console.error('Error al actualizar el producto:', error);
+        req.logger.error('Error al actualizar el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al actualizar el producto', error: error.message });
       }
     });
 
-    this.productRouter.delete('/:id', async (req, res) => {
+    this.productRouter.delete('/:id', addLogger, async (req, res) => {
       const productId = req.params.id;
     
       try {
         const response = await ProductController.deleteProduct(req, res, productId);
       } catch (error) {
-        console.error('Error al eliminar el producto:', error);
+        req.logger.error('Error al eliminar el producto:', error);
         res.status(500).json({ status: 'error', message: 'Error al eliminar el producto', error: error.message });
       }
     });

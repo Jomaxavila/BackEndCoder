@@ -1,14 +1,55 @@
-import winston from "winston"
+import winston from "winston";
 
-const logger = winston.createLogger({
-	transports:[
-		new winston.transports.Console({ level:"http"}),
-		new winston.transports.File({filename:'./errores.log', level:'http'})
-	]
-})
+const levelOptions = {
+  levels: {
+    fatal: 0,
+    error: 1,
+    warning: 2,
+    info: 3,
+    debug: 4,
+  },
+  colors: {
+    fatal: 'red',
+    error: 'orange',
+    warning: 'yellow',
+    info: 'blue',
+    debug: 'white',
+  }
+};
 
-export const addLogger = (req, res, next)=>{
-	req.logger = logger
-req.logger.http(`${req.method}en ${req.url} -${new Date().toLocaleTimeString}`)
-next();
-}
+
+const developmentLogger = winston.createLogger({
+  levels: levelOptions.levels,
+  transports: [
+    new winston.transports.Console({
+      level: "debug", 
+      format: winston.format.combine(
+        winston.format.colorize({ all: true, colors: levelOptions.colors }),
+        winston.format.simple()
+      ),
+    }),
+  ],
+});
+
+
+const productionLogger = winston.createLogger({
+  levels: levelOptions.levels,
+  transports: [
+    new winston.transports.File({
+      filename: './alertas.log',
+      level: 'info',
+      format: winston.format.simple(),
+    }),
+  ],
+});
+
+
+export const logger = process.env.NODE_ENV === 'production' ? productionLogger : developmentLogger;
+
+export const addLogger = (req, res, next) => {
+  req.logger = logger;
+  req.logger.info(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
+  req.logger.warn(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
+  next();
+};
+export { developmentLogger, productionLogger };
