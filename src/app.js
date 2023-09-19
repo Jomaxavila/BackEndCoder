@@ -16,6 +16,7 @@ import appRouter from "./routes/app.router.js";
 import cors from 'cors';
 import ViewsRouter from "./routes/views/views.routes.js";
 import Mockingrouter from "./routes/Mocking/mocking.routes.js";
+import loggerTestRoutes from "./routes/logger/loggerTest.routes.js";
 import errorMiddle from "./middleware/indexControlError.js"
 import { addLogger, logger } from "./Utils/logger.js";
 
@@ -72,6 +73,7 @@ app.use(cors({
 app.use ('/api', appRouter)
 app.use('/',ViewsRouter.getRouter())
 app.use('/mockingproducts', Mockingrouter.getRouter());
+app.use('/loggerTest',loggerTestRoutes.getRouter());
 app.use(errorMiddle)
 app.use(addLogger);
 

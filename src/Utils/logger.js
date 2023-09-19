@@ -48,8 +48,11 @@ export const logger = process.env.NODE_ENV === 'production' ? productionLogger :
 
 export const addLogger = (req, res, next) => {
   req.logger = logger;
+  req.logger.warning(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
   req.logger.info(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
-  req.logger.warn(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
+  req.logger.debug(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
   next();
 };
+
+
 export { developmentLogger, productionLogger };

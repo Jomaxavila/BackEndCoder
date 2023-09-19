@@ -16,6 +16,7 @@ class ProductsRouter {
         res.json({ status: 'success', payload: products });
       } catch (error) {
         req.logger.error('Error al obtener productos:', error);
+        req.logger.warning('Hubo un problema al obtener productos');
         res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
       }
     });
@@ -30,6 +31,7 @@ class ProductsRouter {
         } 
       } catch (error) {
         req.logger.error(`Error al obtener el producto con ID ${productId}:`, error);
+        req.logger.warning(`Hubo un problema al obtener el producto con ID ${productId}`);
         res.status(500).json({ status: 'error', message: 'Error al obtener el producto', error: error.message });
       }
     });
@@ -62,6 +64,7 @@ class ProductsRouter {
     
       } catch (error) {
         req.logger.error('Error al crear el producto:', error);
+        req.logger.warning('Hubo un problema al crear el producto');
         res.status(500).json({ status: 'error', message: 'Error al crear el producto', error: error.message });
       }
     });
@@ -74,6 +77,7 @@ class ProductsRouter {
         const response = await ProductController.updateProduct(req, res, productId, updatedProduct);
       } catch (error) {
         req.logger.error('Error al actualizar el producto:', error);
+        req.logger.warning('Hubo un problema al actualizar el producto');
         res.status(500).json({ status: 'error', message: 'Error al actualizar el producto', error: error.message });
       }
     });
@@ -85,6 +89,7 @@ class ProductsRouter {
         const response = await ProductController.deleteProduct(req, res, productId);
       } catch (error) {
         req.logger.error('Error al eliminar el producto:', error);
+        req.logger.warning('Hubo un problema al eliminar el producto');
         res.status(500).json({ status: 'error', message: 'Error al eliminar el producto', error: error.message });
       }
     });

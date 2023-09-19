@@ -3,6 +3,7 @@ import params from "./params.js";
 
 const mode = params.mode;
 
+
 dotenv.config({
   path: `./.env.${mode}`,
 });
@@ -18,6 +19,5 @@ const CONFIG = {
 
 };
 
-console.log("SECRET_KEY:", CONFIG.SECRET_KEY);
 
 export default CONFIG;
