@@ -1,35 +1,43 @@
 import passport from "passport";
 import local from "passport-local";
-import { isValidPassword} from "../utils.js"
+import { isValidPassword } from "../utils.js";
 import GitHubStrategy from "passport-github2";
 import userModel from "../models/schemas/usersModel.js";
-import passportJWT, { ExtractJwt }from "passport-jwt";
+import passportJWT, { ExtractJwt } from "passport-jwt";
 import CONFIG from "./config.js";
 
-
-const JwtStrategy = passportJWT.Strategy
+const JwtStrategy = passportJWT.Strategy;
 
 export const initPassport = () => {
-  passport.use("jwt", new JwtStrategy({
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: CONFIG.SECRET_KEY,
-  }, async (jwt_payload, done) => {
-    try {
-      const user = await userModel.findById(jwt_payload.id);
-      if (!user) {
-        return done(null, false, { message: "Usuario no encontrado" });
+  passport.use(
+    "jwt",
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: CONFIG.SECRET_KEY,
+      },
+      async (jwt_payload, done) => {
+        try {
+          const user = await userModel.findById(jwt_payload.id);
+          if (!user) {
+            return done(null, false, { message: "Usuario no encontrado" });
+          }
+          return done(null, user);
+        } catch (error) {
+          return done(error, false);
+        }
       }
-      return done(null, user);
-    } catch (error) {
-      return done(error, false);
-    }
-  }));
+    )
+  );
 
   // Configuración de GitHub Strategy
-  passport.use("github",new GitHubStrategy({
-    clientID: "Iv1.b4d747ed99c2d832",
-    clientSecret: CONFIG.CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/api/session/githubcallback",
+  passport.use(
+    "github",
+    new GitHubStrategy(
+      {
+        clientID: "Iv1.b4d747ed99c2d832",
+        clientSecret: CONFIG.CLIENT_SECRET,
+        callbackURL: "http://localhost:8080/api/session/githubcallback",
       },
       async (accesToken, refreshToken, profile, done) => {
         try {
@@ -53,6 +61,7 @@ export const initPassport = () => {
       }
     )
   );
+
   // Configuración de la estrategia de autenticación local
   const LocalStrategy = local.Strategy;
   passport.use(
@@ -62,7 +71,7 @@ export const initPassport = () => {
       async (email, password, done) => {
         try {
           const user = await userModel.findOne({ email });
-          if (!user || !isValidPassword(user, password)) { 
+          if (!user || !isValidPassword(user, password)) {
             return done(null, false, { message: "Credenciales incorrectas" });
           }
           return done(null, user);
@@ -72,14 +81,21 @@ export const initPassport = () => {
       }
     )
   );
+
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
-  
-  passport.deserializeUser(async (id, done) => {
-    let user = await userModel.findById(id);
-    done(null, user);
-  });
-  
 
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await userModel.findById(id);
+      if (user) {
+        done(null, user);
+      } else {
+        done(null, false);
+      }
+    } catch (error) {
+      done(error);
+    }
+  });
 };

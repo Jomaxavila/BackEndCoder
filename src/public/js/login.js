@@ -53,3 +53,33 @@ form?.addEventListener('submit', async (event) => {
       timer: 3000
     });
   }})
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const resetPasswordButton = document.getElementById("resetPasswordButton");
+
+    if (resetPasswordButton) {
+      resetPasswordButton.addEventListener("click", () => {
+        // Aquí puedes realizar una solicitud AJAX o enviar un formulario al servidor
+        // para enviar el correo de restablecimiento de contraseña.
+        // Por ejemplo:
+        fetch("/api/session/forgotPassword", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: "correo_del_usuario@example.com" }), // Reemplaza con el correo del usuario
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert("Correo de restablecimiento enviado con éxito.");
+            } else {
+              alert("Error al enviar el correo de restablecimiento.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    }
+  });

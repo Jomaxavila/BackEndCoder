@@ -6,7 +6,7 @@ let chatMessages = document.getElementById("chatMessages");
 Swal.fire({
   title: "Bienvenido a nuestro chat",
   input: "text",
-  text: "Ingresa tu usuario por favor",
+  text: "Ingresa un NICKNAME por favor",
   inputvalidator: (value) => {
     return !value && "Se requiere un nombre para continuar";
   },
