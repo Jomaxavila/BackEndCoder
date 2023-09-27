@@ -17,8 +17,8 @@ class ViewsRouter {
     this.viewsrouter.get('/login', (req, res) => {
       res.render("login");
     });
-    this.viewsrouter.get('/resetPassword', (req, res) => {
-      res.render('resetPassword');
+    this.viewsrouter.get('/restartPassword', (req, res) => {
+      res.render('restartPassword');
     });
     this.viewsrouter.get('/failregister', (req, res) => {
       res.render('failregister');

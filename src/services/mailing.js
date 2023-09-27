@@ -19,7 +19,7 @@ export default class MailingService {
       result = await this.client.sendMail({
         from,
         to,
-        subject, // Corregir "subjet" a "subject"
+        subject, 
         html,
         attachments,
       });
