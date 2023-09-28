@@ -1,6 +1,5 @@
 
 import SessionService from "../services/session.service.js";
-import { SaveUsersDTO } from "../models/dtos/users.dto.js";
 
 
 
@@ -10,6 +9,25 @@ class SessionController {
     const response = await SessionService.restartPassword(email, password);
     res.status(response.status === "success" ? 200 : 400).json(response);
   }
+
+  async sendResetMail(req, res) {
+    try {
+      const { email } = req.body;
+      console.log(email)
+      const response = await SessionService.sendResetMail(email);
+      console.log(response)
+  
+      if (response.status === "success") {
+        res.status(200).json({ message: "Correo de restablecimiento enviado con éxito." });
+      } else {
+        res.status(500).json({ message: "Error al enviar el correo de restablecimiento." });
+      }
+    } catch (error) {
+      console.error("Error al enviar el correo de restablecimiento:", error);
+      res.status(500).json({ message: "Error interno del servidor." });
+    }
+  }
+  
 
   async registerUser(req, res) {
     const { first_name, last_name, email, age, password } = req.body;

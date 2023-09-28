@@ -1,12 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
-import SessionController from "../../controllers/session.controller.js"
-
+import SessionController from "../../controllers/session.controller.js";
 
 class SessionsRouter {
   constructor() {
     this.sessionsRouter = Router();
-   
+
     this.sessionsRouter.get(
       "/github",
       passport.authenticate("github", { scope: ["user:email"] }),
@@ -28,7 +27,7 @@ class SessionsRouter {
     this.sessionsRouter.post(
       "/login",
       passport.authenticate("local"),
-      SessionController.loginUser.bind(SessionController) // Cambio aquí
+      SessionController.loginUser.bind(SessionController)
     );
 
     this.sessionsRouter.post("/logout", SessionController.logout.bind(SessionController));
@@ -38,12 +37,16 @@ class SessionsRouter {
       passport.authenticate("local", { session: false }),
       SessionController.getCurrentSession.bind(SessionController)
     );
+
+    this.sessionsRouter.post(
+      "/send-reset-email",
+      SessionController.sendResetMail.bind(SessionController)
+    );
   }
 
   getRouter() {
-    return this.sessionsRouter; 
+    return this.sessionsRouter;
   }
 }
 
 export default new SessionsRouter();
-
