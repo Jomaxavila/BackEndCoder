@@ -3,6 +3,7 @@ import customError from '../../services/errors/customError.js';
 import EError from '../../services/errors/enums.js';
 import ProductController from '../../controllers/product.controller.js';
 import { addLogger } from '../../Utils/logger.js';
+import auth from '../../config/auth.middleware.js';
 
 class ProductsRouter {
   constructor() {
@@ -37,10 +38,10 @@ class ProductsRouter {
     });
     
     this.productRouter.post('/', addLogger, async (req, res) => {
-      const { title, description, price, status, code, stock, category, thumbnail, quantity,owner } = req.body;
+      const { title, description, price, status, code, category, thumbnail, quantity,owner } = req.body;
     
       try {
-        if (!title || !description || !price || !status || !code || !stock || !category || !thumbnail || !quantity || !owner) {
+        if (!title || !description || !price || !status || !code || !category || !thumbnail || !quantity || !owner) {
           throw customError.createError({
             name: 'Error al crear el producto',
             message: 'Fallo el intento de crear el producto',
@@ -54,7 +55,6 @@ class ProductsRouter {
           price,
           status,
           code,
-          stock,
           category,
           thumbnail,
           quantity

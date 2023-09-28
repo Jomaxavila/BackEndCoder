@@ -25,7 +25,7 @@ form?.addEventListener('submit', async (event) => {
         timer: 3000
       });
       setTimeout(() => {
-        if (responseData.payload.role === 'admin') {
+        if (responseData.payload.role === 'admin','premium') {
           window.location.href = '/admin';
         } else {
           window.location.href = '/products'; 

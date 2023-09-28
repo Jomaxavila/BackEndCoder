@@ -1,50 +1,43 @@
 import userModel from "../models/schemas/usersModel.js";
-import { createhast } from "../utils.js";
+import { createHash } from "../utils.js";
 import CONFIG from "../config/config.js";
 import MailingService from "./mailing.js";
 import jwt from "jsonwebtoken";
 
 class SessionService {
-  async restartPassword(email, password) {
-    if (!email || !password)
+
+  async restartPassword(email, newPassword) {
+    if (!email || !newPassword) {
       return { status: "error", error: "Valores incompletos" };
-
+    }
+  
     const user = await userModel.findOne({ email });
-    if (!user)
+    console.log('User:', user);
+  
+    if (!user) {
       return { status: "error", error: "Usuario no encontrado" };
-
-    const newHashedPassword = createhast(password);
+    }
+  
+    const newPasswordHash = createHash(newPassword);
+    console.log('New Password Hash:', newPasswordHash);
+    console.log('User Password:', user.password);
+  
+    if (newPasswordHash === user.password) {
+      console.log('Password Matched:', newPasswordHash, user.password);
+      return { status: "error", error: "La nueva contraseña no puede ser igual a la contraseña anterior" };
+    }
+  
+    const newHashedPassword = createHash(newPassword);
+  
     await userModel.updateOne(
       { _id: user._id },
       { $set: { password: newHashedPassword } }
     );
-
+  
     return { status: "success", message: "Contraseña restaurada" };
   }
-
-  async registerUser(first_name, last_name, email, age, password) {
-    try {
-      const user = await userModel.findOne({ email });
-      if (user) {
-        return { status: "error", error: "El usuario ya existe" };
-      }
-
-      const newUser = {
-        first_name,
-        last_name,
-        email,
-        age,
-        password: createhast(password),
-      };
-
-      await userModel.create(newUser);
-      return { status: "success", message: "Usuario registrado exitosamente" };
-    } catch (error) {
-      console.log("Error en el registro:", error);
-      return { status: "error", error: "Error al registrar usuario" };
-    }
-  }
-
+  
+  
   async loginUser(req) {
     try {
       req.session.user = {

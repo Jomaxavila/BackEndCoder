@@ -10,7 +10,6 @@ class ProductService {
       code: newProduct.code,
       price: newProduct.price,
       status: newProduct.status,
-      stock: newProduct.stock,
       category: newProduct.category,
       thumbnail: newProduct.thumbnail,
       quantity: newProduct.quantity,

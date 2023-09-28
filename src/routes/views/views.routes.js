@@ -27,7 +27,7 @@ class ViewsRouter {
     this.viewsrouter.get('/cart', (req, res) => {
       res.render('cart');
     });
-    this.viewsrouter.get('/admin',auth(['admin', 'premium']), ViewsController.renderAdminPage);
+    this.viewsrouter.get('/admin',auth(["ADMIN", "PREMIUM"]), ViewsController.renderAdminPage);
   }
 
   getRouter() {

@@ -6,6 +6,6 @@ deleteProductForm.addEventListener('submit', event => {
 
   const productId = document.getElementById('Delete').value;
 
-  deleteProduct(productId);
+  deleteProductForm(productId);
 });
 

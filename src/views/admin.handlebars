@@ -34,11 +34,6 @@
     <div class="container mt-6" style="max-width: 500px">
       <form action="/api/products" method="post" enctype="multipart/form-data">
         <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
-        <<div class="m-5 text-center">
-  <section>
-    <div class="container mt-6" style="max-width: 500px">
-      <form action="/api/products" method="post">
-        <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
         <div class="mb-3">
           <label class="form-label">Nombre</label>
           <input
@@ -81,26 +76,13 @@
           />
         </div>
         <div class="mb-3">
-          <label class="form-label">Stock</label>
-          <input
-            class="form-control"
-            type="number"
-            min="0"
-            max="10000"
-            placeholder="Ingrese la cantidad en stock"
-            name="stock"
-            required 
-          />
-        </div>
-        <div class="mb-3">
           <label class="form-label">Categoría</label>
-          <input
-            class="form-control"
-            type="text"
-            placeholder="Ingrese la categoría del producto"
-            name="category"
-            required 
-          />
+          <select class="form-select" name="category" required>
+            <option value="clasicas">Clásicas</option>
+            <option value="modernas">Modernas</option>
+            <option value="antiguas">Antiguas</option>
+          </select>
+        </div>
         </div>
         <div class="mb-3">
           <label class="form-label">Link de la Imagen</label>

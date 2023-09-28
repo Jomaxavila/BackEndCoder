@@ -1,7 +1,8 @@
 const form = document.getElementById('restartPasswordForm');
 const restartPasswordButton = document.getElementById('restartPasswordButton');
 
-restartPasswordButton.addEventListener('click', async () => {
+form.addEventListener('submit', async (event) => {
+  event.preventDefault(); 
   const data = new FormData(form);
   const obj = {};
   data.forEach((value, key) => (obj[key] = value));
