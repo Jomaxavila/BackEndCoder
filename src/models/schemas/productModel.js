@@ -12,9 +12,20 @@ const productSchema = mongoose.Schema({
   stock: { type: Number, required: true },
   category: { type: String, required: true },
   thumbnail: { type: String, required: true },
-  quantity: { type: Number, required: true }
+  quantity: { type: Number, required: true },
+  owner: {
+    type: String, 
+    ref: 'User', 
+    default: 'admin',
+    validate: {
+      validator: async function (value) {
+        const user = await mongoose.model('User').findById(value);
+        return user && user.role === 'premium';
+      },
+      message: 'El propietario debe ser un usuario premium.',
+    },
+  },
 });
-
 productSchema.plugin(mongoosePaginate)
 
 const productsModel = mongoose.model(productCollection, productSchema);

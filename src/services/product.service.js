@@ -13,7 +13,8 @@ class ProductService {
       stock: newProduct.stock,
       category: newProduct.category,
       thumbnail: newProduct.thumbnail,
-      quantity: newProduct.quantity
+      quantity: newProduct.quantity,
+      owner: newProduct.owner
     };
   
     const existingProduct = await productsModel.findOne({ code: product.code });

@@ -1,46 +1,58 @@
-// login.js
+form?.addEventListener('submit', async (event) => {
+  event.preventDefault();
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('form'); // Reemplaza con el ID de tu formulario
+  const data = new FormData(form);
+  const loginPayload = Object.fromEntries(data);
 
-  form?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    console.log('Form submitted');
+  try {
+    const response = await fetch('/api/session/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(loginPayload)  
+    });
 
-    const data = new FormData(form);
-    const loginPayload = Object.fromEntries(data);
-
-    try {
-      const response = await fetch('/api/session/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(loginPayload),
-      });
-
-      console.log('Fetch response:', response);
-
-      if (response.status === 200) {
-        // ... Código de éxito aquí ...
-      } else if (response.status === 401) {
-        // ... Código de credenciales incorrectas aquí ...
-      } else {
-        // ... Código de otros errores aquí ...
-      }
-    } catch (error) {
-      console.error('Error en la solicitud al servidor:', error);
+    if (response.status === 200) {
+      const responseData = await response.json();
 
       Swal.fire({
+        title: '¡Bienvenido!',
+        text: `¡Bienvenido, ${responseData.payload.name}! ${responseData.message}`,
+        icon: 'success',
+        position: 'center',
+        timer: 3000
+      });
+      setTimeout(() => {
+        if (responseData.payload.role === 'admin') {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/products'; 
+        }
+      }, 3000);
+    } else {
+      Swal.fire({
         title: 'Error',
-        text: 'Ha ocurrido un error en la solicitud al servidor. Inténtalo de nuevo más tarde.',
+        text: 'Credenciales incorrectas. Inténtalo de nuevo.',
         icon: 'error',
         position: 'center',
-        timer: 3000,
+        timer: 3000
       });
     }
-  });
+  } catch (error) {
+    console.error('Error:', error);
+    console.error('Error status:', error.status);
+    console.error('Error message:', error.message);
+    
+    Swal.fire({
+      title: 'Error',
+      text: 'Ha ocurrido un error. Inténtalo de nuevo más tarde.',
+      icon: 'error',
+      position: 'center',
+      timer: 3000
+    });
+  }})
 
   const forgotPasswordButton = document.getElementById('forgotPasswordButton');
 
@@ -113,4 +125,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-});
+

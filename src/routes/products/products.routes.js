@@ -37,10 +37,10 @@ class ProductsRouter {
     });
     
     this.productRouter.post('/', addLogger, async (req, res) => {
-      const { title, description, price, status, code, stock, category, thumbnail, quantity } = req.body;
+      const { title, description, price, status, code, stock, category, thumbnail, quantity,owner } = req.body;
     
       try {
-        if (!title || !description || !price || !status || !code || !stock || !category || !thumbnail || !quantity) {
+        if (!title || !description || !price || !status || !code || !stock || !category || !thumbnail || !quantity || !owner) {
           throw customError.createError({
             name: 'Error al crear el producto',
             message: 'Fallo el intento de crear el producto',

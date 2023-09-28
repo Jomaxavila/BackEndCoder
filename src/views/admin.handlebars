@@ -34,6 +34,11 @@
     <div class="container mt-6" style="max-width: 500px">
       <form action="/api/products" method="post" enctype="multipart/form-data">
         <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
+        <<div class="m-5 text-center">
+  <section>
+    <div class="container mt-6" style="max-width: 500px">
+      <form action="/api/products" method="post">
+        <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
         <div class="mb-3">
           <label class="form-label">Nombre</label>
           <input
@@ -57,10 +62,9 @@
         <div class="mb-3">
           <label class="form-label">Código</label>
           <input
-            class="form-control is-valid"
+            class="form-control"
             type="text"
             placeholder="Ingrese el código del producto"
-            value=""
             name="code"
             required 
           />
@@ -68,10 +72,10 @@
         <div class="mb-3">
           <label class="form-label">Precio</label>
           <input
-            class="form-control is-valid"
-            type="text"
+            class="form-control"
+            type="number"
+            step="0.01"
             placeholder="Ingrese el precio del producto"
-            value=""
             name="price"
             required 
           />
@@ -79,21 +83,43 @@
         <div class="mb-3">
           <label class="form-label">Stock</label>
           <input
-            class="form-control is-valid"
+            class="form-control"
             type="number"
             min="0"
             max="10000"
-            value="0"
+            placeholder="Ingrese la cantidad en stock"
             name="stock"
             required 
           />
         </div>
         <div class="mb-3">
-          <label class="form-label">Imágen</label>
+          <label class="form-label">Categoría</label>
           <input
             class="form-control"
-            type="file"
+            type="text"
+            placeholder="Ingrese la categoría del producto"
+            name="category"
+            required 
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Link de la Imagen</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Ingrese el enlace de la imagen"
             name="thumbnail"
+            required 
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Cantidad</label>
+          <input
+            class="form-control"
+            type="number"
+            min="1"
+            placeholder="Ingrese la cantidad"
+            name="quantity"
             required 
           />
         </div>
@@ -106,6 +132,7 @@
     </div>
   </section>
 </div>
+
 <div class="m-5 text-center">
   <h3>Eliminar Producto</h3>
   <form id="deleteProductForm">

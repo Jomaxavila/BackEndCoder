@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ViewsController from "../../controllers/views.controller.js";
+import auth from "../../config/auth.middleware.js";
 
 
 
@@ -26,7 +27,7 @@ class ViewsRouter {
     this.viewsrouter.get('/cart', (req, res) => {
       res.render('cart');
     });
-    this.viewsrouter.get('/admin', ViewsController.renderAdminPage);
+    this.viewsrouter.get('/admin',auth(['admin', 'premium']), ViewsController.renderAdminPage);
   }
 
   getRouter() {
