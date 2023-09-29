@@ -94,7 +94,7 @@ class SessionService {
 
       const resetToken = await this.generatePasswordResetToken(user._id);
 
-      const resetLink = `${CONFIG.APP_URL}/restartPassword/${resetToken}`;
+      const resetLink = `${"http://localhost:8080"}/restartPassword/${resetToken}`;
 
       const emailContent = `
         <p>Haga clic en el siguiente enlace para restablecer su contraseña:</p>

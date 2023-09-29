@@ -32,7 +32,7 @@
   <h1>Bienvenido al Panel de Administración</h1>
   <section>
     <div class="container mt-6" style="max-width: 500px">
-      <form action="/api/products" method="post" enctype="multipart/form-data">
+      <form id="createProductForm" action="/api/products" method="POST" enctype="multipart/form-data">
         <h3 class="is-size-3 mt-5">Ingrese un nuevo producto</h3>
         <div class="mb-3">
           <label class="form-label">Nombre</label>
@@ -84,7 +84,7 @@
           </select>
         </div>
         </div>
-        <div class="mb-3">
+        <div class=" container mb-3">
           <label class="form-label">Link de la Imagen</label>
           <input
             class="form-control"
@@ -94,7 +94,7 @@
             required 
           />
         </div>
-        <div class="mb-3">
+        <div class="container mb-3">
           <label class="form-label">Cantidad</label>
           <input
             class="form-control"
@@ -107,7 +107,7 @@
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button class="btn btn-primary">Guardar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </div>
       </form>
@@ -123,3 +123,4 @@
   </form>
 </div>
 <script src="/js/admin.js"></script>
+
