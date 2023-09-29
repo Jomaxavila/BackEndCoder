@@ -13,19 +13,23 @@ const productSchema = mongoose.Schema({
   thumbnail: { type: String, required: true },
   quantity: { type: Number, required: true },
   owner: {
-    type: String, 
-    ref: 'User', 
-    default: 'admin',
+    type: mongoose.Schema.Types.ObjectId,
+    default: "admin",
     validate: {
       validator: async function (value) {
-        const user = await mongoose.model('User').findById(value);
-        return user && user.role === 'premium';
+        const user = await mongoose.model("users").findById(value);
+        if (user && (user.role === "premium" || user.role === "admin")) {
+          return true;
+        } else {
+          return false;
+        }
       },
-      message: 'El propietario debe ser un usuario premium.',
+      message: 'El propietario debe ser un usuario premium o admin.',
     },
   },
 });
-productSchema.plugin(mongoosePaginate)
+
+productSchema.plugin(mongoosePaginate);
 
 const productsModel = mongoose.model(productCollection, productSchema);
 
