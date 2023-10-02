@@ -60,13 +60,12 @@ const forgotPasswordButton = document.getElementById('forgotPasswordButton');
 forgotPasswordButton?.addEventListener('click', async (event) => {
   event.preventDefault();
 
-  // Usa una promesa para esperar a que el usuario ingrese su correo electrónico
   const userEmail = await new Promise((resolve) => {
     Swal.fire({
       title: 'Restablecer contraseña',
-      input: 'email', // Esto define un campo de entrada de tipo "email"
+      input: 'email', 
       inputLabel: 'Ingresa tu dirección de correo electrónico',
-      inputPlaceholder: 'Correo electrónico',
+      inputPlaceholder: 'jomaxavila@gmail.com',
       showCancelButton: true,
       confirmButtonText: 'Enviar correo',
       cancelButtonText: 'Cancelar',
@@ -77,12 +76,11 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        resolve(result.value); // Resuelve la promesa con el valor ingresado por el usuario
+        resolve(result.value); 
       }
     });
   });
 
-  // Verifica si el usuario hizo clic en "Enviar correo"
   if (userEmail) {
     try {
       console.log('Enviando solicitud al servidor para restablecer la contraseña...');

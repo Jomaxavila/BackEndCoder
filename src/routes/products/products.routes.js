@@ -62,12 +62,10 @@ class ProductsRouter {
   
           const response = await ProductController.createProduct(req, res, newProduct);
   
-          // Puedes enviar una respuesta exitosa aquí si es necesario
           res.json({ status: 'success', payload: response });
   
       } catch (error) {
-          // No es necesario enviar una respuesta de error aquí,
-          // Express se encargará de manejarla automáticamente
+
           req.logger.warn('Hubo un problema al crear el producto');
       }
   });

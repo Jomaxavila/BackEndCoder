@@ -42,7 +42,7 @@ class SessionsRouter {
       "/send-reset-email",
       SessionController.sendResetMail.bind(SessionController)
     );
-  }
+  }    
 
   getRouter() {
     return this.sessionsRouter;

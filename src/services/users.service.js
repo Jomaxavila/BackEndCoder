@@ -52,6 +52,32 @@ class UserService{
 
     }
   }
+  async changeUserRole(uid, newRole) {
+    try {
+      // Validar que el nuevo rol sea "user" o "premium"
+      if (newRole !== 'user' && newRole !== 'premium') {
+        return { status: 'error', message: 'El nuevo rol no es válido' };
+      }
+  
+      // Buscar al usuario por su ID (uid)
+      const user = await userModel.findById(uid);
+  
+      // Validar que el usuario exista
+      if (!user) {
+        return { status: 'error', message: 'Usuario no encontrado' };
+      }
+  
+      // Actualizar el rol del usuario en la base de datos
+      user.role = newRole;
+      await user.save();
+  
+      return { status: 'success', message: 'Rol de usuario actualizado con éxito' };
+    } catch (error) {
+      console.error('Error al cambiar el rol del usuario:', error);
+      return { status: 'error', message: 'Error al actualizar el rol del usuario' };
+    }
+  }
+  
 }
 
 export default new UserService();

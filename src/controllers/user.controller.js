@@ -2,7 +2,7 @@ import UserService from "../services/users.service.js";
 import { STATUS } from "../utilidades/constantes.js";
 
 class UserController {
-  static async login(req, res, next) {
+   async login(req, res, next) {
     const { email, password } = req.body;
 
     try {
@@ -18,7 +18,7 @@ class UserController {
     }
   }
 
-  static async createUser(req, res, next) {
+   async createUser(req, res, next) {
     try {
       const data = req.body;
       const role = req.body.role || 'usuario';
@@ -29,7 +29,7 @@ class UserController {
     }
   }
 
-  static async getUser(req, res, next) {
+ async getUser(req, res, next) {
     try {
       const { email } = req.body;
       const users = await UserService.getUser(email);
@@ -43,6 +43,28 @@ class UserController {
       next(error);
     }
   }
+
+  async changeUserRole(req, res) {
+    try {
+      const { uid, newRole } = req.body;
+  
+      if (newRole !== 'user' && newRole !== 'premium') {
+        return res.status(400).json({ message: 'El nuevo rol no es válido' });
+      }
+  
+      const result = await UserService.changeUserRole(uid, newRole);
+  
+      if (result.status === 'success') {
+        return res.status(200).json({ message: 'Rol de usuario actualizado con éxito' });
+      } else {
+        return res.status(500).json({ message: 'Error al actualizar el rol del usuario' });
+      }
+    } catch (error) {
+      console.error('Error al cambiar el rol del usuario:', error);
+      return res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+  
 }
 
-export default UserController;
+export default new UserController();
