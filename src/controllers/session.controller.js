@@ -1,9 +1,12 @@
 
+import usersModel from "../models/schemas/usersModel.js";
 import SessionService from "../services/session.service.js";
 
 
 
+
 class SessionController {
+  
   async restartPassword(req, res) {
     const { email, password } = req.body;
     const response = await SessionService.restartPassword(email, password);
@@ -13,21 +16,25 @@ class SessionController {
   async sendResetMail(req, res) {
     try {
       const { email } = req.body;
-      console.log(email)
-      const response = await SessionService.sendResetMail(email);
-      console.log(response)
-  
-      if (response.status === "success") {
-        res.status(200).json({ message: "Correo de restablecimiento enviado con éxito." });
-      } else {
-        res.status(500).json({ message: "Error al enviar el correo de restablecimiento." });
+    
+
+      const user = await usersModel.findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({ message: "Correo electrónico no encontrado" });
       }
+
+      const resetToken = await SessionService.generatePasswordResetToken(user._id)
+
+    
+
     } catch (error) {
-      console.error("Error al enviar el correo de restablecimiento:", error);
-      res.status(500).json({ message: "Error interno del servidor." });
+      console.error("Error al enviar el correo de restablecimiento de contraseña:", error);
+      return res.status(500).json({ message: "Error interno del servidor" });
     }
   }
-  
+
+
 
   async registerUser(req, res) {
     const { first_name, last_name, email, age, password } = req.body;

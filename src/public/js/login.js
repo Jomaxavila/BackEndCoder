@@ -55,7 +55,8 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
-const forgotPasswordButton = document.getElementById('forgotPasswordButton');
+
+const forgotPasswordButton = document.getElementById('sendEmail');
 
 forgotPasswordButton?.addEventListener('click', async (event) => {
   event.preventDefault();
@@ -63,7 +64,7 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
   const userEmail = await new Promise((resolve) => {
     Swal.fire({
       title: 'Restablecer contraseña',
-      input: 'email', 
+      input: 'email',
       inputLabel: 'Ingresa tu dirección de correo electrónico',
       inputPlaceholder: 'jomaxavila@gmail.com',
       showCancelButton: true,
@@ -76,7 +77,7 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        resolve(result.value); 
+        resolve(result.value);
       }
     });
   });
@@ -84,20 +85,20 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
   if (userEmail) {
     try {
       console.log('Enviando solicitud al servidor para restablecer la contraseña...');
-      const response = await fetch('/api/send-reset-email', {
+      const response = await fetch('/api/session/sendEmail', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: userEmail }),
       });
-
+      console.log(userEmail)
       console.log('Fetch response for reset email:', response);
 
       if (response.ok) {
         Swal.fire({
           title: 'Correo Enviado',
-          text: 'Se ha enviado un correo electrónico con instrucciones para restablecer su contraseña.',
+          text: 'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.',
           icon: 'success',
           position: 'center',
           timer: 3000,
@@ -106,7 +107,7 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
         console.error('Error al enviar el correo electrónico');
         Swal.fire({
           title: 'Error',
-          text: 'Se produjo un error al enviar el correo electrónico. Por favor, inténtelo nuevamente.',
+          text: 'Se produjo un error al enviar el correo electrónico. Por favor, inténtalo nuevamente.',
           icon: 'error',
           position: 'center',
           timer: 3000,
@@ -116,7 +117,7 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
       console.error('Error al enviar la solicitud al servidor:', error);
       Swal.fire({
         title: 'Error',
-        text: 'Se produjo un error al enviar la solicitud al servidor. Por favor, inténtelo nuevamente.',
+        text: 'Se produjo un error al enviar la solicitud al servidor. Por favor, inténtalo nuevamente.',
         icon: 'error',
         position: 'center',
         timer: 3000,
@@ -124,3 +125,5 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
     }
   }
 });
+
+

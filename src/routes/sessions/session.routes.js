@@ -32,14 +32,11 @@ class SessionsRouter {
 
     this.sessionsRouter.post("/logout", SessionController.logout.bind(SessionController));
 
-    this.sessionsRouter.get(
-      "/current",
-      passport.authenticate("local", { session: false }),
-      SessionController.getCurrentSession.bind(SessionController)
-    );
+    this.sessionsRouter.post("/sendEmail", SessionController.sendResetMail.bind(SessionController));
+
 
     this.sessionsRouter.post(
-      "/send-reset-email",
+      "/sendEmail",
       SessionController.sendResetMail.bind(SessionController)
     );
   }    
