@@ -83,16 +83,17 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
   });
 
   if (userEmail) {
+    console.log(userEmail)
     try {
       console.log('Enviando solicitud al servidor para restablecer la contraseña...');
-      const response = await fetch('/api/session/sendEmail', { 
+      const response = await fetch('/api/sendEmail', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: userEmail }),
       });
-      console.log(userEmail)
+
       console.log('Fetch response for reset email:', response);
 
       if (response.ok) {
@@ -104,10 +105,10 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
           timer: 3000,
         });
       } else {
-        console.error('Error al enviar el correo electrónico');
+        console.error('Error en la respuesta del servidor:', response.status);
         Swal.fire({
           title: 'Error',
-          text: 'Se produjo un error al enviar el correo electrónico. Por favor, inténtalo nuevamente.',
+          text: 'Se produjo un error en la respuesta del servidor. Por favor, inténtalo nuevamente.',
           icon: 'error',
           position: 'center',
           timer: 3000,
@@ -125,5 +126,3 @@ forgotPasswordButton?.addEventListener('click', async (event) => {
     }
   }
 });
-
-

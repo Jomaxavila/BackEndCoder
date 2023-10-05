@@ -17,13 +17,39 @@ import cors from 'cors';
 import ViewsRouter from "./routes/views/views.routes.js";
 import Mockingrouter from "./routes/Mocking/mocking.routes.js";
 import loggerTestRoutes from "./routes/logger/loggerTest.routes.js";
-import errorMiddle from "./middleware/indexControlError.js"
+import errorMiddle from "./middleware/indexControlError.js";
 import { addLogger, logger } from "./Utils/logger.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Documentacion de las APIs',
+      description: 'Ecommerce de cámaras fotográficas antiguas',
+      version: '1.0.0',
+      contact: {
+        name: "Avila Maxi",
+        url: 'https://www.linkedin.com/in/maxiavila/'
+      }
+    }
+  },
+  apis: [
+    `${__dirname}/docs/carts.yaml`,
+    `${__dirname}/docs/products.yaml`,
+  ],
+
+};
+
+const spec = swaggerJSDoc(swaggerOptions);
 
 const app = express();
 const PORT = CONFIG.PORT || 8080;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+
 
 const httpServer = http.createServer(app);
 const io = new SocketServer(httpServer);
@@ -40,6 +66,7 @@ mongoose.connect(CONFIG.MONGO_URI, {
     logger.error("Error en la conexión con Mongo Atlas", error);
   });
 
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));

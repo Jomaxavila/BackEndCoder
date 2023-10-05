@@ -45,8 +45,6 @@ class CartController {
             message: `Stock insuficiente para el producto con ID ${item.productId}`,
           });
         }
-  
-        // Descuenta la cantidad comprada del stock y actualiza la base de datos
         product.stock -= item.quantity;
         await ProductService.updateProduct(product);
   
@@ -69,16 +67,34 @@ class CartController {
     }
   }
   
-
-
   async addProductInCart(req, res) {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
-      
-      // Llamar a la función de CartService para agregar el producto al carrito
+      const product = await ProductService.getProductById(productId);
+      const cart = await CartService.getCartById(cartId);
+  
+      if (!product) {
+        return res.status(400).json({
+          code: 400,
+          status: "error",
+          message: `Producto con ID ${productId} no encontrado`,
+        });
+      }
+  
+      if (!cart) {
+        return res.status(404).json({
+          code: 404,
+          status: "error",
+          message: "Carrito no encontrado",
+        });
+      }
+  
+      if (req.user.role === 'premium' && req.user._id.toString() === product.owner.toString()) {
+        return res.status(403).json({ message: 'No puedes agregar tu propio producto al carrito' });
+      }
+  
       const response = await CartService.addProductToCart(cartId, productId);
-      
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -89,6 +105,8 @@ class CartController {
     }
   }
   
+  
+
 
   async deleteProductInCart(req, res) {
     try {
@@ -112,7 +130,6 @@ class CartController {
       const cart = await CartService.getCartById(cartId);
       console.log(`Carrito obtenido: ${JSON.stringify(cart)}`);
   
-      // Iterar sobre las propiedades del objeto cart.items
       for (const productId in cart.items) {
         const quantity = cart.items[productId];
   

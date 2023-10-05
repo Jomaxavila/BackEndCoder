@@ -16,17 +16,12 @@ class SessionController {
   async sendResetMail(req, res) {
     try {
       const { email } = req.body;
-    
-
+  
       const user = await usersModel.findOne({ email });
-
       if (!user) {
         return res.status(404).json({ message: "Correo electrónico no encontrado" });
       }
-
       const resetToken = await SessionService.generatePasswordResetToken(user._id)
-
-    
 
     } catch (error) {
       console.error("Error al enviar el correo de restablecimiento de contraseña:", error);
