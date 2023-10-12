@@ -5,7 +5,31 @@ import MailingService from "./mailing.js";
 import jwt from "jsonwebtoken";
 
 class SessionService {
-
+  async registerUser(first_name, last_name, email, age, password) {
+    try {
+      const user = await userModel.findOne({ email });
+      if (user) {
+        return { status: "error", error: "El usuario ya existe" };
+      }
+  
+      const newUser = {
+        first_name,
+        last_name,
+        email,
+        age,
+        password: createHash(password), 
+      };
+  
+      await userModel.create(newUser);
+      return { status: "success", message: "Usuario registrado exitosamente" };
+    } catch (error) {
+      console.log("Error en el registro:", error);
+      return { status: "error", error: "Error al registrar usuario" };
+    }
+  }
+  
+  
+  
   async restartPassword(email, newPassword) {
     if (!email || !newPassword) {
       return { status: "error", error: "Valores incompletos" };
