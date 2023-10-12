@@ -5,7 +5,7 @@ class CartService {
     try {
       const cart = await cartModel.create({});
       return {
-        code: 202,
+        code: 200, // Cambiado a 200 para indicar éxito
         status: "Éxito",
         message: cart,
       };
@@ -17,11 +17,12 @@ class CartService {
       };
     }
   }
+
   async getCartById(cartId) {
     try {
       const cart = await cartModel.findById(cartId);
       if (!cart) {
-        return null; // Retorna null si no se encuentra el carrito
+        return null; 
       }
       return cart;
     } catch (error) {

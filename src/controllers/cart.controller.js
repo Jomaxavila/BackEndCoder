@@ -5,7 +5,20 @@ class CartController {
   async createCart(req, res) {
     try {
       const response = await CartService.createCart();
-      res.status(response.code).json(response);
+      if (response.code === 200) {
+        res.status(200).json({
+          code: 200,
+          status: "success",
+          message: "Cart created successfully",
+          payload: response.message, 
+        });
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: "error",
+          message: "Error creating the cart",
+        });
+      }
     } catch (error) {
       res.status(500).json({
         code: 500,
@@ -14,6 +27,8 @@ class CartController {
       });
     }
   }
+  
+  
   async purchaseCart(req, res) {
     try {
       const cartId = req.params.cid;
@@ -192,7 +207,20 @@ class CartController {
   async getCarts(req, res) {
     try {
       const response = await CartService.getCarts();
-      res.status(response.code).json(response);
+      if (response.code === 202) {
+        res.status(200).json({
+          code: 200,
+          status: "success",
+          message: "Carts retrieved successfully",
+          payload: response.message, 
+        });
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: "error",
+          message: "Error al obtener los carritos",
+        });
+      }
     } catch (error) {
       res.status(500).json({
         code: 500,
@@ -201,6 +229,7 @@ class CartController {
       });
     }
   }
+  
 
   async deleteCart(req, res) {
     try {
