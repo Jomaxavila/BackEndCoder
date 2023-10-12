@@ -35,42 +35,54 @@ class ProductsRouter {
         res.status(500).json({ status: 'error', message: 'Error al obtener el producto', error: error.message });
       }
     });
-    
+
     this.productRouter.post('/', addLogger, async (req, res) => {
       const { title, description, price, status, code, category, thumbnail, quantity, owner } = req.body;
-  
-      try {
-          if (!title || !description || !price || !status || !code || !category || !thumbnail || !quantity || !owner) {
-              throw customError.createError({
-                  name: 'Error al crear el producto',
-                  message: 'Fallo el intento de crear el producto',
-                  code: EError.INVALID_TYPES_ERROR,
-              });
-          }
-  
-          const newProduct = {
-              title,
-              description,
-              price,
-              status,
-              code,
-              category,
-              thumbnail,
-              quantity,
-              owner
-          };
-  
-          const response = await ProductController.createProduct(req, res, newProduct);
-  
-          res.json({ status: 'success', payload: response });
-  
-      } catch (error) {
 
-          req.logger.warn('Hubo un problema al crear el producto');
+      try {
+        if (!title || !description || !price || !status || !code || !category || !thumbnail || !quantity || !owner) {
+          throw customError.createError({
+            name: 'Error al crear el producto',
+            message: 'Fallo el intento de crear el producto',
+            code: EError.INVALID_TYPES_ERROR,
+          });
+        }
+
+        const newProduct = {
+          title,
+          description,
+          price,
+          status,
+          code,
+          category,
+          thumbnail,
+          quantity,
+          owner,
+        };
+
+        const response = await ProductController.createProduct(req, res, newProduct);
+
+        if (response.code === 201) {
+          res.status(201).json({
+            status: 'success',
+            message: response.message,
+          });
+        } else {
+          res.status(400).json({
+            status: 'error',
+            message: response.message,
+          });
+        }
+      } catch (error) {
+        req.logger.warn('Hubo un problema al crear el producto', error);
+        res.status(500).json({
+          status: 'error',
+          message: 'Error al crear el producto',
+          error: error.message,
+        });
       }
-  });
+    });
   
-    
 
     this.productRouter.put('/:id', addLogger, async (req, res) => {
       const productId = req.params.id;

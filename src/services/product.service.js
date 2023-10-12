@@ -3,7 +3,7 @@ import productsModel from "../models/schemas/productModel.js";
 
 class ProductService {
   
-  addProduct = async (newProduct) => {
+  async addProduct(newProduct) {
     const product = {
       title: newProduct.title,
       description: newProduct.description,
@@ -13,34 +13,36 @@ class ProductService {
       category: newProduct.category,
       thumbnail: newProduct.thumbnail,
       quantity: newProduct.quantity,
-      owner: newProduct.owner
+      owner: newProduct.owner,
     };
-  
+
     const existingProduct = await productsModel.findOne({ code: product.code });
-  
+
     if (existingProduct) {
       return {
-        code: 400, 
-        status: "error",
+        code: 400,
+        status: 'error',
         message: `El código ${product.code} ya está en uso por otro producto.`,
       };
     }
-  
+
     try {
       const result = await productsModel.create(product);
       return {
-        code: 202,
-        status: "success",
-        message: `El producto ${product.title} ha sido agregado con éxito. Su id interno es ${product.id}`,
+        code: 201,
+        status: 'success',
+        message: `El producto ${product.title} ha sido agregado con éxito. Su id interno es ${result._id}`,
+        product: result,
       };
     } catch (error) {
       return {
         code: 400,
-        status: "error",
-        message: `${error}`,
+        status: 'error',
+        message: error.message,
       };
     }
-  };
+  }
+  
   
     getProducts = async () => {
       try {

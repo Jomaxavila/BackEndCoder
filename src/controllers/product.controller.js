@@ -1,6 +1,7 @@
 import ProductService from "../services/product.service.js";
 
  class ProductController {
+
   static async getAllProducts(req, res, next) {
     try {
       const result = await ProductService.getProducts();
@@ -57,27 +58,36 @@ import ProductService from "../services/product.service.js";
     }
   }
 
-  static async createProduct(req, res, next) {
+  static async createProduct(req, res, newProduct) {
     try {
-      const product = req.body;
-      const response = await ProductService.addProduct(product);
-      res.status(response.code).json({
-        status: response.status,
-        message: response.message,
-      });
+      const response = await ProductService.addProduct(newProduct);
+
+      return response;
     } catch (error) {
-      next(error);
+      return {
+        code: 500,
+        status: 'error',
+        message: error.message,
+      };
     }
   }
+
 
   static async getProductById(req, res, next) {
     try {
       const productId = req.params.id;
       const response = await ProductService.getProductById(productId);
-      if (response) {
-        res.send(response);
+
+      if (response && response.message) {
+        res.status(404).json({
+          status: 'error',
+          message: 'Producto no encontrado',
+        });
       } else {
-        res.status(404).send({ message: "Producto no encontrado" });
+        res.status(200).json({
+          status: 'success',
+          payload: response,
+        });
       }
     } catch (error) {
       next(error);
