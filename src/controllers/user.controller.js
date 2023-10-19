@@ -46,13 +46,14 @@ class UserController {
 
   async changeUserRole(req, res) {
     try {
-      const { uid, newRole } = req.body;
+      const { newRole } = req.body;
+      const uid = req.params.uid; 
   
       if (newRole !== 'user' && newRole !== 'premium') {
         return res.status(400).json({ message: 'El nuevo rol no es válido' });
       }
   
-      const result = await UserService.changeUserRole(uid, newRole);
+      const result = await UserService.changeUserRole(newRole, uid); 
   
       if (result.status === 'success') {
         return res.status(200).json({ message: 'Rol de usuario actualizado con éxito' });
@@ -64,7 +65,25 @@ class UserController {
       return res.status(500).json({ message: 'Error interno del servidor' });
     }
   }
+
+  async uploadDocuments(req, res, next) {
+    const { uid } = req.params;
+    const { profileImage, productImage, documents } = req.files;
+  
+    console.log('Received files:', req.files); 
+  
+    if (profileImage) {
+      console.log('Uploading profile image...');
+    } else if (productImage) {
+      console.log('Uploading product image...');
+    } else if (documents) {
+      console.log('Uploading document...');
+    } else {
+      return res.status(400).json({ message: 'No se proporcionaron archivos válidos' });
+    }
+  
+    res.status(200).json({ message: 'Documentos cargados con éxito' });
+  }
   
 }
-
 export default new UserController();

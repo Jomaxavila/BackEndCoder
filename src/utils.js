@@ -45,13 +45,25 @@ const __dirname = dirname(__filename);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, __dirname + "/uploads");
+    let folderType = '';
+
+    if (file.fieldname === 'profileImage') {
+      folderType = 'profileImage';
+    } else if (file.fieldname === 'productImage') {
+      folderType = 'productImage';
+    } else if (file.fieldname === 'documents') {
+      folderType = 'documents';
+    }
+
+    cb(null, `src/public/uploads/${folderType}/`);
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
+
 const upload = multer({ storage });
 
 export default upload;
+
