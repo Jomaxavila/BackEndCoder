@@ -29,43 +29,53 @@ class UserController {
     }
   }
 
- async getUser(req, res, next) {
+  async getUser(req, res, next) {
     try {
-      const { email } = req.body;
-      const users = await UserService.getUser(email);
-      if (users.length === 0) {
+      const { userId } = req.body;
+      const user = await UserService.getUser(userId);
+  
+      if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
       } else {
-        const user = users[0];
         res.status(200).json({ user, status: STATUS.SUCCESS });
       }
     } catch (error) {
       next(error);
     }
   }
-
-  async changeUserRole(req, res) {
-    try {
-      const { newRole } = req.body;
-      const uid = req.params.uid; 
   
-      if (newRole !== 'user' && newRole !== 'premium') {
-        return res.status(400).json({ message: 'El nuevo rol no es válido' });
+
+  async changeToPremium(req, res) {
+    try {
+      const { uid } = req.params;
+      const user = await UserService.getUser(uid);
+  
+      if (!user) {
+        return res.status(400).json({ message: 'Usuario no encontrado' });
       }
   
-      const result = await UserService.changeUserRole(newRole, uid); 
+      if (user.role === 'premium' || user.role === 'usuario') {
+        if (user.role === 'usuario') {
+          const hasRequiredDocuments = await UserService.hasRequiredDocuments(uid);
+          if (!hasRequiredDocuments) {
+            return res.status(400).json({ message: 'El usuario no ha terminado de procesar su documentación.' });
+          }
+        }
   
-      if (result.status === 'success') {
-        return res.status(200).json({ message: 'Rol de usuario actualizado con éxito' });
+        user.role = 'premium';
+        user.status = 'complete';
+        await user.save();
+  
+        return res.status(200).json({ message: 'Rol de usuario actualizado a premium con éxito' });
       } else {
-        return res.status(500).json({ message: 'Error al actualizar el rol del usuario' });
+        return res.status(400).json({ message: 'El nuevo rol no es válido' });
       }
     } catch (error) {
       console.error('Error al cambiar el rol del usuario:', error);
       return res.status(500).json({ message: 'Error interno del servidor' });
     }
   }
-
+  
   async uploadDocuments(req, res, next) {
     const { uid } = req.params;
     const { profileImage, productImage, documents } = req.files;

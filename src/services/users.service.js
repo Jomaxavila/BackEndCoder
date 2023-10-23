@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils.js'
-import userModel from '../models/schemas/usersModel.js';
+import usersModel from '../models/schemas/usersModel.js';
 
 
 class UserService{
   async login(email, password) {
     try {
-        const user = await userModel.findOne({ email }); 
+        const user = await usersModel.findOne({ email }); 
         if (user && bcrypt.compareSync(password, user.password)) {
             const role = user.role === 'admin' ? 'admin' : 'usuario';
             const access_token = generateToken({ email, role });
@@ -33,7 +33,7 @@ class UserService{
     try {
         data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10));
         data.role = role;
-        const response = await userModel.create(data);
+        const response = await usersModel.create(data);
         return response;
     } catch (error) {
         throw new Error(error.message);
@@ -41,23 +41,22 @@ class UserService{
 }
 
 
-  async getUser(email){
-    try{
-      const response = await userModel.find({email}).lean()
-
-      return response
-
-    }catch (error){
-      throw new Error(error.message) 
-
-    }
+async getUser(uid) {
+  try {
+    const user = await usersModel.findById(uid).lean();
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
   }
+}
+
+
   async changeUserRole(newRole, uid) {
     try {
       if (newRole !== 'user' && newRole !== 'premium') {
         return { status: 'error', message: 'El nuevo rol no es válido' };
       }
-      const user = await userModel.findById(uid); 
+      const user = await usersModel.findById(uid); 
       if (!user) {
         return { status: 'error', message: 'Usuario no encontrado' };
       }
@@ -73,7 +72,7 @@ class UserService{
 
   async updateUserDocuments(userId, documentType, filePath) {
     try {
-      const user = await userModel.findById(userId);
+      const user = await usersModel.findById(userId);
   
       console.log('User found:', user); 
   
@@ -107,6 +106,28 @@ class UserService{
     } catch (error) {
       console.error('Error al actualizar el documento del usuario:', error);
       return { status: 'error', message: 'Error al actualizar el documento del usuario' };
+    }
+  }
+  async hasRequiredDocuments(uid) {
+    try {
+      const user = await usersModel.findById(uid);
+  
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+  
+      const requiredDocuments = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
+      const documents = user.documents.map(doc => doc.type);
+  
+      for (const doc of requiredDocuments) {
+        if (!documents.includes(doc)) {
+          return false;
+        }
+      }
+  
+      return true;
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
   
