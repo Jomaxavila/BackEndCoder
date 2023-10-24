@@ -80,20 +80,25 @@ class UserController {
     const { uid } = req.params;
     const { profileImage, productImage, documents } = req.files;
   
-    console.log('Received files:', req.files); 
+    console.log('Received files:', req.files);
+    console.log('UID:', uid);
   
     if (profileImage) {
       console.log('Uploading profile image...');
+      await UserService.updateUserDocuments(uid, 'profileImage', profileImage[0].filename);
     } else if (productImage) {
       console.log('Uploading product image...');
+      await UserService.updateUserDocuments(uid, 'productImage', productImage[0].filename);
     } else if (documents) {
       console.log('Uploading document...');
+      await UserService.updateUserDocuments(uid, 'documents', documents[0].filename);
     } else {
       return res.status(400).json({ message: 'No se proporcionaron archivos válidos' });
     }
   
     res.status(200).json({ message: 'Documentos cargados con éxito' });
   }
+  
   
 }
 export default new UserController();

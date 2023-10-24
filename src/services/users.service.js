@@ -74,40 +74,24 @@ async getUser(uid) {
     try {
       const user = await usersModel.findById(userId);
   
-      console.log('User found:', user); 
+      console.log('User found:', user);
+      console.log('Document type:', documentType); // Agrega esta línea para verificar el valor de documentType
+      console.log('File path:', filePath); // Agrega esta línea para verificar el valor de filePath
   
       if (!user) {
         return { status: 'error', message: 'Usuario no encontrado' };
       }
   
-      let folderType = '';
-      if (documentType === 'profileImage') {
-        folderType = 'profiles';
-      } else if (documentType === 'productImage') {
-        folderType = 'products';
-      } else if (documentType === 'documents') {
-        folderType = 'documents';
-      }
-  
-      console.log('Folder type:', folderType); 
-  
-      const fullFilePath = `/public/uploads/${folderType}/${filePath}`;
-  
-      console.log('Full file path:', fullFilePath); 
-  
-      user.documents.push({
-        type: documentType,
-        path: fullFilePath,
-      });
-  
-      await user.save();
-  
-      return { status: 'success', message: 'Documento actualizado con éxito' };
+      // Resto de la función...
     } catch (error) {
       console.error('Error al actualizar el documento del usuario:', error);
       return { status: 'error', message: 'Error al actualizar el documento del usuario' };
     }
   }
+  
+
+
+
   async hasRequiredDocuments(uid) {
     try {
       const user = await usersModel.findById(uid);

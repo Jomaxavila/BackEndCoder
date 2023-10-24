@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema({
   },
   documents: [
     {
-      name: String,
-      reference: String,
+      type: String, 
+      path: String, 
     },
   ],
-  last_connection: Date, 
+  last_connection: Date,
 });
 
 const usersModel = mongoose.model(userCollection, userSchema);
