@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
       folderType = 'profileImage';
     } else if (file.fieldname === 'productImage') {
       folderType = 'productImage';
-    } else if (file.fieldname === 'documents') {
+    } else if (file.fieldname === 'documents' || file.fieldname === 'Identificación' || file.fieldname === 'Comprobante de domicilio' || file.fieldname === 'Comprobante de estado de cuenta') {
       folderType = 'documents';
     }
 

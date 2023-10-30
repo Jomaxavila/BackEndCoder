@@ -1,5 +1,7 @@
 import UserService from "../services/users.service.js";
 import { STATUS } from "../utilidades/constantes.js";
+import {UserResponseDTO} from "../models/dtos/users.dto.js"
+
 
 class UserController {
    async login(req, res, next) {
@@ -31,7 +33,7 @@ class UserController {
 
   async getUser(req, res, next) {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
       const user = await UserService.getUser(userId);
   
       if (!user) {
@@ -39,6 +41,18 @@ class UserController {
       } else {
         res.status(200).json({ user, status: STATUS.SUCCESS });
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  async getAllUsers(req, res, next) {
+    try {
+      const usersResponse = await UserService.getAllUsers();
+  
+      const formattedUsers = usersResponse.message.map(user => new UserResponseDTO(user));
+  
+      res.status(200).json(formattedUsers);
     } catch (error) {
       next(error);
     }
@@ -61,7 +75,7 @@ class UserController {
             return res.status(400).json({ message: 'El usuario no ha terminado de procesar su documentación.' });
           }
         }
-  
+
         user.role = 'premium';
         user.status = 'complete';
         await user.save();

@@ -1,11 +1,8 @@
-export class SaveUsersDTO {
-    constructor(payload){
-        this.first_name= payload.name;
-        this.last_name= payload.lastName;
-        this.full_name= `${payload.name} ${payload.lastName}`.trim(); 
-        this.email= payload.email;
-        this.active= true
+export class UserResponseDTO {
+    constructor(user) {
+        this.first_name = user.first_name;
+        this.last_name = user.last_name;
+        this.email = user.email;
+        this.role = user.role;
     }
-} 
-
-
+}

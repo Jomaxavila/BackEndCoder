@@ -6,7 +6,8 @@ import upload from '../../utils.js';
 class UserRouter {
   constructor() {
     this.router = Router();
-    this.router.get('/', UserController.getUser);
+    this.router.get('/:userId', UserController.getUser);
+    this.router.get('/',UserController.getAllUsers);
     this.router.post('/', UserController.createUser);
     this.router.post('/login', SessionController.loginUser);
     this.router.put('/premium/:uid', UserController.changeToPremium);
@@ -14,6 +15,9 @@ class UserRouter {
       { name: 'profileImage', maxCount: 1 },
       { name: 'productImage', maxCount: 1 },
       { name: 'documents', maxCount: 1 },
+      { name: 'Identificación', maxCount: 1 },
+      { name: 'Comprobante de domicilio', maxCount: 1 },
+      { name: 'Comprobante de estado de cuenta', maxCount: 1 },
     ]), UserController.uploadDocuments);
   }
   getRouter() {

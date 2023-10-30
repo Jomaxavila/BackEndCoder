@@ -51,6 +51,29 @@ async getUser(uid) {
 }
 
 
+async getAllUsers() {
+  try {
+    const users = await usersModel.find({}, 'first_name last_name email role');
+
+    return {
+      code: 202,
+      status: "success",
+      message: users
+    };
+  } catch (error) {
+    console.error("Error al obtener los usuarios:", error.message);
+    return {
+      code: 500,
+      status: "error",
+      message: "Error al obtener los usuarios"
+    };
+  }
+}
+
+
+
+
+
   async changeUserRole(newRole, uid) {
     try {
       if (newRole !== 'user' && newRole !== 'premium') {
