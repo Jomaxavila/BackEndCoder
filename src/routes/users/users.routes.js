@@ -8,6 +8,7 @@ class UserRouter {
     this.router = Router();
     this.router.get('/:userId', UserController.getUser);
     this.router.get('/',UserController.getAllUsers);
+    this.router.delete('/',UserController.deleteAllUsers);
     this.router.post('/', UserController.createUser);
     this.router.post('/login', SessionController.loginUser);
     this.router.put('/premium/:uid', UserController.changeToPremium);

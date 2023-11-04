@@ -57,6 +57,18 @@ class UserController {
       next(error);
     }
   }
+
+  async deleteAllUsers(req, res, next) {
+    try {
+      const usersResponse = await UserService.getAllUsers();
+  
+      const formattedUsers = usersResponse.message.map(user => new UserResponseDTO(user));
+  
+      res.status(200).json(formattedUsers);
+    } catch (error) {
+      next(error);
+    }
+  }
   
 
   async changeToPremium(req, res) {
