@@ -26,7 +26,7 @@ form?.addEventListener('submit', async (event) => {
       });
       setTimeout(() => {
         if (responseData.payload.role === 'admin' || responseData.payload.role === 'premium') {
-          window.location.href = '/deleteUser';
+          window.location.href = '/getwiews';
         } else {
           window.location.href = '/products'; 
         }

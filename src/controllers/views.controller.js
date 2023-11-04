@@ -1,4 +1,6 @@
 import ViewsService from "../services/views.service.js";
+import UserService from "../services/users.service.js"
+
 
 class ViewsController {
   async renderHome(req, res) {
@@ -22,6 +24,7 @@ class ViewsController {
   async renderChat(req, res) {
     try {
       const messages = await ViewsService.getChatMessages();
+
       res.render("chat", { messages });
     } catch (error) {
       res.status(500).render("error", {
@@ -70,6 +73,52 @@ class ViewsController {
       });
     }
   }
+
+async renderDeleteUser(req, res, next) {
+  try {
+    const usersResponse = await UserService.getAllUsers();
+
+    if (usersResponse.status === 'success') {
+      const users = usersResponse.message;
+      res.render("deleteUser", { users, user: req.session.user });
+    } else {
+      res.status(500).render("error", {
+        message: 'Error al obtener la lista de usuarios',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+async renderCart(req, res) {
+  try {
+    // Aquí puedes agregar la lógica para obtener los productos del carrito
+    // Por ejemplo, puedes obtener los productos del carrito desde una base de datos o una sesión.
+    const cartProducts = await obtenerProductosDelCarrito();
+
+    // Luego, renderiza la vista "cart" y pasa los productos del carrito como datos.
+    res.render("cart", { cartProducts });
+  } catch (error) {
+    res.status(500).render("error", {
+      message: "Error al obtener los productos del carrito",
+    });
+  }
+}
+
+  
+  
+  async deleteUser(req, res) {
+    try {
+      const userId = req.body.userId; 
+  
+      res.redirect('/'); 
+    } catch (error) {
+      res.status(500).render('error', {
+        message: 'Error al eliminar el usuario',
+      });
+    }
+  }
+  
 }
 
 export default new ViewsController();

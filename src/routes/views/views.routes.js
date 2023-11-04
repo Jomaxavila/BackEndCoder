@@ -1,9 +1,7 @@
 import { Router } from "express";
 import ViewsController from "../../controllers/views.controller.js";
 import auth from "../../config/auth.middleware.js";
-
-
-
+import viewsController from "../../controllers/views.controller.js";
 
 class ViewsRouter {
   constructor() {
@@ -11,10 +9,10 @@ class ViewsRouter {
     this.viewsrouter.get("/", ViewsController.renderHome);
     this.viewsrouter.get("/chat", ViewsController.renderChat);
     this.viewsrouter.get("/products", ViewsController.renderProducts);
+    this.viewsrouter.get("/cart", viewsController.renderCart)
     this.viewsrouter.get('/register', (req, res) => {
       res.render("register");
     });
-
     this.viewsrouter.get('/login', (req, res) => {
       res.render("login");
     });
@@ -24,10 +22,10 @@ class ViewsRouter {
     this.viewsrouter.get('/failregister', (req, res) => {
       res.render('failregister');
     });
-    this.viewsrouter.get('/cart', (req, res) => {
-      res.render('cart');
-    });
-    this.viewsrouter.get('/admin',auth(["ADMIN", "PREMIUM"]), ViewsController.renderAdminPage);
+   
+    this.viewsrouter.get('/getwiews',auth(["ADMIN"]), ViewsController.renderDeleteUser); 
+
+    this.viewsrouter.get('/admin', auth(["ADMIN", "PREMIUM"]), ViewsController.renderAdminPage);
   }
 
   getRouter() {
