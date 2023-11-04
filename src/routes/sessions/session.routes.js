@@ -35,10 +35,6 @@ class SessionsRouter {
     this.sessionsRouter.post("/sendEmail", SessionController.sendResetMail.bind(SessionController));
 
 
-    this.sessionsRouter.post(
-      "/sendEmail",
-      SessionController.sendResetMail.bind(SessionController)
-    );
   }    
 
   getRouter() {

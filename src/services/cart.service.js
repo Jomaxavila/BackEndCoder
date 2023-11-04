@@ -5,7 +5,7 @@ class CartService {
     try {
       const cart = await cartModel.create({});
       return {
-        code: 200, // Cambiado a 200 para indicar éxito
+        code: 200,
         status: "Éxito",
         message: cart,
       };

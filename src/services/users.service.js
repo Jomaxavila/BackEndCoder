@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils.js'
 import usersModel from '../models/schemas/usersModel.js';
+import { UserResponseDTO } from '../models/dtos/users.dto.js';
 
 
 class UserService{
@@ -53,24 +54,24 @@ async getUser(uid) {
 
 async getAllUsers() {
   try {
-    const users = await usersModel.find({}, 'first_name last_name email role');
+    const users = await usersModel.find();
+
+    const usersDTO = users.map((user) => new UserResponseDTO(user));
 
     return {
       code: 202,
       status: "success",
-      message: users
+      message: usersDTO,
     };
   } catch (error) {
     console.error("Error al obtener los usuarios:", error.message);
     return {
       code: 500,
       status: "error",
-      message: "Error al obtener los usuarios"
+      message: "Error al obtener los usuarios",
     };
   }
 }
-
-
 
 
 
@@ -92,6 +93,7 @@ async getAllUsers() {
       return { status: 'error', message: 'Error al actualizar el rol del usuario' };
     }
   }
+
 
   async updateUserDocuments(userId, documentType, filePath) {
     try {
@@ -158,7 +160,5 @@ async getAllUsers() {
   
   
 }
-
-
 
 export default new UserService();

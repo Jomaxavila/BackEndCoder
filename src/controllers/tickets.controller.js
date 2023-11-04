@@ -6,7 +6,7 @@ import productService from "../services/product.service.js";
 export default class TicketsController {
   static async getTickets(req, res, next) {
     try {
-      // Obtiene todos los tickets
+     
       const tickets = await TicketsService.getTickets();
       res.json(tickets);
     } catch (error) {
