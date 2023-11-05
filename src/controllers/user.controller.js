@@ -237,6 +237,34 @@ class UserController {
     }
   }
   
+  async userNonActive(req, res, next) {
+
+    try {
+      const usersResponse = await UserService.getAllUsers();
+      const sessionResponse = await SessionService.getAllSession();
+
+      const users = usersResponse.message;
+      const sessions = sessionResponse.message;
+
+      const usersWithoutSession = users.filter((user) => {
+        const session = sessions.find((session) => session.email === user.email);
+        return session === undefined; 
+      });
+
+      const usersWithNoSessionInfo = usersWithoutSession.map((user) => {
+        return {
+          ...user,
+          mail: user.email,
+          // Puedes agregar más información relevante aquí si es necesario
+        };
+      });
+
+      // Enviar lista de usarios que no estan con sesion activa
+      res.status(200).json(usersWithNoSessionInfo);
+    } catch (error) {
+      next(error);
+    }
+  }
   
 }
 export default new UserController();

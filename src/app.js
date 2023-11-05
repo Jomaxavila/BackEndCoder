@@ -81,7 +81,7 @@ app.use(
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-       ttl: 172800, // 2 días en segundos ,
+       ttl: 604800, // 7 días de session en segundos.
     }),
   })
 );

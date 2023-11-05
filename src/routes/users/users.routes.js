@@ -9,6 +9,7 @@ class UserRouter {
     this.router.get('/:userId', UserController.getUser);
     this.router.get('/',UserController.getAllUsers);
     this.router.delete('/delete',UserController.deleteAllUsers);
+    this.router.put('/user2dias',UserController.userNonActive);
     this.router.post('/', UserController.createUser);
     this.router.post('/login', SessionController.loginUser);
     this.router.put('/premium/:uid', UserController.changeToPremium);

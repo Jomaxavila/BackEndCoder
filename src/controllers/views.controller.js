@@ -1,5 +1,6 @@
 import ViewsService from "../services/views.service.js";
 import UserService from "../services/users.service.js"
+import SessionService from "../services/session.service.js";
 
 
 class ViewsController {
@@ -93,9 +94,26 @@ async renderCart(req, res) {
 async renderDeleteUser(req, res, next) {
   try {
     const usersResponse = await UserService.getAllUsers();
+  
+      const sessionResponse = await SessionService.getAllSession();
 
-    if (usersResponse.status === 'success') {
       const users = usersResponse.message;
+      const sessions = sessionResponse.message;
+
+      const usersWithoutSession = users.filter((user) => {
+        const session = sessions.find((session) => session.email === user.email);
+        return session === undefined; 
+      });
+
+      const usersWithNoSessionInfo = usersWithoutSession.map((user) => {
+        return {
+          ...user,
+          mail: user.email,
+          // Puedes agregar más información relevante aquí si es necesario
+        };
+      });
+    if (usersResponse.status === 'success') {
+      const users = usersWithNoSessionInfo;
       res.render("deleteUser", { users, user: req.session.user });
     } else {
       res.status(500).render("error", {

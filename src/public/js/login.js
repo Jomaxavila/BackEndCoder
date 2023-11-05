@@ -26,7 +26,7 @@ form?.addEventListener('submit', async (event) => {
       });
       setTimeout(() => {
         if (responseData.payload.role === 'admin' || responseData.payload.role === 'premium') {
-          window.location.href = '/getwiews';
+          window.location.href = '/getviews';
         } else {
           window.location.href = '/products'; 
         }
