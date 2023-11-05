@@ -1,6 +1,8 @@
 import UserService from "../services/users.service.js";
 import { STATUS } from "../utilidades/constantes.js";
 import {UserResponseDTO} from "../models/dtos/users.dto.js"
+import SessionService from "../services/session.service.js";
+import nodemailer from "nodemailer";
 
 
 class UserController {
@@ -58,6 +60,20 @@ class UserController {
     }
   }
 
+  async deleteUsers(req, res, next) {
+    try {
+      const usersResponse = await UserService.getAllUsers();
+      console.log("los usuarios Kills: ",usersResponse)
+  
+      const formattedUsers = usersResponse.message.map(user => new UserResponseDTO(user));
+  
+      res.status(200).json(formattedUsers);
+    } catch (error) {
+      next(error);
+    }
+    
+  }
+  
   async deleteAllUsers(req, res, next) {
     try {
       const usersResponse = await UserService.getAllUsers();
@@ -123,6 +139,102 @@ class UserController {
     }
   
     res.status(200).json({ message: 'Documentos cargados con éxito' });
+  }
+
+  async deleteAllUsers(req, res, next) {
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail", 
+      auth: {
+        user: "quirogaserastour@gmail.com",
+        pass: "xrvvaihydfcgwofd",
+      },
+    });
+
+    // Esta es una función auxiliar para enviar correos electrónicos
+    function sendExpirationEmail(userEmail, userName) {
+      const mailOptions = {
+        from: "quirogaserastour@gmail.com",
+        to: "quirogaserastour@gmail.com",
+        subject: "Notificación de expiración de sesión",
+        text: `Hola ${userName},\n\nTu sesión ha expirado. Por favor, inicia sesión de nuevo si deseas continuar utilizando el servicio.\n\nSaludos,\nEl equipo de soporte`,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log("Error al enviar correo:", error);
+        } else {
+          console.log("Correo enviado: " + info.response);
+        }
+      });
+    }
+
+    try {
+      const usersResponse = await UserService.getAllUsers();
+      const sessionResponse = await SessionService.getAllSession();
+
+      const users = usersResponse.message;
+      const sessions = sessionResponse.message;
+
+      const matchingUsers = users.filter((user) => {
+        const session = sessions.find(
+          (session) => session.email === user.email
+        );
+        return session !== undefined; // Si se encuentra una sesión, se incluye el usuario
+      });
+
+      const usersWithSessionInfo = matchingUsers.map((user) => {
+        const session = sessions.find(
+          (session) => session.email === user.email
+        );
+        return {
+          ...user,
+          mail: user.email,
+          expires: session.expires,
+        };
+      });
+
+      // Función para filtrar por 30 min y devolver el estado de la sesión
+      function checkSessionExpiry(usersWithSessionInfo) {
+        const currentTime = new Date();
+        const thirtyMinutesLater = new Date(currentTime.getTime() + 30 * 60000); // 30 minutos en milisegundos
+        return usersWithSessionInfo.map((user) => {
+          const expiryTime = new Date(user.expires);
+          const isSessionExpired = expiryTime < thirtyMinutesLater;
+          const sessionStatus = isSessionExpired
+            ? `La sesión del usuario ${user.first_name} ${user.last_name} ya expiró.`
+            : `La sesión del usuario ${user.first_name} ${user.last_name} es válida.`;
+
+          if (isSessionExpired) {
+            // Envía un correo electrónico al usuario notificándole que su sesión ha expirado
+            sendExpirationEmail(
+              user.email,
+              `${user.first_name} ${user.last_name}`
+            );
+          }
+
+          // Formatear la fecha de expiración a la hora local de Argentina
+          const expiryLocalTime = expiryTime.toLocaleString("es-AR", {
+            timeZone: "America/Argentina/Buenos_Aires",
+          });
+
+          return {
+            user: `${user.first_name} ${user.last_name}`,
+            sessionStatus: sessionStatus,
+            expiryLocalTime: expiryLocalTime,
+            isSessionExpired: isSessionExpired,
+          };
+        });
+      }
+
+      // Obtener el estado de la sesión para cada usuario
+      const sessionStatuses = checkSessionExpiry(usersWithSessionInfo);
+
+      // Enviar el estado de la sesión como parte de la respuesta JSON
+      res.status(200).json(sessionStatuses);
+    } catch (error) {
+      next(error);
+    }
   }
   
   

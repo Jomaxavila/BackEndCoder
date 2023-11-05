@@ -81,7 +81,7 @@ app.use(
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      ttl: 3600,
+       ttl: 172800, // 2 días en segundos ,
     }),
   })
 );

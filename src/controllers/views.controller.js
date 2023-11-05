@@ -74,6 +74,22 @@ class ViewsController {
     }
   }
 
+
+async renderCart(req, res) {
+  try {
+    const userId = req.session.userId; 
+    const cartProducts = await ViewsService.getCartUser(userId);
+    const user = req.session.user; 
+
+    res.render("cart", { cartProducts, user });
+  } catch (error) {
+    res.status(500).render("error", {
+      message: "Error al obtener los productos del carrito o los datos del usuario",
+    });
+  }
+}
+
+
 async renderDeleteUser(req, res, next) {
   try {
     const usersResponse = await UserService.getAllUsers();
@@ -90,22 +106,7 @@ async renderDeleteUser(req, res, next) {
     next(error);
   }
 }
-async renderCart(req, res) {
-  try {
-    // Aquí puedes agregar la lógica para obtener los productos del carrito
-    // Por ejemplo, puedes obtener los productos del carrito desde una base de datos o una sesión.
-    const cartProducts = await obtenerProductosDelCarrito();
 
-    // Luego, renderiza la vista "cart" y pasa los productos del carrito como datos.
-    res.render("cart", { cartProducts });
-  } catch (error) {
-    res.status(500).render("error", {
-      message: "Error al obtener los productos del carrito",
-    });
-  }
-}
-
-  
   
   async deleteUser(req, res) {
     try {

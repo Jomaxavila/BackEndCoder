@@ -74,7 +74,6 @@ async getAllUsers() {
 }
 
 
-
   async changeUserRole(newRole, uid) {
     try {
       if (newRole !== 'user' && newRole !== 'premium') {
