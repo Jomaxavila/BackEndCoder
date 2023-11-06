@@ -3,8 +3,6 @@ import { createHash } from "../utils.js";
 import CONFIG from "../config/config.js";
 import MailingService from "./mailing.js";
 import jwt from "jsonwebtoken";
-import sessionModel from '../models/schemas/sessionModel.js';
-import { SessionResponseDTO } from '../models/dtos/session.dto.js';
 
 class SessionService {
   async registerUser(first_name, last_name, email, age, password) {
@@ -108,25 +106,6 @@ class SessionService {
     } catch (error) {
       console.log("Error al obtener la sesión actual:", error);
       return { status: "error", error: "Error al obtener la sesión actual" };
-    }
-  }
-
-  async getAllSession() {
-    try {
-      const session = await sessionModel.find();
-      const sessionDTO = session.map((s) => new SessionResponseDTO(s._doc));
-      return {
-        code: 202,
-        status: "success",
-        message: sessionDTO,
-      };
-    } catch (error) {
-      console.error("Error al obtener las sessions:", error.message);
-      return {
-        code: 500,
-        status: "error",
-        message: "Error al obtener las sessions",
-      };
     }
   }
 

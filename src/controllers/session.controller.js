@@ -1,6 +1,7 @@
 
 import usersModel from "../models/schemas/usersModel.js";
 import SessionService from "../services/session.service.js";
+import UserService from "../services/users.service.js";
 
 
 
@@ -33,9 +34,11 @@ class SessionController {
 
   async registerUser(req, res) {
     const { first_name, last_name, email, age, password } = req.body;
-    const response = await SessionService.registerUser(first_name, last_name, email, age, password);
-    res.status(response.status === "success" ? 200 : 400).json(response);
+    // Utiliza la función createUser en lugar de registerUser
+    const response = await UserService.createUser({ first_name, last_name, email, age, password }, 'usuario');
+    res.status(response._id ? 200 : 400).json(response);
   }
+  
 
   async loginUser(req, res) {
     const response = await SessionService.loginUser(req);

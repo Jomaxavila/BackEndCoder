@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { generateToken } from '../utils.js'
 import usersModel from '../models/schemas/usersModel.js';
 import { UserResponseDTO } from '../models/dtos/users.dto.js';
+import cartModel from '../models/schemas/cartModel.js';
 
 
 class UserService{
@@ -29,17 +30,33 @@ class UserService{
     }
 }
 
+async createUser(data, role) {
+  try {
+    data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10));
+    data.role = role;
 
-  async createUser(data, role) {
-    try {
-        data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10));
-        data.role = role;
-        const response = await usersModel.create(data);
-        return response;
-    } catch (error) {
-        throw new Error(error.message);
-    }
+    // Crear un nuevo usuario
+    const user = await usersModel.create(data);
+
+    // Crear un carrito vacío y asignarlo al usuario
+    const newCart = new cartModel({
+      products: [],
+    });
+
+    const cart = await newCart.save();
+
+    // Asignar el ID del carrito al usuario
+    user.cart = cart._id;
+    await user.save();
+
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 }
+
+
+ 
 
 
 async getUser(uid) {
