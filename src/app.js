@@ -95,7 +95,7 @@ app.set("view engine", "handlebars");
 app.use(cookieParser())
 app.use(cors({
   origin: 'http://127.0.0.1:5580', 
-  methods: ['GET', 'POST', 'PUT','DELETE'] 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'] 
 }));
 app.use ('/api', appRouter)
 app.use('/',ViewsRouter.getRouter())

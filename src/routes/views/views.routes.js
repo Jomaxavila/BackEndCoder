@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ViewsController from "../../controllers/views.controller.js";
 import auth from "../../config/auth.middleware.js";
-import viewsController from "../../controllers/views.controller.js";
+
 
 class ViewsRouter {
   constructor() {
@@ -9,7 +9,7 @@ class ViewsRouter {
     this.viewsrouter.get("/", ViewsController.renderHome);
     this.viewsrouter.get("/chat", ViewsController.renderChat);
     this.viewsrouter.get("/products", ViewsController.renderProducts);
-    this.viewsrouter.get("/cart", viewsController.renderCart)
+    this.viewsrouter.get("/cart", ViewsController.renderCart)
     this.viewsrouter.get('/register', (req, res) => {
       res.render("register");
     });

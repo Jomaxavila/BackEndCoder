@@ -42,9 +42,9 @@
         <h5 class="card-title">{{first_name}} {{last_name}}</h5>
         <p class="card-text">{{email}}</p>
         <p class="card-text">{{role}}</p>
-        <form action="/eliminar-usuario" method="POST">
-          <input type="hidden" name="userId" value="{{_id}}">
-          <button type="submit" class="btn btn-danger">Eliminar Usuario</button>
+        <form id="form-eliminar-usuario" action="/api/users/delete" method="POST">
+          <input type="hidden" id="email" name="email" value="{{email}}">
+          <button type="button" class="btn btn-danger btn-eliminar-usuario" data-email="{{email}}">Eliminar Usuario</button>
         </form>
       </div>
     </div>
@@ -57,3 +57,29 @@
 </section>
 <div class="pagination justify-content-center">
 </div>
+<script>// Utiliza una clase para seleccionar todos los botones y vincula el evento 'click' a cada uno
+document.querySelectorAll('.btn-eliminar-usuario').forEach(function(button) {
+   button.addEventListener('click', function(event) {
+     // Usa el atributo de datos para obtener el email asociado con el botón que fue clickeado
+     var email = this.getAttribute('data-email');
+     fetch('/api/users/delete', {
+       method: 'DELETE',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({
+         email: email
+       })
+     }).then(response => {
+       if (response.ok) {
+         console.log('Usuario eliminado');
+         window.location.href = window.location.href;
+         // Aquí podrías también eliminar la tarjeta del usuario del DOM o refrescar la página
+       } else {
+         console.log('Error al eliminar el usuario');
+       }
+     }).catch(error => {
+       console.error('Hubo un problema con la operación fetch: ' + error.message);
+     });
+   });
+ });</script>

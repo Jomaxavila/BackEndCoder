@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		const productId = button.dataset.productId;
   
 		try {
-		  const response = await fetch(`/api/cart/addProductInCart/${productId}`, {
+		  
+		  const response = await fetch(`/api/cart/${carttId}/products/${productId}`, {
+			
 			method: 'POST',
 			headers: {
 			  'Content-Type': 'application/json',

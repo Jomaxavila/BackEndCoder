@@ -74,18 +74,6 @@ class UserController {
     
   }
   
-  async deleteAllUsers(req, res, next) {
-    try {
-      const usersResponse = await UserService.getAllUsers();
-  
-      const formattedUsers = usersResponse.message.map(user => new UserResponseDTO(user));
-  
-      res.status(200).json(formattedUsers);
-    } catch (error) {
-      next(error);
-    }
-  }
-  
 
   async changeToPremium(req, res) {
     try {
@@ -141,7 +129,9 @@ class UserController {
     res.status(200).json({ message: 'Documentos cargados con éxito' });
   }
 
-  async deleteAllUsers(req, res, next) {
+  async deleteAllUsers2(req, res, next) {
+
+    const emailToDelete = req.body.email;
 
     const transporter = nodemailer.createTransport({
       service: "gmail", 
@@ -227,8 +217,13 @@ class UserController {
         });
       }
 
+      console.log("emailToDelete: ", emailToDelete)
+
       // Obtener el estado de la sesión para cada usuario
       const sessionStatuses = checkSessionExpiry(usersWithSessionInfo);
+
+      console.log("sessionStatuses: ", sessionStatuses);
+
 
       // Enviar el estado de la sesión como parte de la respuesta JSON
       res.status(200).json(sessionStatuses);
@@ -236,6 +231,62 @@ class UserController {
       next(error);
     }
   }
+
+  async deleteAllUsers(req, res, next) {
+    const emailToDelete = req.body.email;
+  
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "quirogaserastour@gmail.com",
+        pass: "xrvvaihydfcgwofd",
+      },
+    });
+  
+    // Esta es una función auxiliar para enviar correos electrónicos
+    function sendDeletionEmail(userEmail, userName) {
+      const mailOptions = {
+        from: "quirogaserastour@gmail.com",
+        to: "quirogaserastour@gmail.com",
+        subject: "Notificación de eliminación de cuenta",
+        text: `Hola ${userName},\n\nTu cuenta ha sido eliminada por inactividad.\n\nSaludos,\nEl equipo de soporte`,
+      };
+  
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log("Error al enviar correo:", error);
+        } else {
+          console.log("Correo enviado: " + info.response);
+        }
+      });
+    }
+  
+    try {
+      // Obtener todos los usuarios
+      const usersResponse = await UserService.getAllUsers();
+      const users = usersResponse.message;
+  
+      // Buscar el usuario con el email proporcionado
+      const userToDelete = users.find(user => user.email === emailToDelete);
+  
+      if (userToDelete) {
+        // Eliminar el usuario utilizando el UserService
+        await UserService.deleteUserByEmail(emailToDelete);
+  
+        // Enviar correo electrónico al usuario notificando la eliminación de la cuenta
+        sendDeletionEmail(emailToDelete, `${userToDelete.first_name} ${userToDelete.last_name}`);
+  
+        // Enviar respuesta de éxito
+        res.status(200).json({ message: 'Usuario eliminado con éxito y notificado por correo electrónico.' });
+      } else {
+        // Enviar una respuesta de error si no se encuentra el usuario
+        res.status(404).json({ message: 'Usuario no encontrado.' });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   
   async userNonActive(req, res, next) {
 

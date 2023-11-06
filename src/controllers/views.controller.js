@@ -54,7 +54,7 @@ class ViewsController {
       } else {
         options.sort = { price: sort === "desc" ? 1 : -1 };
       }
-
+  
       const result = await ViewsService.getProductsWithPagination(filters, options);
 
       res.render("products", {
@@ -67,6 +67,8 @@ class ViewsController {
         prevLink: result.hasPrevPage ? `/products?page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/products?page=${result.nextPage}` : null,
         user: req.session.user,
+
+
       });
     } catch (error) {
       res.status(500).render("error", {
@@ -125,19 +127,6 @@ async renderDeleteUser(req, res, next) {
   }
 }
 
-  
-  async deleteUser(req, res) {
-    try {
-      const userId = req.body.userId; 
-  
-      res.redirect('/'); 
-    } catch (error) {
-      res.status(500).render('error', {
-        message: 'Error al eliminar el usuario',
-      });
-    }
-  }
-  
 }
 
 export default new ViewsController();

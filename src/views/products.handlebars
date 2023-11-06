@@ -16,7 +16,7 @@
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item user-nav">
-            <a class="nav-link m-1">{{user.name}}</a>
+           <p class="card-text m-3"> {{user.name}}</p>
           </li>
           <li class="nav-item">
             <form action="/api/session/logout" method="POST">
@@ -49,10 +49,11 @@
                 <p class="card-text">{{description}}</p>
                 <p class="card-text">{{category}}</p>
                 <p class="card-text">$USD {{price}}</p>
-               <form action="/cart/addProductInCart/{{pid}}" method="POST">
+                <p class="card-text">Cart ID: {{cartId}}</p>
+              <form action="/cart/addProductInCart/{{pid}}" method="POST">
+                <input type="hidden" name="cartId" value="{{cartId}}">
                 <button class="btn btn-success m-2 add-to-cart-button" data-product-id="{{pid}}">Agregar al carrito</button>
               </form>
-
               </div>
             </div>
           </div>

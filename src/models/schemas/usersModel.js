@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   cart: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart",
+    ref: "carts",
   },
   role: {
     type: String,
@@ -27,8 +27,9 @@ const userSchema = new mongoose.Schema({
       reference: String,
     },
   ],
-  last_connection: Date, 
+  last_connection: Date,
 });
+
 
 const usersModel = mongoose.model(userCollection, userSchema);
 
