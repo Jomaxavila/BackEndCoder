@@ -90,6 +90,8 @@ class CartService {
       throw error;
     }
   }
+ 
+
   async addProductToCart(cartId, productId) {
     try {
       // Verificar si el carrito existe
@@ -127,6 +129,7 @@ class CartService {
       throw error;
     }
   }
+
 
 
   async deleteProductInCart(cartId, productId) {

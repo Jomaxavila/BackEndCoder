@@ -86,30 +86,9 @@ class CartController {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
-      const product = await ProductService.getProductById(productId);
-      const cart = await CartService.getCartById(cartId);
-  
-      if (!product) {
-        return res.status(400).json({
-          code: 400,
-          status: "error",
-          message: `Producto con ID ${productId} no encontrado`,
-        });
-      }
-  
-      if (!cart) {
-        return res.status(404).json({
-          code: 404,
-          status: "error",
-          message: "Carrito no encontrado",
-        });
-      }
-  
-      if (req.user.role === 'premium' && req.user._id.toString() === product.owner.toString()) {
-        return res.status(403).json({ message: 'No puedes agregar tu propio producto al carrito' });
-      }
-  
+      
       const response = await CartService.addProductToCart(cartId, productId);
+      
       res.status(response.code).json(response);
     } catch (error) {
       res.status(500).json({
@@ -137,59 +116,8 @@ class CartController {
       });
     }
   }
-  async purchaseCart(req, res) {
-    try {
-      const cartId = req.params.cid;
-      console.log(`Inicio de la compra del carrito ${cartId}`);
+ 
   
-      const cart = await CartService.getCartById(cartId);
-      console.log(`Carrito obtenido: ${JSON.stringify(cart)}`);
-  
-      for (const productId in cart.items) {
-        const quantity = cart.items[productId];
-  
-        const product = await ProductService.getProductById(productId);
-  
-        if (!product) {
-          return res.status(400).json({
-            code: 400,
-            status: "error",
-            message: `Producto con ID ${productId} no encontrado`,
-          });
-        }
-  
-        if (product.stock < quantity) {
-          return res.status(400).json({
-            code: 400,
-            status: "error",
-            message: `Stock insuficiente para el producto con ID ${productId}`,
-          });
-        }
-  
-        product.stock -= quantity;
-        await ProductService.updateProduct(product);
-
-      }
-  
-      await CartService.completeCart(cartId);
-  
-      res.status(200).json({
-        code: 200,
-        status: "success",
-        message: "Compra exitosa",
-      });
-    } catch (error) {
-      console.error(`Error en la compra del carrito: ${error.message}`);
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al finalizar la compra del carrito",
-      });
-    }
-  }
-  
-  
-
   async getCart(req, res) {
     try {
       const cartId = req.params.id;

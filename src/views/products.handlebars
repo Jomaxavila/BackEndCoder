@@ -49,10 +49,10 @@
                 <p class="card-text">{{description}}</p>
                 <p class="card-text">{{category}}</p>
                 <p class="card-text">$USD {{price}}</p>
-                <form action="/cart/addProductInCart/{{pid}}" method="POST">
-                  <button type="submit" class="btn btn-success m-2">Agregar al
-                    carrito</button>
-                </form>
+               <form action="/cart/addProductInCart/{{pid}}" method="POST">
+                <button class="btn btn-success m-2 add-to-cart-button" data-product-id="{{pid}}">Agregar al carrito</button>
+              </form>
+
               </div>
             </div>
           </div>
@@ -76,3 +76,5 @@
   
   </div>
 </div>
+
+<script src="/js/products.js"></script>
