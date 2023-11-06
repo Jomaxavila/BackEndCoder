@@ -70,7 +70,8 @@ class SessionService {
         name: `${req.user.first_name} ${req.user.last_name}`,
         email: req.user.email,
         age: req.user.age,
-        role: req.user.role,
+        role: req.user.role
+       
       };
       return {
         status: 'success',

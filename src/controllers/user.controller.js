@@ -52,13 +52,12 @@ class UserController {
     try {
       const usersResponse = await UserService.getAllUsers();
   
-      const formattedUsers = usersResponse.message.map(user => new UserResponseDTO(user));
-  
-      res.status(200).json(formattedUsers);
+      res.status(200).json(usersResponse);
     } catch (error) {
       next(error);
     }
   }
+
 
   async deleteUsers(req, res, next) {
     try {

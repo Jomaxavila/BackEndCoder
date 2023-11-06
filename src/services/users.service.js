@@ -52,17 +52,29 @@ async getUser(uid) {
 }
 
 
+async getUserEmail(email) {
+  try {
+
+    const user = await usersModel.findOne({email:email},{})
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
 async getAllUsers() {
   try {
     const users = await usersModel.find();
 
     const usersDTO = users.map((user) => new UserResponseDTO(user));
-
+  
     return {
       code: 202,
       status: "success",
-      message: usersDTO,
+      message: users
     };
+
   } catch (error) {
     console.error("Error al obtener los usuarios:", error.message);
     return {
@@ -164,7 +176,6 @@ async getAllUsers() {
         // Si no se encuentra el usuario, lanzar un error
         throw new Error('Usuario no encontrado');
       }
-
       // Si se encuentra el usuario, eliminarlo
       await usersModel.deleteOne({ email: email });
       return { status: 'success', message: 'Usuario eliminado con éxito' };

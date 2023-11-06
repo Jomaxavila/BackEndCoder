@@ -16,7 +16,7 @@
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item user-nav">
-           <p class="card-text m-3"> {{user.name}}</p>
+           <p class="card-text m-3"> {{user}}</p>
           </li>
           <li class="nav-item">
             <form action="/api/session/logout" method="POST">
@@ -24,7 +24,7 @@
             </form>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/cart"><i class="fas fa-shopping-cart m-2"></i></a>
+            <a class="nav-link" href="api/carts/{{user}}"><i class="fas fa-shopping-cart m-2"></i></a>
           </li>
         </ul>
       </div>
@@ -32,6 +32,7 @@
   </nav>
 </div>
   <h1 class="m-5 text-center">Lista de productos con paginación</h1>
+  <h2> Hola render user {{user}}</h2>
   <section class="mt-6">
     <div class="container">
       <div class="row justify-content-center">
@@ -42,18 +43,15 @@
                 src="{{thumbnail}}"
                 style="width: 150px; height: 200px; object-fit: contain;"
                 class="img-fluid rounded mx-auto d-block mt-3 mx-auto my-auto"
-                alt="Product Image"
-              />
+                alt="Product Image"/>
               <div class="card-body text-center">
                 <h5 class="card-title">{{title}}</h5>
                 <p class="card-text">{{description}}</p>
                 <p class="card-text">{{category}}</p>
                 <p class="card-text">$USD {{price}}</p>
-                <p class="card-text">Cart ID: {{cartId}}</p>
-              <form action="/cart/addProductInCart/{{pid}}" method="POST">
-                <input type="hidden" name="cartId" value="{{cartId}}">
-                <button class="btn btn-success m-2 add-to-cart-button" data-product-id="{{pid}}">Agregar al carrito</button>
-              </form>
+      
+                <button id = "addToCart" class="btn btn-success m-2 add-to-cart-button" data-cid = "{{../user}}" data-productid="{{_id}}">Agregar al carrito</button>
+            
               </div>
             </div>
           </div>

@@ -12,7 +12,7 @@ export default (io) => {
     socket.on('message', data => {
       messages.push(data);
       io.emit('messagesLogs', messages);
-      console.log(data);
+     
 
       // Guardar el mensaje en la colección "messages"
       const newMessage = new messageModel({

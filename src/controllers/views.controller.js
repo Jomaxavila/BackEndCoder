@@ -54,9 +54,10 @@ class ViewsController {
       } else {
         options.sort = { price: sort === "desc" ? 1 : -1 };
       }
-  
+      const infoUser = await UserService.getUserEmail(req.session.user.email)
       const result = await ViewsService.getProductsWithPagination(filters, options);
-
+      const userCart = infoUser.cart.toString();
+  
       res.render("products", {
         products: result.docs,
         totalPages: result.totalPages,
@@ -66,8 +67,7 @@ class ViewsController {
         nextPage: result.nextPage,
         prevLink: result.hasPrevPage ? `/products?page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/products?page=${result.nextPage}` : null,
-        user: req.session.user,
-
+        user: userCart,
 
       });
     } catch (error) {
@@ -80,9 +80,10 @@ class ViewsController {
 
 async renderCart(req, res) {
   try {
-    const userId = req.session.userId; 
-    const cartProducts = await ViewsService.getCartUser(userId);
-    const user = req.session.user; 
+    const infoUser = await UserService.getUserEmail(req.session.user.email)
+    console.log(req.session.user) 
+    const cartProducts = await ViewsService.getCartUser();
+  
 
     res.render("cart", { cartProducts, user });
   } catch (error) {
