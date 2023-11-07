@@ -57,6 +57,8 @@ class ViewsController {
       const infoUser = await UserService.getUserEmail(req.session.user.email)
       const result = await ViewsService.getProductsWithPagination(filters, options);
       const userCart = infoUser.cart.toString();
+      const nameUser = infoUser.first_name + " " + infoUser.last_name;
+
   
       res.render("products", {
         products: result.docs,
@@ -67,7 +69,8 @@ class ViewsController {
         nextPage: result.nextPage,
         prevLink: result.hasPrevPage ? `/products?page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/products?page=${result.nextPage}` : null,
-        user: userCart,
+        cartIdUser: userCart,
+        user : nameUser,
 
       });
     } catch (error) {
@@ -111,8 +114,11 @@ async renderDeleteUser(req, res, next) {
       const usersWithNoSessionInfo = usersWithoutSession.map((user) => {
         return {
           ...user,
-          mail: user.email,
-          // Puedes agregar más información relevante aquí si es necesario
+          email: user.email,
+          name: user.name,
+          last_name:user.last_name,
+          role:user.role
+      
         };
       });
     if (usersResponse.status === 'success') {
@@ -131,3 +137,4 @@ async renderDeleteUser(req, res, next) {
 }
 
 export default new ViewsController();
+

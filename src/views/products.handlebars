@@ -24,7 +24,7 @@
             </form>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="api/carts/{{user}}"><i class="fas fa-shopping-cart m-2"></i></a>
+            <a class="nav-link" href="api/carts/{{cartIdUser}}"><i class="fas fa-shopping-cart m-2"></i></a>
           </li>
         </ul>
       </div>
@@ -32,7 +32,6 @@
   </nav>
 </div>
   <h1 class="m-5 text-center">Lista de productos con paginación</h1>
-  <h2> Hola render user {{user}}</h2>
   <section class="mt-6">
     <div class="container">
       <div class="row justify-content-center">
@@ -49,9 +48,7 @@
                 <p class="card-text">{{description}}</p>
                 <p class="card-text">{{category}}</p>
                 <p class="card-text">$USD {{price}}</p>
-      
-                <button id = "addToCart" class="btn btn-success m-2 add-to-cart-button" data-cid = "{{../user}}" data-productid="{{_id}}">Agregar al carrito</button>
-            
+                <button id = "addToCart" class="btn btn-success m-2 add-to-cart-button" data-cid = "{{../cartIdUser}}" data-productid="{{_id}}">Agregar al carrito</button>        
               </div>
             </div>
           </div>
