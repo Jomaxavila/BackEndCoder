@@ -3,6 +3,7 @@ import { STATUS } from "../utilidades/constantes.js";
 import {UserResponseDTO} from "../models/dtos/users.dto.js"
 import SessionService from "../services/session.service.js";
 import nodemailer from "nodemailer";
+import CONFIG from "../config/config.js";
 
 
 class UserController {
@@ -135,16 +136,16 @@ class UserController {
     const transporter = nodemailer.createTransport({
       service: "gmail", 
       auth: {
-        user: "quirogaserastour@gmail.com",
-        pass: "xrvvaihydfcgwofd",
+        user: CONFIG.MAILING_USER,
+        pass: CONFIG.MAILING_PASSWORD,
       },
     });
 
     // Esta es una función auxiliar para enviar correos electrónicos
     function sendExpirationEmail(userEmail, userName) {
       const mailOptions = {
-        from: "quirogaserastour@gmail.com",
-        to: "quirogaserastour@gmail.com",
+        from: CONFIG.MAILING_USER,
+        to: "jomaxavila@gmail.com",
         subject: "Notificación de expiración de sesión",
         text: `Hola ${userName},\n\nTu sesión ha expirado. Por favor, inicia sesión de nuevo si deseas continuar utilizando el servicio.\n\nSaludos,\nEl equipo de soporte`,
       };
@@ -237,16 +238,16 @@ class UserController {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "quirogaserastour@gmail.com",
-        pass: "xrvvaihydfcgwofd",
+        user: CONFIG.MAILING_USER,
+        pass: CONFIG.MAILING_PASSWORD,
       },
     });
   
     // Esta es una función auxiliar para enviar correos electrónicos
     function sendDeletionEmail(userEmail, userName) {
       const mailOptions = {
-        from: "quirogaserastour@gmail.com",
-        to: "quirogaserastour@gmail.com",
+        from: CONFIG.MAILING_USER,
+        to: "jomaxavila@gmail.com",
         subject: "Notificación de eliminación de cuenta",
         text: `Hola ${userName},\n\nTu cuenta ha sido eliminada por inactividad.\n\nSaludos,\nEl equipo de soporte`,
       };

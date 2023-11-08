@@ -5,7 +5,7 @@ const cartCollection = "carts";
 const cartSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users', // Referencia al modelo de usuarios
+    ref: 'users', 
   },
   products: [
     {
