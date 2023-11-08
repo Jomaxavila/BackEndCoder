@@ -34,20 +34,28 @@ class ViewsService {
 
 
 
-  async getCartUser(userId) {
-  try {
-    // Aquí puedes implementar la lógica para obtener el carrito del usuario en función de su ID o desde una sesión.
-    const userCart = await cartModel.findOne({ userId }).lean();
-
-    if (!userCart) {
-      return []; // Retorna un array vacío si el carrito no se encuentra.
+  async getCartUser(cartId) {
+    try {
+      const userCart = await cartModel.findOne({ _id: cartId })
+     
+        .populate({
+          path: "products.product",
+          model: "products",
+        })
+        .lean();
+  
+      if (!userCart) {
+        return [];
+      }
+      console.log("userCart de VIEWS SERVICE ", userCart.toString())
+      return userCart.products;
+    } catch (error) {
+      throw new Error("Error al obtener el carrito del usuario");
     }
-
-    return userCart.cartItems; // Esto podría ser la información del carrito del usuario.
-  } catch (error) {
-    throw new Error("Error al obtener el carrito del usuario");
   }
-}
+  
+  
+  
 
 }
 

@@ -81,20 +81,36 @@ class ViewsController {
   }
 
 
-async renderCart(req, res) {
-  try {
-    const infoUser = await UserService.getUserEmail(req.session.user.email)
-    console.log(req.session.user) 
-    const cartProducts = await ViewsService.getCartUser();
+  async renderCartProducts(req, res) {
+    try {
+      console.log("Iniciando renderCartProducts");
+      // Obtén la información del usuario actual
+      const infoUser = await UserService.getUserEmail(req.session.user.email);
+      console.log("Info del usuario:", infoUser);
+      const nameUser = infoUser.first_name + " " + infoUser.last_name;
   
-
-    res.render("cart", { cartProducts, user });
-  } catch (error) {
-    res.status(500).render("error", {
-      message: "Error al obtener los productos del carrito o los datos del usuario",
-    });
+      // Obtén los productos del carrito del usuario
+      const cartProducts = await ViewsService.getCartUser(infoUser.cart);
+      const cartId = infoUser.cart.toString();
+      console.log(cartId)
+      console.log("Productos del carrito:", cartProducts);
+  
+      res.render("cart", {
+        cartProducts,
+        user: nameUser,
+        cartId,
+      });
+      console.log("Renderización exitosa de la vista 'cart'");
+    } catch (error) {
+      console.error("Error en renderCartProducts:", error);
+      res.status(500).render("error", {
+        message: "Error al obtener los productos del carrito o los datos del usuario",
+      });
+    }
   }
-}
+  
+  
+  
 
 
 async renderDeleteUser(req, res, next) {
@@ -114,11 +130,10 @@ async renderDeleteUser(req, res, next) {
       const usersWithNoSessionInfo = usersWithoutSession.map((user) => {
         return {
           ...user,
-          email: user.email,
-          name: user.name,
+          email: user.email,  
+          first_name: user.first_name,
           last_name:user.last_name,
           role:user.role
-      
         };
       });
     if (usersResponse.status === 'success') {

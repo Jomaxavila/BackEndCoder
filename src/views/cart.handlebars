@@ -31,31 +31,32 @@
     </div>
   </nav>
 </div>
-  <h1 class="m-5 text-center">comprando productos</h1>
-  <section class="mt-6">
-    <div class="container">
-      <div class="row justify-content-center">
-        {{#each products}}
-          <div class="mt-5 col-md-4">
-            <div class="card mb-4 h-100">
-              <img
-                src="{{thumbnail}}"
-                style="width: 100px; height: 150px; object-fit: contain;"
-                class="img-fluid rounded mx-auto d-block mt-3 mx-auto my-auto"
-                alt="Product Image"
-              />
-              <div class="card-body text-center">
-                <h5 class="card-title">{{title}}</h5>
-                <p class="card-text">{{description}}</p>
-                <p class="card-text">{{category}}</p>
-                <p class="card-text">$USD {{price}}</p>
-                <form action="/cart/purchase/{{user.cartId}}" method="POST">
-                  <button type="submit" class="btn btn-primary m-2">Realizar Compra</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        {{/each}}
+ <h1 class="m-5 text-center">Comprando productos</h1>
+<section class="mt-6">
+  <div class="container">
+    <div class="row">
+      {{#each cartProducts}}
+  <div class="col-md-4">
+    <div class="card mb-4 h-100">
+      <img
+        src="{{product.thumbnail}}"
+        style="width: 100%; max-height: 200px; object-fit: contain;"
+        class="img-fluid rounded mx-auto d-block mt-3 mx-auto my-auto"
+        alt="Product Image"
+      />
+      <div class="card-body text-center">
+        <h5 class="card-title">{{product.title}}</h5>
+        <p class="card-text">{{product.description}}</p>
+        <p class="card-text">{{product.category}}</p>
+        <p class="card-text">$USD {{product.price}}</p>
+        <p class="card-text">Cantidad:  {{quantity}}</p> <!-- Modificado para mostrar la cantidad del carrito -->
+        <form action="/cart/purchase/{{user.cartId}}" method="POST">
+          <button type="submit" class="btn btn-primary m-2">Realizar Compra</button>
+        </form>
       </div>
     </div>
-  </section>
+  </div>
+{{/each}}
+    </div>
+  </div>
+</section>

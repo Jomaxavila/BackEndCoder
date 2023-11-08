@@ -3,18 +3,16 @@ import messageModel from "../models/schemas/messagesModel.js";
 
 export default (io) => {
   io.on('connection', (socket) => {
-    console.log("New client websocket: ", socket.id);
+
 
     let messages = [];
 
-    console.log("Tenemos un cliente nuevo");
+    
 
     socket.on('message', data => {
       messages.push(data);
       io.emit('messagesLogs', messages);
      
-
-      // Guardar el mensaje en la colección "messages"
       const newMessage = new messageModel({
         user: data.user,
         message: data.message,

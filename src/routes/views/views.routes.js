@@ -9,7 +9,7 @@ class ViewsRouter {
     this.viewsrouter.get("/", ViewsController.renderHome);
     this.viewsrouter.get("/chat", ViewsController.renderChat);
     this.viewsrouter.get("/products", ViewsController.renderProducts);
-    this.viewsrouter.get("/cart", ViewsController.renderCart)
+    this.viewsrouter.get("/cart", ViewsController.renderCartProducts)
     this.viewsrouter.get('/register', (req, res) => {
       res.render("register");
     });
