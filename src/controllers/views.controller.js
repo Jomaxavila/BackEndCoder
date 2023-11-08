@@ -83,24 +83,22 @@ class ViewsController {
 
   async renderCartProducts(req, res) {
     try {
-      console.log("Iniciando renderCartProducts");
-      // Obtén la información del usuario actual
       const infoUser = await UserService.getUserEmail(req.session.user.email);
-      console.log("Info del usuario:", infoUser);
       const nameUser = infoUser.first_name + " " + infoUser.last_name;
-  
-      // Obtén los productos del carrito del usuario
       const cartProducts = await ViewsService.getCartUser(infoUser.cart);
       const cartId = infoUser.cart.toString();
-      console.log(cartId)
-      console.log("Productos del carrito:", cartProducts);
+  
+      // Calcula el monto total
+      const cartTotalAmount = cartProducts.reduce((total, product) => {
+        return total + product.product.price * product.quantity;
+      }, 0);
   
       res.render("cart", {
         cartProducts,
         user: nameUser,
         cartId,
+        cartTotalAmount, // Pasa el monto total a la vista
       });
-      console.log("Renderización exitosa de la vista 'cart'");
     } catch (error) {
       console.error("Error en renderCartProducts:", error);
       res.status(500).render("error", {
@@ -108,6 +106,8 @@ class ViewsController {
       });
     }
   }
+  
+  
   
   
   

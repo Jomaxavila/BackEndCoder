@@ -47,7 +47,6 @@ class ViewsService {
       if (!userCart) {
         return [];
       }
-      console.log("userCart de VIEWS SERVICE ", userCart.toString())
       return userCart.products;
     } catch (error) {
       throw new Error("Error al obtener el carrito del usuario");
