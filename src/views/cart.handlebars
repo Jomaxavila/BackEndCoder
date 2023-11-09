@@ -60,9 +60,7 @@
 </table>
 
 <h3 class="text-center">Total: $USD {{cartTotalAmount}}</h3>
+  <button id = "purchaseCart" class="btn btn-success m-2 add-to-cart-button" data-cid = "{{../cartIdUser}}">Comprar</button> 
 
-<form action="/cart/purchase/{{user.cartId}}" method="POST">
-  <button type="submit" class=" text-center btn btn-primary m-2">Comprar todo</button>
-</form>
   </div>
 </section>

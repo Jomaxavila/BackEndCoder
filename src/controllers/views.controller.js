@@ -87,8 +87,6 @@ class ViewsController {
       const nameUser = infoUser.first_name + " " + infoUser.last_name;
       const cartProducts = await ViewsService.getCartUser(infoUser.cart);
       const cartId = infoUser.cart.toString();
-  
-      // Calcula el monto total
       const cartTotalAmount = cartProducts.reduce((total, product) => {
         return total + product.product.price * product.quantity;
       }, 0);
@@ -97,7 +95,7 @@ class ViewsController {
         cartProducts,
         user: nameUser,
         cartId,
-        cartTotalAmount, // Pasa el monto total a la vista
+        cartTotalAmount, 
       });
     } catch (error) {
       console.error("Error en renderCartProducts:", error);

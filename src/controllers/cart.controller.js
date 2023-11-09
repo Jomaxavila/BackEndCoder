@@ -1,5 +1,6 @@
 import CartService from "../services/cart.service.js";
-import ProductService from "./product.controller.js";
+import ProductService from "../services/product.service.js";
+
 
 class CartController {
   async createCart(req, res) {
@@ -29,12 +30,16 @@ class CartController {
   }
   
   
+ 
   async purchaseCart(req, res) {
     try {
       const cartId = req.params.cid;
+      console.log('Cart ID:', cartId);
       const cart = await CartService.getCartById(cartId);
+      console.log('Cart encontrado:', cart);
   
       if (!cart) {
+        console.log('Carrito no encontrado');
         return res.status(404).json({
           code: 404,
           status: "error",
@@ -42,31 +47,57 @@ class CartController {
         });
       }
   
-      for (const item of cart.items) {
-        const product = await ProductService.getProductById(item.productId);
+      // Un objeto para rastrear la cantidad comprada de cada producto
+      const purchasedQuantities = {};
+  
+      console.log("aca tiene que recorrer y trae cart.products", cart.products);
+  
+      for (const item of cart.products) {
+        const productId = item.product.toString();
+        const product = await ProductService.getProductById(productId);
+        console.log('Producto del carrito:', product);
   
         if (!product) {
+          console.log(`Producto con ID ${item.product} no encontrado`);
           return res.status(400).json({
             code: 400,
             status: "error",
-            message: `Producto con ID ${item.productId} no encontrado`,
+            message: `Producto con ID ${item.product} no encontrado`,
           });
         }
   
-        if (product.stock < item.quantity) {
+        const purchasedQuantity = item.quantity;
+        const productQuantity = product.quantity;
+  
+        // Comprueba si hay suficiente stock para el producto
+        if (productQuantity < purchasedQuantity) {
+          console.log(`Stock insuficiente para el producto con ID ${item.product}`);
           return res.status(400).json({
             code: 400,
             status: "error",
-            message: `Stock insuficiente para el producto con ID ${item.productId}`,
+            message: `Stock insuficiente para el producto con ID ${item.product}`,
           });
         }
-        product.stock -= item.quantity;
-        await ProductService.updateProduct(product);
   
-        await CartService.removeItemFromCart(cartId, item.productId);
+        // Lleva un registro de la cantidad comprada de cada producto
+        purchasedQuantities[productId] = purchasedQuantity;
+        console.log("Cantidad comprada de producto con ID", productId, ":", purchasedQuantity);
+      }
+  
+      console.log("Cantidad comprada de cada producto:", purchasedQuantities);
+  
+      console.log("pasando por aca...");
+  
+     
+      for (const productId in purchasedQuantities) {
+        const product = await ProductService.getProductById(productId);
+        product.quantity -= purchasedQuantities[productId];
+        await ProductService.updateProducts(product);
+        console.log("Stock actualizado para producto con ID", productId, ":", product.quantity);
       }
   
       await CartService.completeCart(cartId);
+      console.log('Carrito marcado como completo:', cartId);
   
       res.status(200).json({
         code: 200,
@@ -74,6 +105,7 @@ class CartController {
         message: "Compra exitosa",
       });
     } catch (error) {
+      console.log('Error:', error);
       res.status(500).json({
         code: 500,
         status: "error",
@@ -81,6 +113,9 @@ class CartController {
       });
     }
   }
+   
+  
+  
   
   async addProductInCart(req, res) {
     try {

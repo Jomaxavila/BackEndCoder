@@ -3,6 +3,7 @@ import customError from '../../services/errors/customError.js';
 import EError from '../../services/errors/enums.js';
 import ProductController from '../../controllers/product.controller.js';
 import { addLogger } from '../../Utils/logger.js';
+import ProductService from '../../services/product.service.js';
 
 
 class ProductsRouter {
@@ -25,7 +26,7 @@ class ProductsRouter {
       const productId = req.params.id;
       try {
         req.logger.info(`Obteniendo producto con ID: ${productId}`);
-        const product = await ProductController.getProductById(req, res, productId);
+        const product = await ProductService.getProductById(req, res, productId);
         if (product) {
           res.json({ status: 'success', payload: product });
         } 

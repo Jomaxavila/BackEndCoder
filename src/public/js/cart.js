@@ -26,4 +26,35 @@ removeButtons.forEach(button => {
             console.error("Fetch catch, Error al eliminar del carrito:", error);
         });
     });
+
+
+    const purchaseButton = document.querySelectorAll("#purchaseCart");
+
+    purchaseButton.forEach(button => {
+    button.addEventListener("click", () => {
+        const cid = button.dataset.cid;
+    
+
+        fetch(`http://localhost:8080/api/carts/${cid}/purchase`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            Toastify({
+                text: 'Carrito Comprado, revisa tu email',
+                duration: 3000,
+                destination: 'right',
+                gravity: "bottom",
+                close: true,
+            }).showToast();
+            // Puedes recargar la página o actualizar la lista de productos en el carrito aquí
+        })
+        .catch((error) => {
+            console.error("Fetch catch, Error al comprar el carrito:", error);
+        });
+    });
+    });
 });

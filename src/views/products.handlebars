@@ -7,11 +7,11 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/products">Home</a>
+           <li class="nav-item">
+            <a class="nav-link" href="/chat">Chat Live</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/chat">CHAT LIVE</a>
+            <a class="nav-link active" aria-current="page" href="/products">Back Home</a>
           </li>
         </ul>
         <ul class="navbar-nav">
@@ -36,18 +36,18 @@
     <div class="container">
       <div class="row justify-content-center">
         {{#each products}}
-          <div class="mt-5 col-md-4">
+          <div class="mt-5 col-md-5">
             <div class="card mb-4 h-100">
               <img
                 src="{{thumbnail}}"
                 style="width: 150px; height: 200px; object-fit: contain;"
-                class="img-fluid rounded mx-auto d-block mt-3 mx-auto my-auto"
+                class="img-fluid rounded mx-auto d-block mt-4 mx-auto my-auto"
                 alt="Product Image"/>
               <div class="card-body text-center">
                 <h5 class="card-title">{{title}}</h5>
                 <p class="card-text">{{description}}</p>
-                <p class="card-text">{{category}}</p>
-                <p class="card-text">$USD {{price}}</p>
+                <p class="card-text"> Stock {{quantity}}</p>
+                <p class="card-text">$usd {{price}}</p>
                 <button id = "addToCart" class="btn btn-success m-2 add-to-cart-button" data-cid = "{{../cartIdUser}}" data-productid="{{_id}}">Agregar al carrito</button>        
               </div>
             </div>
