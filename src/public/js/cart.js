@@ -1,60 +1,50 @@
-const removeButtons = document.querySelectorAll("#removeProductCartButton");
+const purchaseButtons = document.querySelectorAll(".add-to-cart-button");
 
-removeButtons.forEach(button => {
-    button.addEventListener("click", () => {
+purchaseButtons.forEach(button => {
+    button.addEventListener("click", async () => {
         const cid = button.dataset.cid;
-        const pid = button.dataset.productid;
 
-        fetch(`http://localhost:8080/api/carts/${cid}/products/${pid}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            Toastify({
-                text: 'Producto eliminado del carrito',
-                duration: 3000,
-                destination: 'right',
-                gravity: "bottom",
-                close: true,
-            }).showToast();
-            // Puedes recargar la página o actualizar la lista de productos en el carrito aquí
-        })
-        .catch((error) => {
-            console.error("Fetch catch, Error al eliminar del carrito:", error);
-        });
-    });
+        try {
+            const response = await fetch(`/api/carts/${cid}/purchase`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-
-    const purchaseButton = document.querySelectorAll("#purchaseCart");
-
-    purchaseButton.forEach(button => {
-    button.addEventListener("click", () => {
-        const cid = button.dataset.cid;
-    
-
-        fetch(`http://localhost:8080/api/carts/${cid}/purchase`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            Toastify({
-                text: 'Carrito Comprado, revisa tu email',
-                duration: 3000,
-                destination: 'right',
-                gravity: "bottom",
-                close: true,
-            }).showToast();
-            // Puedes recargar la página o actualizar la lista de productos en el carrito aquí
-        })
-        .catch((error) => {
-            console.error("Fetch catch, Error al comprar el carrito:", error);
-        });
-    });
+            if (response.ok) {
+                const data = await response.json();
+              
+                Swal.fire({
+                    title: 'Compra Exitosa, revisa tu correo para más detalles',
+                    text: data.message, 
+                    icon: 'success',
+                    timer: 3000,
+                    position: 'center',
+                }).then(() => {
+                    // Redirige o realiza alguna acción adicional
+                    location.reload(); 
+                    window.location.href = 'products'; // Recarga la página
+                });
+            } else {
+                // La compra falló, muestra un mensaje de error
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',
+                    icon: 'error',
+                    timer: 3000,
+                    position: 'center',
+                });
+            }
+        } catch (error) {
+            console.error("Error al comprar el carrito:", error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',
+                icon: 'error',
+                timer: 3000,
+                position: 'center',
+            });
+        }
     });
 });

@@ -85,8 +85,9 @@ class ViewsController {
     try {
       const infoUser = await UserService.getUserEmail(req.session.user.email);
       const nameUser = infoUser.first_name + " " + infoUser.last_name;
+      const userCart = infoUser.cart.toString();
+      const success = req.query.success === 'true';
       const cartProducts = await ViewsService.getCartUser(infoUser.cart);
-      const cartId = infoUser.cart.toString();
       const cartTotalAmount = cartProducts.reduce((total, product) => {
         return total + product.product.price * product.quantity;
       }, 0);
@@ -94,8 +95,10 @@ class ViewsController {
       res.render("cart", {
         cartProducts,
         user: nameUser,
-        cartId,
         cartTotalAmount, 
+        userCart,
+        success
+
       });
     } catch (error) {
       console.error("Error en renderCartProducts:", error);

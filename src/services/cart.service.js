@@ -30,6 +30,16 @@ class CartService {
     }
   }
 
+  async updateCart(cart) {
+    try {
+      await cartModel.updateOne({ _id: cart._id }, { $set: cart });
+      return { message: "Carrito actualizado" };
+    } catch (error) {
+      console.error("Error al actualizar el carrito:", error.message);
+      return { error: "Error al actualizar el carrito" };
+    }
+  }
+
   async removeItemFromCart(cartId, productId) {
     try {
       const cart = await cartModel.findById(cartId);
