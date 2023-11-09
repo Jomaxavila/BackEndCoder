@@ -23,7 +23,7 @@ class ViewsRouter {
       res.render('failregister');
     });
    
-    this.viewsrouter.get('/getviews',auth(["ADMIN"]), ViewsController.renderDeleteUser); 
+    this.viewsrouter.get('/getviews',auth(["ADMIN","PREMIUM"]), ViewsController.renderDeleteUser); 
 
     this.viewsrouter.get('/admin', auth(["ADMIN", "PREMIUM"]), ViewsController.renderAdminPage);
   }

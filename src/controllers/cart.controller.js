@@ -73,6 +73,16 @@ class CartController {
             }
         }
 
+        if (productsNotPurchased.length > 0) {
+            // Muestra una alerta de error en caso de falta de stock
+            return res.status(400).json({
+                code: 400,
+                status: "error",
+                message: "No se pudo completar la compra debido a la falta de stock",
+                error: true,
+            });
+        }
+
         for (const productId in purchasedQuantities) {
             const product = await ProductService.getProductById(productId);
             product.quantity -= purchasedQuantities[productId];
@@ -80,18 +90,16 @@ class CartController {
             console.log("Stock actualizado para producto con ID", productId, ":", product.quantity);
         }
 
-        const remainingProducts = cart.products.filter(
-            (item) => !productsNotPurchased.includes(item.product.toString())
-        );
-
         console.log("Productos que no se pudieron comprar:", productsNotPurchased);
-        console.log("Productos que quedan en el carrito:", remainingProducts);
 
         await CartService.completeCart(cartId);
         console.log('Carrito marcado como completo:', cartId);
 
-        // Elimina todos los productos del carrito
-        cart.products = [];
+        // Elimina los productos comprados del carrito
+        cart.products = cart.products.filter(
+            (item) => productsNotPurchased.includes(item.product.toString())
+        );
+
         await CartService.updateCart(cart);
 
         res.status(200).json({
@@ -110,10 +118,6 @@ class CartController {
     }
 }
 
-  
-  
-
-  
   
   async addProductInCart(req, res) {
     try {
