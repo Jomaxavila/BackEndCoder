@@ -12,36 +12,37 @@ purchaseButtons.forEach(button => {
                 },
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
-              
-                if (data.error) {
-                    // Muestra una alerta de error en caso de falta de stock
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'No se pudo completar la compra debido a la falta de stock.',
-                        icon: 'error',
-                        timer: 3000,
-                        position: 'center',
-                    });
-                } else {
+                if (data.productsNotPurchased.length > 0) {
+                    // Al menos un producto se pudo comprar
                     Swal.fire({
                         title: 'Compra Exitosa, revisa tu correo para más detalles',
-                        text: data.message, 
+                        text: data.message,
                         icon: 'success',
                         timer: 3000,
                         position: 'center',
                     }).then(() => {
                         // Redirige o realiza alguna acción adicional
-                        location.reload(); 
+                        location.reload();
                         window.location.href = 'products'; // Recarga la página
+                    });
+                } else {
+                    // Ningún producto se pudo comprar
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'No hay productos con suficiente stock para completar la compra.',
+                        icon: 'error',
+                        timer: 3000,
+                        position: 'center',
                     });
                 }
             } else {
-        
+                // La compra falló por otro motivo
                 Swal.fire({
                     title: 'Error',
-                    text: 'Sin stock temportalmente. Inténtalo de nuevo más tarde.',
+                    text: 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',
                     icon: 'error',
                     timer: 3000,
                     position: 'center',

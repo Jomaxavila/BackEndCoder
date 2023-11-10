@@ -28,7 +28,6 @@ class CartController {
       });
     }
   }
-  
   async purchaseCart(req, res) {
     try {
         const cartId = req.params.cid;
@@ -73,13 +72,12 @@ class CartController {
             }
         }
 
-        if (productsNotPurchased.length > 0) {
-            // Muestra una alerta de error en caso de falta de stock
+        if (Object.keys(purchasedQuantities).length === 0) {
+            // No hay productos con suficiente stock para comprar
             return res.status(400).json({
                 code: 400,
                 status: "error",
-                message: "No se pudo completar la compra debido a la falta de stock",
-                error: true,
+                message: "No hay productos con suficiente stock para completar la compra",
             });
         }
 
@@ -117,6 +115,7 @@ class CartController {
         });
     }
 }
+
 
   
   async addProductInCart(req, res) {
