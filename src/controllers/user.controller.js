@@ -4,9 +4,13 @@ import {UserResponseDTO} from "../models/dtos/users.dto.js"
 import SessionService from "../services/session.service.js";
 import nodemailer from "nodemailer";
 import CONFIG from "../config/config.js";
+import { sendDeletionEmail } from "../services/mailing.js";
+import { sendExpirationEmail } from "../services/mailing.js";
+
 
 
 class UserController {
+
    async login(req, res, next) {
     const { email, password } = req.body;
 
@@ -130,84 +134,53 @@ class UserController {
   }
 
   async deleteAllUsers2(req, res, next) {
-
     const emailToDelete = req.body.email;
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail", 
-      auth: {
-        user: CONFIG.MAILING_USER,
-        pass: CONFIG.MAILING_PASSWORD,
-      },
-    });
-
-    // Esta es una función auxiliar para enviar correos electrónicos
-    function sendExpirationEmail(userEmail, userName) {
-      const mailOptions = {
-        from: CONFIG.MAILING_USER,
-        to: "jomaxavila@gmail.com",
-        subject: "Notificación de expiración de sesión",
-        text: `Hola ${userName},\n\nTu sesión ha expirado. Por favor, inicia sesión de nuevo si deseas continuar utilizando el servicio.\n\nSaludos,\nEl equipo de soporte`,
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log("Error al enviar correo:", error);
-        } else {
-          console.log("Correo enviado: " + info.response);
-        }
-      });
-    }
-
+  
     try {
       const usersResponse = await UserService.getAllUsers();
       const sessionResponse = await SessionService.getAllSession();
-
+  
       const users = usersResponse.message;
       const sessions = sessionResponse.message;
-
+  
       const matchingUsers = users.filter((user) => {
-        const session = sessions.find(
-          (session) => session.email === user.email
-        );
-        return session !== undefined; // Si se encuentra una sesión, se incluye el usuario
+        const session = sessions.find((session) => session.email === user.email);
+        return session !== undefined;
       });
-
+  
       const usersWithSessionInfo = matchingUsers.map((user) => {
-        const session = sessions.find(
-          (session) => session.email === user.email
-        );
+        const session = sessions.find((session) => session.email === user.email);
         return {
           ...user,
           mail: user.email,
           expires: session.expires,
         };
       });
-
-      // Función para filtrar por 30 min y devolver el estado de la sesión
+  
       function checkSessionExpiry(usersWithSessionInfo) {
         const currentTime = new Date();
-        const thirtyMinutesLater = new Date(currentTime.getTime() + 30 * 60000); // 30 minutos en milisegundos
+        const thirtyMinutesLater = new Date(currentTime.getTime() + 30 * 60000);
         return usersWithSessionInfo.map((user) => {
           const expiryTime = new Date(user.expires);
           const isSessionExpired = expiryTime < thirtyMinutesLater;
           const sessionStatus = isSessionExpired
             ? `La sesión del usuario ${user.first_name} ${user.last_name} ya expiró.`
             : `La sesión del usuario ${user.first_name} ${user.last_name} es válida.`;
-
+  
           if (isSessionExpired) {
-            // Envía un correo electrónico al usuario notificándole que su sesión ha expirado
             sendExpirationEmail(
-              user.email,
+              user.mail,
               `${user.first_name} ${user.last_name}`
-            );
+            ).catch((error) => {
+              console.error("Error al enviar correo de expiración:", error);
+            });
           }
-
+  
           // Formatear la fecha de expiración a la hora local de Argentina
           const expiryLocalTime = expiryTime.toLocaleString("es-AR", {
             timeZone: "America/Argentina/Buenos_Aires",
           });
-
+  
           return {
             user: `${user.first_name} ${user.last_name}`,
             sessionStatus: sessionStatus,
@@ -216,77 +189,49 @@ class UserController {
           };
         });
       }
-
-      console.log("emailToDelete: ", emailToDelete)
-
-      // Obtener el estado de la sesión para cada usuario
+  
+      console.log("emailToDelete: ", emailToDelete);
+  
       const sessionStatuses = checkSessionExpiry(usersWithSessionInfo);
-
+  
       console.log("sessionStatuses: ", sessionStatuses);
-
-
-      // Enviar el estado de la sesión como parte de la respuesta JSON
+  
       res.status(200).json(sessionStatuses);
     } catch (error) {
       next(error);
     }
   }
+  
+
 
   async deleteAllUsers(req, res, next) {
     const emailToDelete = req.body.email;
   
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: CONFIG.MAILING_USER,
-        pass: CONFIG.MAILING_PASSWORD,
-      },
-    });
-  
-    // Esta es una función auxiliar para enviar correos electrónicos
-    function sendDeletionEmail(userEmail, userName) {
-      const mailOptions = {
-        from: CONFIG.MAILING_USER,
-        to: "jomaxavila@gmail.com",
-        subject: "Notificación de eliminación de cuenta",
-        text: `Hola ${userName},\n\nTu cuenta ha sido eliminada por inactividad.\n\nSaludos,\nEl equipo de soporte`,
-      };
-  
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log("Error al enviar correo:", error);
-        } else {
-          console.log("Correo enviado: " + info.response);
-        }
-      });
-    }
-  
     try {
-      // Obtener todos los usuarios
       const usersResponse = await UserService.getAllUsers();
       const users = usersResponse.message;
   
-      // Buscar el usuario con el email proporcionado
-      const userToDelete = users.find(user => user.email === emailToDelete);
+      const userToDelete = users.find((user) => user.email === emailToDelete);
   
       if (userToDelete) {
-        // Eliminar el usuario utilizando el UserService
         await UserService.deleteUserByEmail(emailToDelete);
   
-        // Enviar correo electrónico al usuario notificando la eliminación de la cuenta
-        sendDeletionEmail(emailToDelete, `${userToDelete.first_name} ${userToDelete.last_name}`);
+     
+        await sendDeletionEmail(
+          emailToDelete,
+          `${userToDelete.first_name} ${userToDelete.last_name}`
+        );
   
-        // Enviar respuesta de éxito
-        res.status(200).json({ message: 'Usuario eliminado con éxito y notificado por correo electrónico.' });
+        res.status(200).json({
+          message: 'Usuario eliminado con éxito y notificado por correo electrónico.',
+        });
       } else {
-        // Enviar una respuesta de error si no se encuentra el usuario
         res.status(404).json({ message: 'Usuario no encontrado.' });
       }
     } catch (error) {
       next(error);
     }
   }
-  
   
   async userNonActive(req, res, next) {
 
@@ -306,11 +251,11 @@ class UserController {
         return {
           ...user,
           mail: user.email,
-          // Puedes agregar más información relevante aquí si es necesario
+         
         };
       });
 
-      // Enviar lista de usarios que no estan con sesion activa
+    
       res.status(200).json(usersWithNoSessionInfo);
     } catch (error) {
       next(error);
