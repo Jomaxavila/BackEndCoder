@@ -26,12 +26,11 @@ class ProductsRouter {
       const productId = req.params.id;
       try {
         req.logger.info(`Obteniendo producto con ID: ${productId}`);
-        const product = await ProductService.getProductById(req, res, productId);
+        const product = await ProductService.getProductById(productId);  
         if (product) {
           res.json({ status: 'success', payload: product });
         } 
       } catch (error) {
-       
         req.logger.warn(`Hubo un problema al obtener el producto con ID ${productId}`);
         res.status(500).json({ status: 'error', message: 'Error al obtener el producto', error: error.message });
       }

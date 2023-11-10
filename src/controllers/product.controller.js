@@ -73,7 +73,7 @@ import ProductService from "../services/product.service.js";
   }
 
 
-  static async getProductById(req, res) {
+  static async getProductById(req, res, next) {
     try {
       const productId = req.params.id;
       const response = await ProductService.getProductById(productId);
@@ -90,6 +90,7 @@ import ProductService from "../services/product.service.js";
         });
       }
     } catch (error) {
+      next(error);
     }
   }
 

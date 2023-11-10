@@ -1,7 +1,6 @@
 import productsModel from "../models/schemas/productModel.js";
 
 
-
 class ProductService {
   
   async addProduct(newProduct) {
