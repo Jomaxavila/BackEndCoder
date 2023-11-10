@@ -32,7 +32,7 @@ purchaseButtons.forEach(button => {
                     // Ningún producto se pudo comprar
                     Swal.fire({
                         title: 'Error',
-                        text: 'No hay productos con suficiente stock para completar la compra.',
+                        text: `Stock insuficiente para el producto con ID ${data.productsNotPurchased.join(', ')}.`,
                         icon: 'error',
                         timer: 3000,
                         position: 'center',
@@ -42,7 +42,7 @@ purchaseButtons.forEach(button => {
                 // La compra falló por otro motivo
                 Swal.fire({
                     title: 'Error',
-                    text: 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',
+                    text: data.message || 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',
                     icon: 'error',
                     timer: 3000,
                     position: 'center',

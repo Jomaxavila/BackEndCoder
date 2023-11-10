@@ -1,5 +1,8 @@
 import CartService from "../services/cart.service.js";
 import ProductService from "../services/product.service.js";
+import { sendPurchaseConfirmationEmail } from "../services/mailing.js";
+import UserService from "../services/users.service.js"
+import ViewsService from "../services/views.service.js";
 
 
 class CartController {
@@ -11,7 +14,7 @@ class CartController {
           code: 200,
           status: "success",
           message: "Cart created successfully",
-          payload: response.message, 
+          payload: response.message,
         });
       } else {
         res.status(500).json({
@@ -28,6 +31,104 @@ class CartController {
       });
     }
   }
+
+ 
+
+
+
+
+  async addProductInCart(req, res) {
+    try {
+      const cartId = req.params.cid;
+      const productId = req.params.pid;
+
+      const response = await CartService.addProductToCart(cartId, productId);
+
+      res.status(response.code).json(response);
+    } catch (error) {
+      res.status(500).json({
+        code: 500,
+        status: "error",
+        message: "Error al agregar el producto al carrito",
+      });
+    }
+  }
+
+
+
+
+  async deleteProductInCart(req, res) {
+    try {
+      const cartId = req.params.cid;
+      const productId = req.params.pid;
+      const response = await CartService.deleteProductInCart(cartId, productId);
+      res.status(response.code).json(response);
+    } catch (error) {
+      res.status(500).json({
+        code: 500,
+        status: "error",
+        message: "Error al eliminar el producto del carrito",
+      });
+    }
+  }
+
+
+  async getCart(req, res) {
+    try {
+      const cartId = req.params.id;
+      const response = await CartService.getCart(cartId);
+      res.status(response.code).json(response);
+    } catch (error) {
+      res.status(500).json({
+        code: 500,
+        status: "error",
+        message: "Error al obtener el carrito",
+      });
+    }
+  }
+
+  async getCarts(req, res) {
+    try {
+      const response = await CartService.getCarts();
+      if (response.code === 202) {
+        res.status(200).json({
+          code: 200,
+          status: "success",
+          message: "Carts retrieved successfully",
+          payload: response.message,
+        });
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: "error",
+          message: "Error al obtener los carritos",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        code: 500,
+        status: "error",
+        message: "Error al obtener los carritos",
+      });
+    }
+  }
+
+
+  async deleteCart(req, res) {
+    try {
+      const cartId = req.params.id;
+      const response = await CartService.deleteCart(cartId);
+      res.status(response.code).json(response);
+    } catch (error) {
+      res.status(500).json({
+        code: 500,
+        status: "error",
+        message: "Error al eliminar el carrito",
+      });
+    }
+  }
+
+
   async purchaseCart(req, res) {
     try {
         const cartId = req.params.cid;
@@ -81,6 +182,19 @@ class CartController {
             });
         }
 
+        // Actualiza el carrito antes de marcarlo como completo
+        cart.products = cart.products.filter(
+            (item) => productsNotPurchased.includes(item.product.toString())
+        );
+
+        try {
+            await CartService.updateCart(cart);
+            console.log('Carrito actualizado antes de la compra:', cart);
+        } catch (error) {
+            console.error('Error al actualizar el carrito:', error);
+            // Maneja el error de actualización del carrito según sea necesario
+        }
+
         for (const productId in purchasedQuantities) {
             const product = await ProductService.getProductById(productId);
             product.quantity -= purchasedQuantities[productId];
@@ -93,12 +207,27 @@ class CartController {
         await CartService.completeCart(cartId);
         console.log('Carrito marcado como completo:', cartId);
 
-        // Elimina los productos comprados del carrito
-        cart.products = cart.products.filter(
-            (item) => productsNotPurchased.includes(item.product.toString())
-        );
+        const infoUser = await UserService.getUserEmail(req.session.user.email);
+        const nameUser = `${infoUser.first_name} ${infoUser.last_name}`;
+        const userCart = infoUser.cart.toString();
+        const cartProducts = await ViewsService.getCartUser(infoUser.cart);
+        const cartTotalAmount = cartProducts.reduce((total, product) => {
+            return total + product.product.price * product.quantity;
+        }, 0);
+        console.log('infoUser:', infoUser);
+        console.log('nameUser:', nameUser);
+        console.log('userCart:', userCart);
+        console.log('cartProducts:', cartProducts);
+        console.log('cartTotalAmount:', cartTotalAmount);
 
-        await CartService.updateCart(cart);
+        const ticketDetails = {
+            infoUser,
+            nameUser,
+            userCart,
+            cartTotalAmount,
+        };
+
+        await sendPurchaseConfirmationEmail(ticketDetails);
 
         res.status(200).json({
             code: 200,
@@ -115,99 +244,6 @@ class CartController {
         });
     }
 }
-
-
-  
-  async addProductInCart(req, res) {
-    try {
-      const cartId = req.params.cid;
-      const productId = req.params.pid;
-      
-      const response = await CartService.addProductToCart(cartId, productId);
-      
-      res.status(response.code).json(response);
-    } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al agregar el producto al carrito",
-      });
-    }
-  }
-  
-  
-
-
-  async deleteProductInCart(req, res) {
-    try {
-      const cartId = req.params.cid;
-      const productId = req.params.pid;
-      const response = await CartService.deleteProductInCart(cartId, productId);
-      res.status(response.code).json(response);
-    } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al eliminar el producto del carrito",
-      });
-    }
-  }
- 
-  
-  async getCart(req, res) {
-    try {
-      const cartId = req.params.id;
-      const response = await CartService.getCart(cartId);
-      res.status(response.code).json(response);
-    } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al obtener el carrito",
-      });
-    }
-  }
-
-  async getCarts(req, res) {
-    try {
-      const response = await CartService.getCarts();
-      if (response.code === 202) {
-        res.status(200).json({
-          code: 200,
-          status: "success",
-          message: "Carts retrieved successfully",
-          payload: response.message, 
-        });
-      } else {
-        res.status(500).json({
-          code: 500,
-          status: "error",
-          message: "Error al obtener los carritos",
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al obtener los carritos",
-      });
-    }
-  }
-  
-
-  async deleteCart(req, res) {
-    try {
-      const cartId = req.params.id;
-      const response = await CartService.deleteCart(cartId);
-      res.status(response.code).json(response);
-    } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al eliminar el carrito",
-      });
-    }
-  }
 }
 
 export default new CartController();

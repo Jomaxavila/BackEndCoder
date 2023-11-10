@@ -1,7 +1,7 @@
 import userModel from "../models/schemas/usersModel.js";
 import { createHash } from "../utils.js";
 import CONFIG from "../config/config.js";
-import MailingService from "./mailing.js";
+
 import jwt from "jsonwebtoken";
 import sessionModel from "../models/schemas/sessionModel.js";
 import { SessionResponseDTO } from "../models/dtos/session.dto.js";

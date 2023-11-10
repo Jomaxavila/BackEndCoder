@@ -2,8 +2,6 @@ import UserService from "../services/users.service.js";
 import { STATUS } from "../utilidades/constantes.js";
 import {UserResponseDTO} from "../models/dtos/users.dto.js"
 import SessionService from "../services/session.service.js";
-import nodemailer from "nodemailer";
-import CONFIG from "../config/config.js";
 import { sendDeletionEmail } from "../services/mailing.js";
 import { sendExpirationEmail } from "../services/mailing.js";
 

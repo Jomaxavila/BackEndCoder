@@ -30,3 +30,15 @@ export function sendExpirationEmail(userEmail, userName) {
 
   return transporter.sendMail(mailOptions);
 }
+
+export function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCart, cartTotalAmount }) {
+  const { email: userEmail } = infoUser;  
+  const mailOptions = {
+    from: CONFIG.MAILING_USER,
+    to: userEmail,  // Usar userEmail directamente
+    subject: 'Confirmación de compra',
+    text: `Hola ${nameUser},\n\nGracias por tu compra. Aquí están los detalles de tu compra:\n\n${JSON.stringify({ infoUser, nameUser, userCart, cartTotalAmount })}\n\nSaludos,\nEl equipo de soporte`,
+  };
+  
+  return transporter.sendMail(mailOptions);
+}
