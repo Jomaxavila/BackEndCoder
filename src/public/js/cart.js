@@ -24,12 +24,12 @@ purchaseButtons.forEach(button => {
                         timer: 3000,
                         position: 'center',
                     }).then(() => {
-                        // Redirige o realiza alguna acción adicional
+                       
                         location.reload();
-                        window.location.href = 'products'; // Recarga la página
+                        window.location.href = 'products'; 
                     });
                 } else {
-                    // Ningún producto se pudo comprar
+                   
                     Swal.fire({
                         title: 'Error',
                         text: `Stock insuficiente para el producto con ID ${data.productsNotPurchased.join(', ')}.`,
@@ -39,7 +39,7 @@ purchaseButtons.forEach(button => {
                     });
                 }
             } else {
-                // La compra falló por otro motivo
+                
                 Swal.fire({
                     title: 'Error',
                     text: data.message || 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',

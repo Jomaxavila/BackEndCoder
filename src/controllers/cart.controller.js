@@ -147,6 +147,7 @@ class CartController {
 
         const purchasedQuantities = {};
         const productsNotPurchased = [];
+        const cartTotals = { withStock: 0, withoutStock: 0 };
 
         for (const item of cart.products) {
             const productId = item.product.toString();
@@ -170,6 +171,13 @@ class CartController {
             } else {
                 purchasedQuantities[productId] = purchasedQuantity;
                 console.log("Cantidad comprada de producto con ID", productId, ":", purchasedQuantity);
+
+                // Actualiza las variables con y sin stock
+                if (productQuantity > 0) {
+                    cartTotals.withStock += product.price * purchasedQuantity;
+                } else {
+                    cartTotals.withoutStock += product.price * purchasedQuantity;
+                }
             }
         }
 
@@ -211,23 +219,28 @@ class CartController {
         const nameUser = `${infoUser.first_name} ${infoUser.last_name}`;
         const userCart = infoUser.cart.toString();
         const cartProducts = await ViewsService.getCartUser(infoUser.cart);
-        const cartTotalAmount = cartProducts.reduce((total, product) => {
-            return total + product.product.price * product.quantity;
-        }, 0);
+
+        // Utiliza las variables con y sin stock para calcular el total del carrito
+        const cartTotalAmount = cartTotals.withStock;
+        const cartTotalWithoutStock = cartTotals.withoutStock;
+
         console.log('infoUser:', infoUser);
         console.log('nameUser:', nameUser);
         console.log('userCart:', userCart);
         console.log('cartProducts:', cartProducts);
-        console.log('cartTotalAmount:', cartTotalAmount);
+        console.log('cartTotalAmount (con stock):', cartTotalAmount);
+        console.log('cartTotalWithoutStock (sin stock):', cartTotalWithoutStock);
 
         const ticketDetails = {
-            infoUser,
-            nameUser,
-            userCart,
-            cartTotalAmount,
-        };
-
-        await sendPurchaseConfirmationEmail(ticketDetails);
+          infoUser,
+          nameUser,
+          userCart,
+          cartTotalAmount,
+          cartTotalWithoutStock,
+          productsNotPurchased,
+      };
+      
+      await sendPurchaseConfirmationEmail(ticketDetails);
 
         res.status(200).json({
             code: 200,
@@ -244,6 +257,8 @@ class CartController {
         });
     }
 }
+
+
 }
 
 export default new CartController();
