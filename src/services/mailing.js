@@ -31,7 +31,7 @@ export function sendExpirationEmail(userEmail, userName) {
   return transporter.sendMail(mailOptions);
 }
 
-export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCart, cartTotalAmount, cartTotalWithoutStock, productsNotPurchased, cartDetails }) {
+export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCart, cartTotalAmount, cartDetails }) {
   try {
       const { email: userEmail } = infoUser;
 
@@ -41,20 +41,19 @@ export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCa
           Gracias por tu compra en nuestro sitio.
 
           Detalles de la compra:
+
           - Número de carrito: ${userCart}
-          - Total de la compra (con stock): $${cartTotalAmount}
-          - Total de la compra (sin stock): $${cartTotalWithoutStock}
+          
 
-          Productos no comprados debido a stock insuficiente:
-          ${productsNotPurchased.map(productId => `- Producto con ID ${productId}`).join('\n')}
-
-          Detalles de los productos comprados:
+          Productos comprados:
           ${cartDetails.map(detail => `
             - Producto: ${detail.title}
               Descripción: ${detail.description}
               Precio: $${detail.price}
               Cantidad: ${detail.quantity}`).join('\n')}
 
+
+             - Total de la compra: $${cartTotalAmount}
           ¡Gracias por elegirnos!
       `;
 

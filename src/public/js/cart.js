@@ -14,32 +14,24 @@ purchaseButtons.forEach(button => {
 
             const data = await response.json();
 
+            console.log("Data received from the server:", data);
+            console.log("Products not purchased:", data.productsNotPurchased);
+
             if (response.ok) {
-                if (data.productsNotPurchased.length > 0) {
-                    // Al menos un producto se pudo comprar
-                    Swal.fire({
-                        title: 'Compra Exitosa, revisa tu correo para más detalles',
-                        text: data.message,
-                        icon: 'success',
-                        timer: 3000,
-                        position: 'center',
-                    }).then(() => {
-                       
-                        location.reload();
-                        window.location.href = 'products'; 
-                    });
-                } else {
-                   
-                    Swal.fire({
-                        title: 'Error',
-                        text: `Stock insuficiente para el producto con ID ${data.productsNotPurchased.join(', ')}.`,
-                        icon: 'error',
-                        timer: 3000,
-                        position: 'center',
-                    });
-                }
+                // Siempre ejecuta este bloque si la respuesta es exitosa
+
+                Swal.fire({
+                    title: 'Compra Exitosa, revisa tu correo para más detalles',
+                    text: data.message,
+                    icon: 'success',
+                    timer: 3000,
+                    position: 'center',
+                }).then(() => {
+                    location.reload();
+                    window.location.href = 'products'; 
+                });
             } else {
-                
+                // Si la respuesta no es exitosa, muestra el mensaje de error
                 Swal.fire({
                     title: 'Error',
                     text: data.message || 'Ha ocurrido un error al comprar el carrito. Inténtalo de nuevo más tarde.',

@@ -50,7 +50,6 @@ class CartService {
           message: "No se encontró un carrito con ese ID",
         };
       }
-
       const productIndex = cart.products.findIndex(
         (product) => product.product.toString() === productId
       );
