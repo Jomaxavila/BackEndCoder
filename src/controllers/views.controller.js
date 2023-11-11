@@ -107,11 +107,7 @@ class ViewsController {
       });
     }
   }
-  
-  
-  
-  
-  
+
 
 
 async renderDeleteUser(req, res, next) {
@@ -149,6 +145,7 @@ async renderDeleteUser(req, res, next) {
     next(error);
   }
 }
+
 
 }
 

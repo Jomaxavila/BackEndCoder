@@ -2,7 +2,8 @@
   <nav class="navbar navbar-expand-md bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#"> 📷 Collection Cameras </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -31,55 +32,61 @@
     </div>
   </nav>
 </div>
+
 <h1 class="m-5 text-center">Lista de Usuarios no activos</h1>
 <section class="mt-6">
   <div class="container">
     <div class="row justify-content-center">
-  {{#each users}}
-  <div class="mt-5 col-md-4">
-    <div class="card mb-4 h-100">
-      <div class="card-body text-center">
-        <h5 class="card-title">{{first_name}} {{last_name}}</h5>
-        <p class="card-text">{{email}}</p>
-        <p class="card-text">{{role}}</p>
-        <form id="form-eliminar-usuario" action="/api/users/delete" method="POST">
-          <input type="hidden" id="email" name="email" value="{{email}}">
-          <button type="button" class="btn btn-danger btn-eliminar-usuario" data-email="{{email}}">Eliminar Usuario</button>
-        </form>
+      {{#each users}}
+      <div class="mt-5 col-md-4">
+        <div class="card mb-4 h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{first_name}} {{last_name}}</h5>
+            <p class="card-text">{{email}}</p>
+            <p class="card-text">{{role}}</p>
+            <form id="form-eliminar-usuario" action="/api/users/delete" method="POST">
+              <input type="hidden" id="email" name="email" value="{{email}}">
+              <button type="button" class="btn btn-danger btn-eliminar-usuario" data-email="{{email}}">Eliminar
+                Usuario</button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  {{/each}}
-</div>
-
+      {{/each}}
     </div>
   </div>
 </section>
-<div class="pagination justify-content-center">
+
+<div>
+  <h3 class="m-5 text-center">Cambiar el Rol de un usuario</h3>
+  <div class="container">
+    <div class="row justify-content-center">
+      {{#each users}}
+      <div class="mt-5 col-md-4">
+        <div class="card mb-4 h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{first_name}} {{last_name}}</h5>
+            <p class="card-text">{{email}}</p>
+            <p class="card-text">{{role}}</p>
+            <form class="change-role-form" method="POST">
+    <input type="hidden" name="userId" value="{{email}}">
+    <div class="mb-3">
+        <label for="newRole" class="form-label">Nuevo Rol</label>
+        <select class="form-select" name="newRole">
+            <option value="admin">Admin</option>
+            <option value="premium">Premium</option>
+        </select>
+    </div>
+    <button type="button" id="changeRole" class="btn btn-primary" data-user-id="{{email}}" data-new-role="premium">Cambiar Rol</button>
+</form>
+
+
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
 </div>
-<script>// Utiliza una clase para seleccionar todos los botones y vincula el evento 'click' a cada uno
-document.querySelectorAll('.btn-eliminar-usuario').forEach(function(button) {
-   button.addEventListener('click', function(event) {
-     // Usa el atributo de datos para obtener el email asociado con el botón que fue clickeado
-     var email = this.getAttribute('data-email');
-     fetch('/api/users/delete', {
-       method: 'DELETE',
-       headers: {
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify({
-         email: email
-       })
-     }).then(response => {
-       if (response.ok) {
-         console.log('Usuario eliminado');
-         window.location.href = window.location.href;
-         // Aquí podrías también eliminar la tarjeta del usuario del DOM o refrescar la página
-       } else {
-         console.log('Error al eliminar el usuario');
-       }
-     }).catch(error => {
-       console.error('Hubo un problema con la operación fetch: ' + error.message);
-     });
-   });
- });</script>
+
+<script src="/js/deleteUser.js"></script>

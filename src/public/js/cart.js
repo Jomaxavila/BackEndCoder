@@ -52,3 +52,27 @@ purchaseButtons.forEach(button => {
         }
     });
 });
+
+
+// cart.js
+
+// Función para actualizar la cantidad del producto
+function updateQuantity(productId, newQuantity) {
+    // Validar que la cantidad esté entre 1 y 5
+    if (newQuantity >= 1 && newQuantity <= 5) {
+      // Implementa lógica para actualizar la cantidad del producto con el ID proporcionado
+      // Puedes hacer una solicitud AJAX a tu servidor para manejar la actualización
+      console.log(`Actualizar cantidad del producto con ID ${productId} a ${newQuantity}`);
+    } else {
+      // Muestra un mensaje de error o realiza alguna acción para indicar que la cantidad es inválida
+      console.log('La cantidad debe estar entre 1 y 5');
+    }
+  }
+  
+  // Función para eliminar un producto
+  function removeProduct(productId) {
+    // Implementa lógica para eliminar el producto con el ID proporcionado
+    // Puedes hacer una solicitud AJAX a tu servidor para manejar la eliminación
+    console.log(`Eliminar producto con ID: ${productId}`);
+  }
+  

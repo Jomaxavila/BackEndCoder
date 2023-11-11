@@ -1,3 +1,5 @@
+
+
 <div>
   <nav class="navbar navbar-expand-md bg-light">
     <div class="container-fluid">
@@ -16,7 +18,7 @@
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item user-nav">
-            <a class="nav-link m-1">{{user}}</a>
+            <a class="nav-link m-1">{{user}}</a> 
           </li>
           <li class="nav-item">
             <form action="/api/session/logout" method="POST">
@@ -32,41 +34,19 @@
   </nav>
 </div>
 
-<h1 class="m-5 text-center">Comprando productos</h1>
-<section class="mt-6">
-  <div class="container">
-    <table class="table table-bordered text-center align-middle">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Descripción</th>
-          <th>Imagen</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+<h3>Modificar el rol de usuario</h3>
+<div class="btn-group dropend">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    Seleccionar nuevo rol
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#" onclick="changeUserRole('{{user._id}}', 'admin')">Admin</a></li>
+    <li><a class="dropdown-item" href="#" onclick="changeUserRole('{{user._id}}', 'premium')">Premium</a></li>
+  </ul>
+</div>
+</div>
 
-      {{#each cartProducts}}
-        <tr>
-          <td>{{product.title}}</td>
-          <td>{{product.description}}</td>
-          <td><img src="{{product.thumbnail}}" alt="Thumbnail" style="width: 50px; max-height: 50px; object-fit: contain;" /></td>
-          <td>$USD {{product.price}}</td>
-          <td>
-            <input type="number" value="{{quantity}}" min="1" max="5" onchange="updateQuantity('{{product._id}}', this.value)">
-          </td>
-          <td>
-            <button class="btn btn-danger btn-sm" onclick="removeProduct('{{product._id}}')">Eliminar</button>
-          </td>
-        </tr>
-      {{/each}}
-
-    </table>
-
-    <h3 class="text-center">Total: $USD {{cartTotalAmount}}</h3>
-    <button id="purchaseCart" class="btn btn-success m-2 add-to-cart-button" data-cid="{{userCart}}">Comprar</button>
-  </div>
+</div>
 </section>
-
-<script src="/js/cart.js"></script>
+<div class="pagination justify-content-center">
+</div>

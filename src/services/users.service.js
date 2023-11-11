@@ -99,24 +99,30 @@ async getAllUsers() {
 }
 
 
-  async changeUserRole(newRole, uid) {
-    try {
+async changeUserRole(req, res) {
+  const { userId, newRole } = req.body;
+
+  try {
       if (newRole !== 'user' && newRole !== 'premium') {
-        return { status: 'error', message: 'El nuevo rol no es válido' };
+          return res.status(400).json({ status: 'error', message: 'El nuevo rol no es válido' });
       }
-      const user = await usersModel.findById(uid); 
+
+      const user = await usersModel.findOne({ email: userId });
+
+
       if (!user) {
-        return { status: 'error', message: 'Usuario no encontrado' };
+          return res.status(404).json({ status: 'error', message: 'Usuario no encontrado' });
       }
+
       user.role = newRole;
       await user.save();
 
-      return { status: 'success', message: 'Rol de usuario actualizado con éxito' };
-    } catch (error) {
+      return res.status(200).json({ status: 'success', message: 'Rol de usuario actualizado con éxito' });
+  } catch (error) {
       console.error('Error al cambiar el rol del usuario:', error);
-      return { status: 'error', message: 'Error al actualizar el rol del usuario' };
-    }
+      return res.status(500).json({ status: 'error', message: 'Error al actualizar el rol del usuario' });
   }
+}
 
 
   async updateUserDocuments(userId, documentType, filePath) {
