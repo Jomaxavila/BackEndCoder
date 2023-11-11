@@ -134,7 +134,7 @@ class CartController {
         const cartId = req.params.cid;
         console.log('Cart ID:', cartId);
         const cart = await CartService.getCartById(cartId);
-        console.log('Cart encontrado:', cart);
+        console.log('Cart encontrado a mapear INCLUIR:', cart);
 
         if (!cart) {
             console.log('Carrito no encontrado');
@@ -166,11 +166,8 @@ class CartController {
             const productQuantity = product.quantity;
 
             if (productQuantity < purchasedQuantity) {
-                console.log(`Stock insuficiente para el producto con ID ${item.product}`);
+                console.log(`Stock insuficiente para el producto con ID a mapear nombre INCLUIR ${item.product}`);
                 productsNotPurchased.push(productId);
-            } else {
-                purchasedQuantities[productId] = purchasedQuantity;
-                console.log("Cantidad comprada de producto con ID", productId, ":", purchasedQuantity);
 
                 // Actualiza las variables con y sin stock
                 if (productQuantity > 0) {
@@ -178,11 +175,13 @@ class CartController {
                 } else {
                     cartTotals.withoutStock += product.price * purchasedQuantity;
                 }
+            } else {
+                purchasedQuantities[productId] = purchasedQuantity;
+                console.log("Cantidad comprada de producto con ID", productId, ":", purchasedQuantity);
             }
         }
 
         if (Object.keys(purchasedQuantities).length === 0) {
-            // No hay productos con suficiente stock para comprar
             return res.status(400).json({
                 code: 400,
                 status: "error",
@@ -190,14 +189,15 @@ class CartController {
             });
         }
 
-        // Actualiza el carrito antes de marcarlo como completo
+        console.log('Productos antes del filtrado:', cart.products);
         cart.products = cart.products.filter(
-            (item) => productsNotPurchased.includes(item.product.toString())
-        );
-
+          (item) => productsNotPurchased.includes(item.product.toString())
+      );
+        console.log('Productos después del filtrado:', cart.products);
+        
         try {
             await CartService.updateCart(cart);
-            console.log('Carrito actualizado antes de la compra:', cart);
+            console.log('Carrito actualizado después de la compra:', cart);
         } catch (error) {
             console.error('Error al actualizar el carrito:', error);
             // Maneja el error de actualización del carrito según sea necesario
@@ -210,7 +210,7 @@ class CartController {
             console.log("Stock actualizado para producto con ID", productId, ":", product.quantity);
         }
 
-        console.log("Productos que no se pudieron comprar:", productsNotPurchased);
+        console.log("Productos que no se pudieron comprar por falta de stock INCLUIR:", productsNotPurchased);
 
         await CartService.completeCart(cartId);
         console.log('Carrito marcado como completo:', cartId);
@@ -218,29 +218,45 @@ class CartController {
         const infoUser = await UserService.getUserEmail(req.session.user.email);
         const nameUser = `${infoUser.first_name} ${infoUser.last_name}`;
         const userCart = infoUser.cart.toString();
-        const cartProducts = await ViewsService.getCartUser(infoUser.cart);
 
-        // Utiliza las variables con y sin stock para calcular el total del carrito
         const cartTotalAmount = cartTotals.withStock;
         const cartTotalWithoutStock = cartTotals.withoutStock;
 
-        console.log('infoUser:', infoUser);
-        console.log('nameUser:', nameUser);
-        console.log('userCart:', userCart);
-        console.log('cartProducts:', cartProducts);
-        console.log('cartTotalAmount (con stock):', cartTotalAmount);
-        console.log('cartTotalWithoutStock (sin stock):', cartTotalWithoutStock);
-
         const ticketDetails = {
-          infoUser,
-          nameUser,
-          userCart,
-          cartTotalAmount,
-          cartTotalWithoutStock,
-          productsNotPurchased,
-      };
-      
-      await sendPurchaseConfirmationEmail(ticketDetails);
+            infoUser,
+            cart,
+            nameUser,
+            userCart,
+            cartTotalAmount,
+            cartTotalWithoutStock,
+            productsNotPurchased,
+            cartDetails: [], // Inicializamos un array para los detalles de los productos en el carrito
+        };
+
+        // Agregamos detalles de cada producto en el carrito
+        for (const item of cart.products) {
+            const productId = item.product.toString();
+            const product = await ProductService.getProductById(productId);
+
+            if (product) {
+                // Detalles del producto
+                const productDetails = {
+                    title: product.title,
+                    description: product.description,
+                    price: product.price,
+                    quantity: item.quantity,
+                };
+
+                // Agregamos los detalles del producto al array de cartDetails
+                ticketDetails.cartDetails.push(productDetails);
+            }
+        }
+
+        // Agrega console.log para depurar
+        console.log('Detalles del ticket antes de enviar el correo:', ticketDetails);
+
+        // Llamada a la función de envío de correo con los detalles actualizados
+        await sendPurchaseConfirmationEmail(ticketDetails);
 
         res.status(200).json({
             code: 200,
@@ -257,6 +273,7 @@ class CartController {
         });
     }
 }
+
 
 
 }

@@ -31,7 +31,7 @@ export function sendExpirationEmail(userEmail, userName) {
   return transporter.sendMail(mailOptions);
 }
 
-export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCart, cartTotalAmount, cartTotalWithoutStock, productsNotPurchased }) {
+export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCart, cartTotalAmount, cartTotalWithoutStock, productsNotPurchased, cartDetails }) {
   try {
       const { email: userEmail } = infoUser;
 
@@ -47,6 +47,13 @@ export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCa
 
           Productos no comprados debido a stock insuficiente:
           ${productsNotPurchased.map(productId => `- Producto con ID ${productId}`).join('\n')}
+
+          Detalles de los productos comprados:
+          ${cartDetails.map(detail => `
+            - Producto: ${detail.title}
+              Descripción: ${detail.description}
+              Precio: $${detail.price}
+              Cantidad: ${detail.quantity}`).join('\n')}
 
           ¡Gracias por elegirnos!
       `;
