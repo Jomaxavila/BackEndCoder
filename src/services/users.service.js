@@ -103,26 +103,35 @@ async changeUserRole(req, res) {
   const { userId, newRole } = req.body;
 
   try {
-      if (newRole !== 'user' && newRole !== 'premium') {
-          return res.status(400).json({ status: 'error', message: 'El nuevo rol no es válido' });
-      }
+    console.log(`Intentando cambiar el rol del usuario ${userId} a ${newRole}`);
+    
+    const validRoles = ['usuario', 'premium', 'admin'];
 
-      const user = await usersModel.findOne({ email: userId });
+    if (!validRoles.includes(newRole)) {
+      console.log(`El nuevo rol ${newRole} no es válido`);
+      return res.status(400).json({ status: 'error', message: 'El nuevo rol no es válido' });
+    }
 
+    const user = await usersModel.findOne({ email: userId });
 
-      if (!user) {
-          return res.status(404).json({ status: 'error', message: 'Usuario no encontrado' });
-      }
+    if (!user) {
+      console.log(`Usuario con ID ${userId} no encontrado`);
+      return res.status(404).json({ status: 'error', message: 'Usuario no encontrado' });
+    }
 
-      user.role = newRole;
-      await user.save();
+    user.role = newRole;
+    await user.save();
 
-      return res.status(200).json({ status: 'success', message: 'Rol de usuario actualizado con éxito' });
+    console.log(`Rol del usuario ${userId} actualizado a ${newRole}`);
+    return res.status(200).json({ status: 'success', message: 'Rol de usuario actualizado con éxito' });
   } catch (error) {
-      console.error('Error al cambiar el rol del usuario:', error);
-      return res.status(500).json({ status: 'error', message: 'Error al actualizar el rol del usuario' });
+    console.error('Error al cambiar el rol del usuario:', error);
+    return res.status(500).json({ status: 'error', message: 'Error al actualizar el rol del usuario' });
   }
 }
+
+
+
 
 
   async updateUserDocuments(userId, documentType, filePath) {

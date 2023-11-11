@@ -30,8 +30,9 @@ const changeButton = document.querySelectorAll("#changeRole");
 
 changeButton.forEach(button => {
     button.addEventListener("click", async () => {
-        const userId = button.dataset.userId;
-        const newRole = button.dataset.newRole;
+        const form = button.closest('form');
+        const userId = form.querySelector('[name="userId"]').value;
+        const newRole = form.querySelector('[name="newRole"]').value;
 
         try {
             const response = await fetch(`http://localhost:8080/api/users/changeRole`, {
@@ -46,15 +47,33 @@ changeButton.forEach(button => {
             });
 
             if (response.ok) {
-                console.log('Rol de usuario cambiado con éxito');
-                // Puedes agregar lógica adicional si es necesario
+                Swal.fire({
+                    title: 'Rol de usuario cambiado con éxito',
+                    icon: 'success',
+                    timer: 3000,
+                    position: 'center',
+                }).then(() => {
+                    location.reload();
+                    window.location.href = 'getviews';
+                });
             } else {
-                console.log('Error al cambiar el rol del usuario');
-                // Puedes manejar el error de acuerdo a tus necesidades
+                Swal.fire({
+                    title: 'Error al cambiar el rol del usuario',
+                    text: 'Hubo un problema al realizar la operación',
+                    icon: 'error',
+                    timer: 3000,
+                    position: 'center',
+                });
             }
         } catch (error) {
-            console.error('Hubo un problema con la operación fetch: ' + error.message);
-            // Puedes manejar el error de acuerdo a tus necesidades
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema con la operación fetch: ' + error.message,
+                icon: 'error',
+                timer: 3000,
+                position: 'center',
+            });
         }
     });
 });
+
