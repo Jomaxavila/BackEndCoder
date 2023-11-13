@@ -57,7 +57,7 @@
             <input type="number" value="{{quantity}}" min="1" max="5" onchange="updateQuantity('{{product._id}}', this.value)">
           </td>
           <td>
-            <button class="btn btn-danger btn-sm" onclick="removeProduct('{{product._id}}')">Eliminar</button>
+            <button  id ="deleteProd" class="btn btn-danger btn-sm" data-productid="{{../_id}}" data-cid = "{{../cartIdUser}}" >Eliminar</button>
           </td>
         </tr>
       {{/each}}

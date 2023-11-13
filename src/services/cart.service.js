@@ -103,7 +103,7 @@ class CartService {
 
   async addProductToCart(cartId, productId) {
     try {
-      // Verificar si el carrito existe
+      
       const cart = await cartModel.findOne({ _id: cartId });
       if (!cart) {
         return {
@@ -113,20 +113,20 @@ class CartService {
         };
       }
 
-      // Verificar si el producto ya está en el carrito
+      
       const productIndex = cart.products.findIndex(
         (product) => product.product.toString() === productId
       );
 
       if (productIndex === -1) {
-        // Si el producto no está en el carrito, agregarlo
+        
         cart.products.push({ product: productId, quantity: 1 });
       } else {
-        // Si el producto ya está en el carrito, incrementar la cantidad
+    
         cart.products[productIndex].quantity++;
       }
 
-      // Guardar el carrito actualizado
+      
       await cart.save();
 
       return {

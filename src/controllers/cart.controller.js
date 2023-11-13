@@ -50,18 +50,30 @@ class CartController {
 
   async deleteProductInCart(req, res) {
     try {
-      const cartId = req.params.cid;
-      const productId = req.params.pid;
-      const response = await CartService.deleteProductInCart(cartId, productId);
-      res.status(response.code).json(response);
+        const cartId = req.params.cid;
+        const productId = req.params.pid;
+
+        // Coloca un punto de interrupción o un console.log para depurar
+        console.log(`Deleting product ${productId} from cart ${cartId}`);
+
+        const response = await CartService.deleteProductInCart(cartId, productId);
+
+        // Coloca otro punto de interrupción o console.log para verificar la respuesta
+        console.log(`Response from CartService:`, response);
+
+        res.status(response.code).json(response);
     } catch (error) {
-      res.status(500).json({
-        code: 500,
-        status: "error",
-        message: "Error al eliminar el producto del carrito",
-      });
+        // Imprime cualquier error en la consola del servidor
+        console.error("Error in deleteProductInCart:", error);
+
+        res.status(500).json({
+            code: 500,
+            status: "error",
+            message: "Error al eliminar el producto del carrito",
+        });
     }
-  }
+}
+
 
   async getCart(req, res) {
     try {
@@ -120,11 +132,9 @@ class CartController {
   async purchaseCart(req, res) {
     try {
       const cartId = req.params.cid;
-      console.log("Cart ID:", cartId);
-  
+     
       const cart = await CartService.getCartById(cartId);
-      console.log("Cart encontrado a mapear INCLUIR:", cart);
-  
+      
       if (!cart) {
         console.log("Carrito no encontrado");
         return res.status(404).json({
@@ -139,14 +149,14 @@ class CartController {
       let cartTotalAmount = 0;
       let cartTotalWithoutStock = 0;
   
-      const cartDetails = []; // Agregamos un array para almacenar los detalles de los productos comprados
+      const cartDetails = [];
   
       for (const item of cart.products) {
         const productId = item.product.toString();
         const product = await ProductService.getProductById(productId);
       
         if (!product) {
-          console.log(`Producto con ID ${item.product} no encontrado`);
+        
           return res.status(400).json({
             code: 400,
             status: "error",
@@ -158,17 +168,16 @@ class CartController {
         const productQuantity = product.quantity;
       
         if (productQuantity < purchasedQuantity) {
-          console.log(`Stock insuficiente para el producto con ID ${item.product}`);
+         
           productsNotPurchased.push(productId);
           const totalForProduct = product.price * purchasedQuantity;
           cartTotalWithoutStock += totalForProduct;
         } else {
-          // Incluso si la cantidad comprada es igual a la cantidad en stock, aún debes procesar el producto
+     
           purchasedQuantities[productId] = purchasedQuantity;
           const totalForProduct = product.price * purchasedQuantity;
           cartTotalAmount += totalForProduct;
       
-          // Agregamos los detalles del producto comprado al array
           const productDetails = {
             title: product.title,
             description: product.description,
@@ -188,12 +197,12 @@ class CartController {
         });
       }
   
-      // Filtra el carrito para dejar solo los productos NO comprados
+      
       cart.products = cart.products.filter(
         (item) => productsNotPurchased.includes(item.product.toString())
       );
   
-      // Elimina los productos comprados del carrito
+   
       for (const productId of productsNotPurchased) {
         await CartService.removeItemFromCart(cartId, productId);
       }

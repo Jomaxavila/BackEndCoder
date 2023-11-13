@@ -88,17 +88,23 @@ class ViewsController {
       const userCart = infoUser.cart.toString();
       const success = req.query.success === 'true';
       const cartProducts = await ViewsService.getCartUser(infoUser.cart);
-      const cartTotalAmount = cartProducts.reduce((total, product) => {
-        return total + product.product.price * product.quantity;
+  
+      const validCartProducts = cartProducts.filter(product => product && product.product);
+  
+      const cartTotalAmount = validCartProducts.reduce((total, product) => {
+        if (product.product && product.product.price) {
+          return total + product.product.price * product.quantity;
+        } else {
+          return total;
+        }
       }, 0);
   
       res.render("cart", {
-        cartProducts,
+        cartProducts: validCartProducts,
         user: nameUser,
-        cartTotalAmount, 
+        cartTotalAmount,
         userCart,
         success
-
       });
     } catch (error) {
       console.error("Error en renderCartProducts:", error);
@@ -107,7 +113,7 @@ class ViewsController {
       });
     }
   }
-
+  
 
 
 async renderDeleteUser(req, res, next) {
