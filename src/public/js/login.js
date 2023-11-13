@@ -25,10 +25,10 @@ form?.addEventListener('submit', async (event) => {
         timer: 3000
       });
       setTimeout(() => {
-        if (responseData.payload.role === 'admin' || responseData.payload.role === 'premium') {
-          window.location.href = '/getviews';
+        if (responseData.payload.role === 'usuario' || responseData.payload.role === 'premium') {
+          window.location.href = '/products';
         } else {
-          window.location.href = '/products'; 
+          window.location.href = '/getviews'; 
         }
       }, 3000);
     } else {

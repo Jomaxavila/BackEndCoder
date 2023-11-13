@@ -1,4 +1,6 @@
 import productsModel from "../models/schemas/productModel.js";
+import usersModel from "../models/schemas/usersModel.js";
+import { sendDeletionProducts} from"../services/mailing.js"
 
 
 class ProductService {
@@ -79,20 +81,41 @@ class ProductService {
       
     
   
-    deleteProductById = async (id) => {
-      try {
-        const result = await productsModel.deleteOne({ _id: id });
-        if (result.deletedCount === 1) {
-          return { message: "Producto eliminado" };
-        } else {
-          return { message: "Producto no encontrado" };
+      deleteProductById = async (id) => {
+        try {
+        
+          const product = await productsModel.findById(id);
+      
+          if (!product) {
+          
+            throw new Error("Producto no encontrado");
+          }
+        
+          const owner = await usersModel.findById(product.owner);
+      
+          if (owner && owner.role === 'premium') {
+            await sendDeletionProducts(owner.email, owner, product)
+            console.log("Correo enviado exitosamente.");
+          } else {
+            console.log("Propietario no es premium. No se enviará correo.");
+          }
+      
+          const result = await productsModel.deleteOne({ _id: id });
+          if (result.deletedCount === 1) {
+            console.log("Producto eliminado exitosamente.");
+            return { message: "Producto eliminado" };
+          } else {
+            console.log("Producto no encontrado al intentar eliminar.");
+            throw new Error("Producto no encontrado al intentar eliminar");
+          }
+        } catch (error) {
+          console.error("Error al eliminar el producto:", error.message);
+          throw error; 
         }
-      } catch (error) {
-        console.error("Error al eliminar el producto:", error.message);
-        return { error: "Error al eliminar el producto" };
-      }
-    };
-  
+      };
+      
+
+
     updateProducts = async ({ id, ...producto }) => {
       try {
         await productsModel.updateOne({ _id: id }, { $set: producto });

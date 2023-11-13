@@ -102,15 +102,14 @@ class ProductsRouter {
       const productId = req.params.id;
     
       try {
-        const response = await ProductController.deleteProduct(req, res, productId);
+        const response = await ProductController.deleteProduct(req, res, productId)
       } catch (error) {
-
-        req.logger.warn('Hubo un problema al eliminar el producto');
         res.status(500).json({ status: 'error', message: 'Error al eliminar el producto', error: error.message });
       }
     });
   }
-
+    
+    
   getRouter() {
     return this.productRouter;
   }

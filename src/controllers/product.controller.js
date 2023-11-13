@@ -116,9 +116,11 @@ import ProductService from "../services/product.service.js";
         res.status(404).send("Producto no encontrado");
       }
     } catch (error) {
-      next(error);
+      console.error("Error en el controlador al eliminar el producto:", error.message);
+      next(error);  
     }
   }
+  
 }
 
 export default ProductController; 

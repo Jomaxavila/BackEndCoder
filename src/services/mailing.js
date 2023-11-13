@@ -72,3 +72,24 @@ export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCa
       // Puedes manejar el error de envío de correo electrónico según sea necesario
   }
 }
+
+
+export function sendDeletionProducts(userEmail, owner, product) {
+  const { first_name, last_name } = owner;
+  
+  const { title, description, price, code, category, thumbnail, quantity } = product;
+
+  const mailOptions = {
+    from: CONFIG.MAILING_USER,
+    to: userEmail,
+    subject: 'Notificación de eliminación de producto',
+    text: `Hola ${first_name} ${last_name},\n\nTu producto ha sido eliminado:\n\nDetalles de tu producto:\n\nTítulo: ${title}\nDescripción: ${description}\nPrecio: ${price}\nCódigo: ${code}\nCategoría: ${category}\nThumbnail: ${thumbnail}\nCantidad: ${quantity}\n\nSaludos,\nEl equipo de soporte`,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+
+
+
+
+
