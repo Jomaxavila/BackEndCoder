@@ -52,16 +52,18 @@ purchaseButtons.forEach(button => {
 });
 
 
-
 const deleteProducts = document.querySelectorAll(".deleteProd");
 
 deleteProducts.forEach(button => {
     button.addEventListener("click", async () => {
         const cid = button.dataset.cid;
         const pid = button.dataset.productid;
+        console.log('Cart ID:', cid);
+        console.log('Product ID que tiene que traer:', pid);
+
 
         try {
-            const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
+            const response = await fetch(`http://localhost:8080/api/carts/${cid}/products/${pid}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

@@ -1,4 +1,6 @@
 import cartModel from "../models/schemas/cartModel.js";
+import mongoose from "mongoose";
+
 
 class CartService {
   async createCart() {
@@ -22,7 +24,7 @@ class CartService {
     try {
       const cart = await cartModel.findById(cartId);
       if (!cart) {
-        return null; 
+        return null;
       }
       return cart;
     } catch (error) {
@@ -99,11 +101,11 @@ class CartService {
       throw error;
     }
   }
- 
+
 
   async addProductToCart(cartId, productId) {
     try {
-      
+
       const cart = await cartModel.findOne({ _id: cartId });
       if (!cart) {
         return {
@@ -113,20 +115,20 @@ class CartService {
         };
       }
 
-      
+
       const productIndex = cart.products.findIndex(
         (product) => product.product.toString() === productId
       );
 
       if (productIndex === -1) {
-        
+
         cart.products.push({ product: productId, quantity: 1 });
       } else {
-    
+
         cart.products[productIndex].quantity++;
       }
 
-      
+
       await cart.save();
 
       return {
@@ -140,43 +142,55 @@ class CartService {
   }
 
 
-
   async deleteProductInCart(cartId, productId) {
     try {
-      const cart = await cartModel.findOne({ _id: cartId });
-      if (!cart) {
+        const cart = await cartModel.findOne({ _id: cartId });
+
+        if (!cart) {
+            return {
+                code: 404,
+                status: "error",
+                message: "No se encontró un carrito con ese ID",
+            };
+        }
+
+        const productIdsInCart = cart.products.map(product => product.product.toString());
+
+        console.log("Product IDs in cart:", productIdsInCart);
+
+        const productIndex = cart.products.findIndex(
+            (product) => product.product.equals(productId)
+        );
+
+        console.log("Received productId:", productId);
+        console.log("Product Index:", productIndex);
+
+        if (productIndex === -1) {
+            return {
+                code: 404,
+                status: "error",
+                message: "El producto no existe en el carrito",
+            };
+        }
+
+        cart.products.splice(productIndex, 1);
+
+        await cart.save();
+
         return {
-          code: 404,
-          status: "error",
-          message: "No se encontró un carrito con ese ID",
+            code: 202,
+            status: "success",
+            message: "Producto eliminado correctamente del carrito",
+            productIdsInCart: productIdsInCart, // Agregar la información al objeto de respuesta
         };
-      }
-
-      const productIndex = cart.products.findIndex(
-        (product) => product.product.toString() === productId
-      );
-
-      if (productIndex === -1) {
-        return {
-          code: 404,
-          status: "error",
-          message: "El producto no existe en el carrito",
-        };
-      }
-
-      cart.products.splice(productIndex, 1);
-
-      await cart.save();
-
-      return {
-        code: 202,
-        status: "success",
-        message: "Producto eliminado correctamente del carrito",
-      };
     } catch (error) {
-      throw error;
+        console.error("Error in deleteProductInCart:", error);
+        throw error;
     }
-  }
+}
+
+
+
 
   async getCart(cartId) {
     try {

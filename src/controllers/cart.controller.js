@@ -2,7 +2,7 @@ import CartService from "../services/cart.service.js";
 import ProductService from "../services/product.service.js";
 import { sendPurchaseConfirmationEmail } from "../services/mailing.js";
 import UserService from "../services/users.service.js";
-import ViewsService from "../services/views.service.js";
+
 
 class CartController {
   async createCart(req, res) {
@@ -53,17 +53,21 @@ class CartController {
         const cartId = req.params.cid;
         const productId = req.params.pid;
 
-        // Coloca un punto de interrupción o un console.log para depurar
+        console.log("Type of productId:", typeof productId);
+
         console.log(`Deleting product ${productId} from cart ${cartId}`);
 
         const response = await CartService.deleteProductInCart(cartId, productId);
 
-        // Coloca otro punto de interrupción o console.log para verificar la respuesta
+        // Obtener el valor de productIdsInCart de la respuesta
+        const productIdsInCart = response.productIdsInCart || [];
+
+        console.log("Product IDs in cart from response:", productIdsInCart);
+
         console.log(`Response from CartService:`, response);
 
         res.status(response.code).json(response);
     } catch (error) {
-        // Imprime cualquier error en la consola del servidor
         console.error("Error in deleteProductInCart:", error);
 
         res.status(500).json({
@@ -73,6 +77,10 @@ class CartController {
         });
     }
 }
+
+
+
+
 
 
   async getCart(req, res) {
