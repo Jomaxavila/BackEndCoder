@@ -1,7 +1,6 @@
 import cartModel from "../models/schemas/cartModel.js";
-import mongoose from "mongoose";
 
-
+ 
 class CartService {
   async createCart() {
     try {
@@ -32,15 +31,69 @@ class CartService {
     }
   }
 
-  async updateCart(cart) {
+  async updateCart(cartId, updatedCart) {
     try {
-      await cartModel.updateOne({ _id: cart._id }, { $set: cart });
+      await cartModel.updateOne({ _id: cartId }, { $set: updatedCart });
+  
       return { message: "Carrito actualizado" };
     } catch (error) {
       console.error("Error al actualizar el carrito:", error.message);
       return { error: "Error al actualizar el carrito" };
     }
   }
+  
+  calculateCartTotal(cartProducts) {
+    const total = cartProducts.reduce((acc, product) => {
+      if (product.product && product.product.price) {
+        return acc + product.product.price * product.quantity;
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    return total;
+  }
+
+  
+  async updateQuantity(cartId, productId, newQuantity) {
+    try {
+      const cart = await cartModel.findById(cartId);
+
+      if (!cart) {
+        return {
+          code: 404,
+          status: 'error',
+          message: 'No se encontró un carrito con ese ID',
+        };
+      }
+
+      const productIndex = cart.products.findIndex(
+        (product) => product.product.toString() === productId
+      );
+
+      if (productIndex === -1) {
+        return {
+          code: 404,
+          status: 'error',
+          message: 'El producto no existe en el carrito',
+        };
+      }
+
+      cart.products[productIndex].quantity = newQuantity;
+
+      await cart.save();
+
+      return {
+        code: 202,
+        status: 'success',
+        message: 'Cantidad actualizada correctamente',
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 
   async removeItemFromCart(cartId, productId) {
     try {

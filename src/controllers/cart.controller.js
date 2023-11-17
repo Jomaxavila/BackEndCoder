@@ -52,19 +52,9 @@ class CartController {
     try {
         const cartId = req.params.cid;
         const productId = req.params.pid;
-
-        console.log("Type of productId:", typeof productId);
-
-        console.log(`Deleting product ${productId} from cart ${cartId}`);
-
         const response = await CartService.deleteProductInCart(cartId, productId);
-
-        // Obtener el valor de productIdsInCart de la respuesta
         const productIdsInCart = response.productIdsInCart || [];
-
-        console.log("Product IDs in cart from response:", productIdsInCart);
-
-        console.log(`Response from CartService:`, response);
+      
 
         res.status(response.code).json(response);
     } catch (error) {
@@ -217,9 +207,7 @@ class CartController {
   
       try {
         await CartService.updateCart(cart);
-        console.log('Carrito actualizado después de la compra:', cart);
       } catch (error) {
-        console.error('Error al actualizar el carrito:', error);
       }
   
       for (const productId in purchasedQuantities) {
@@ -234,10 +222,6 @@ class CartController {
         );
       }
   
-      console.log(
-        "Productos que no se pudieron comprar por falta de stock:",
-        productsNotPurchased
-      );
   
       await CartService.completeCart(cartId);
       console.log("Carrito marcado como completo:", cartId);
@@ -257,10 +241,7 @@ class CartController {
         cartDetails,
       };
   
-      console.log(
-        "Detalles del ticket antes de enviar el correo:",
-        ticketDetails
-      );
+  
   
       await sendPurchaseConfirmationEmail(ticketDetails);
   
@@ -280,6 +261,26 @@ class CartController {
       });
     }
   }
+
+  async updateQuantity(req, res) {
+    const { cid } = req.params;
+    const { productId, newQuantity } = req.body;
+
+    try {
+        const result = await CartService.updateQuantity(cid, productId, newQuantity);
+
+        res.status(result.code).json(result);
+    } catch (error) {
+        console.error('Error en updateQuantity:', error);
+        res.status(500).json({
+            code: 500,
+            status: 'error',
+            message: 'Error al actualizar la cantidad en el carrito',
+        });
+    }
+}
+
+
   
   
   

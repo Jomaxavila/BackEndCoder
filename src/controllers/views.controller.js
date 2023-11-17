@@ -1,6 +1,7 @@
 import ViewsService from "../services/views.service.js";
 import UserService from "../services/users.service.js"
 import SessionService from "../services/session.service.js";
+import cartService from "../services/cart.service.js";
 
 
 class ViewsController {
@@ -89,22 +90,20 @@ class ViewsController {
       const success = req.query.success === 'true';
       const cartProducts = await ViewsService.getCartUser(infoUser.cart);
   
-      const validCartProducts = cartProducts.filter(product => product && product.product);
-  
-      const cartTotalAmount = validCartProducts.reduce((total, product) => {
-        if (product.product && product.product.price) {
-          return total + product.product.price * product.quantity;
-        } else {
-          return total;
-        }
-      }, 0);
+      const validCartProducts = cartProducts.filter(product => product && product.product._id);
+      const productIds = validCartProducts.map(product => product.product._id);
+     
+      const cartTotalAmount = await cartService.calculateCartTotal(validCartProducts);
+
   
       res.render("cart", {
         cartProducts: validCartProducts,
         user: nameUser,
         cartTotalAmount,
         userCart,
-        success
+        success,
+        productIds,
+       
       });
     } catch (error) {
       console.error("Error en renderCartProducts:", error);

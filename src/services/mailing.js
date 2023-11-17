@@ -66,10 +66,8 @@ export async function sendPurchaseConfirmationEmail({ infoUser, nameUser, userCa
 
       await transporter.sendMail(mailOptions);
 
-      console.log('Correo electrónico de confirmación de compra enviado con éxito.');
   } catch (error) {
-      console.error('Error al enviar el correo electrónico:', error);
-      // Puedes manejar el error de envío de correo electrónico según sea necesario
+  
   }
 }
 

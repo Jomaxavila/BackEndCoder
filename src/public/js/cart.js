@@ -58,8 +58,7 @@ deleteProducts.forEach(button => {
     button.addEventListener("click", async () => {
         const cid = button.dataset.cid;
         const pid = button.dataset.productid;
-        console.log('Cart ID:', cid);
-        console.log('Product ID que tiene que traer:', pid);
+      
 
 
         try {
@@ -93,3 +92,39 @@ deleteProducts.forEach(button => {
         }
     });
 });
+
+
+const quantityInputs = document.querySelectorAll(".quantityInput");
+
+quantityInputs.forEach(input => {
+    input.addEventListener("change", async () => {
+        const cid = input.dataset.cid;
+        const pid = input.dataset.productid;
+        const newQuantity = input.value;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/carts/${cid}/updateQuantity`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    productId: pid,
+                    newQuantity: newQuantity,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                location.reload();
+               
+            } else {
+                console.error("Error al actualizar la cantidad:", data.message);
+            }
+        } catch (error) {
+            console.error("Error de red al actualizar la cantidad:", error);
+        }
+    });
+});
+

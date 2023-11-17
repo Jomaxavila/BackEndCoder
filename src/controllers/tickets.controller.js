@@ -77,14 +77,13 @@ export default class TicketsController {
       next(error);
     }
   }
+  
   static async createTicket(req, res, next) {
     const ticketData = req.body;
     
     try {
-      // Crea un nuevo ticket
       const createdTicket = await TicketsService.createTicket(ticketData);
 
-      // Verifica el stock de los productos en el carrito
       for (const productInfo of ticketData.products) {
         const product = await ProductsDAO.getProductById(productInfo.productId);
 
@@ -96,7 +95,6 @@ export default class TicketsController {
           return res.status(400).json({ message: `Stock insuficiente para el producto con ID ${productInfo.productId}` });
         }
 
-        // Resta la cantidad del producto del stock
         product.stock -= productInfo.quantity;
         await ProductsDAO.updateProduct(product._id, product);
       }

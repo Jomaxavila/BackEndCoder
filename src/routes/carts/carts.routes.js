@@ -11,6 +11,8 @@ class CartRouter {
     this.cartRouter.get('/', CartController.getCarts);
     this.cartRouter.delete('/:id', CartController.deleteCart);
     this.cartRouter.post('/:cid/purchase', CartController.purchaseCart); 
+    this.cartRouter.post('/:cid/updateQuantity', CartController.updateQuantity);
+
   }
 
   getRouter() {
